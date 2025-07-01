@@ -4,13 +4,13 @@ export interface MovieSearchDto {
     userId: number;
     tmdbId: number;
     title: string;
-    releaseYear: number;
-    posterUrl: string;
-    director: string;
-    plotSummary: string;
-    userRating: number;
-    userReview: string;
-    watchedDate: Date;
+    releaseYear?: number;
+    posterUrl?: string;
+    director?: string;
+    plotSummary?: string;
+    userRating?: number;
+    userReview?: string;
+    watchedDate?: Date;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -20,13 +20,13 @@ export interface MovieDataDto {
     userId: number;
     tmdbId: number;
     title: string;
-    releaseYear: number;
-    posterUrl: string;
-    director: string;
-    plotSummary: string;
-    userRating: number;
-    userReview: string;
-    watchedDate: Date;
+    releaseYear?: number;
+    posterUrl?: string;
+    director?: string;
+    plotSummary?: string;
+    userRating?: number;
+    userReview?: string;
+    watchedDate?: Date;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -35,13 +35,13 @@ export interface CreateMovieDto {
     userId: number;
     tmdbId: number;
     title: string;
-    releaseYear: number;
-    posterUrl: string;
-    director: string;
-    plotSummary: string;
-    userRating: number;
-    userReview: string;
-    watchedDate: Date;
+    releaseYear?: number;
+    posterUrl?: string;
+    director?: string;
+    plotSummary?: string;
+    userRating?: number;
+    userReview?: string;
+    watchedDate?: Date;
 }
 
 export interface UpdateMovieDto {
@@ -49,11 +49,11 @@ export interface UpdateMovieDto {
     userId: number;
     tmdbId: number;
     title: string;
-    releaseYear: number;
-    posterUrl: string;
-    director: string;
-    plotSummary: string;
-    userRating: number;
-    userReview: string;
-    watchedDate: Date;
+    releaseYear?: number;
+    posterUrl?: string;
+    director?: string;
+    plotSummary?: string;
+    userRating?: number;
+    userReview?: string;
+    watchedDate?: Date;
 }

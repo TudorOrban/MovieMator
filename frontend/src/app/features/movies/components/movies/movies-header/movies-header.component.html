@@ -1,0 +1,21 @@
+<div class="page-title">
+    Movies
+</div>
+
+<div class="flex items-center justify-between w-full">
+    <div class="flex items-center py-4">
+        <app-search-input></app-search-input>
+
+        <button class="mx-4 w-10 h-10 border border-gray-300 shadow-sm rounded-md">
+            <fa-icon [icon]="faArrowUpWideShort"></fa-icon>
+        </button>
+    </div>
+
+    <button 
+        (click)="handleAddMovie()"
+        class="standard-write-button flex items-center space-x-2 h-10"
+    >
+        <fa-icon [icon]="faPlus"></fa-icon>
+        <span class="font-semibold">Add Movie</span>
+    </button>
+</div>

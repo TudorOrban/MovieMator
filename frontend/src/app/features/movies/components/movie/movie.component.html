@@ -1,0 +1,36 @@
+<div class="page-std-padding-y">
+    <!-- Header -->
+    <div class="w-full page-std-padding-x pb-4 border-b border-gray-300 shadow-sm">
+        <div class="text-xl font-semibold">{{ movie?.title }}</div>
+        <div class="text-gray-800">{{ movie?.releaseYear ?? "?" }}</div>
+        <div class="text-gray-800">{{ movie?.director ?? "-" }}</div>
+    </div>
+
+    <!-- Content -->
+    <div class="page-std-padding-x py-4 space-y-4">
+        <div class="space-y-2">
+            <div class="text-lg font-semibold">
+                Plot Summary:
+            </div>
+            <p class="text-gray-900">
+                {{ movie?.plotSummary }}
+            </p>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div class="text-lg font-semibold">
+                User Rating:
+            </div>
+            <div class="text-lg text-gray-800">
+                {{ movie?.userRating ?? "-" }}
+            </div>
+        </div>
+        <div class="space-y-2">
+            <div class="text-lg font-semibold">
+                User Review:
+            </div>
+            <p class="text-gray-900">
+                {{ movie?.userReview }}
+            </p>
+        </div>
+    </div>
+</div>

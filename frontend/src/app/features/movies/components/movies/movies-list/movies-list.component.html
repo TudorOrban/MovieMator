@@ -1,7 +1,9 @@
 <div class="space-y-4">
-    <div *ngFor="let movie of (movies?.results ?? [])" class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm">
-        <div class="text-lg font-semibold">{{ movie.title }}</div>
-        <div class="text-gray-800">{{ movie.releaseYear }}</div>
-        <div class="text-gray-800">{{ movie.director ?? "-" }}</div>
+    <div *ngFor="let movie of (movies?.results ?? [])" class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 cursor-pointer">
+        <a [routerLink]="'/movies/' + movie.id">
+            <div class="text-lg font-semibold">{{ movie.title }}</div>
+            <div class="text-gray-800">{{ movie.releaseYear }}</div>
+            <div class="text-gray-800">{{ movie.director ?? "-" }}</div>
+        </a>
     </div>
 </div>

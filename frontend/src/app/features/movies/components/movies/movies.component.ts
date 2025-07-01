@@ -29,6 +29,10 @@ export class MoviesComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.searchMovies();
+    }
+
+    searchMovies(): void {
         if (!this.userId) return;
 
         this.movieService.searchMovies(this.userId, this.searchParams).subscribe({
@@ -39,5 +43,9 @@ export class MoviesComponent implements OnInit {
                 console.error("Error searching movies: ", error);
             }
         });
+    }
+
+    handleSearchTextChange(newText: string): void {
+        
     }
 }

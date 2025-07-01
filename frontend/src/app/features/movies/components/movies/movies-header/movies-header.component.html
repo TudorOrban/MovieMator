@@ -1,21 +1,33 @@
-<div class="page-title">
-    Movies
-</div>
-
-<div class="flex items-center justify-between w-full">
-    <div class="flex items-center py-4">
-        <app-search-input></app-search-input>
-
-        <button class="mx-4 w-10 h-10 border border-gray-300 shadow-sm rounded-md">
-            <fa-icon [icon]="faArrowUpWideShort"></fa-icon>
-        </button>
+<div class="w-full page-std-padding-x">
+    <div class="text-2xl font-semibold pb-4">
+        Movies ({{ totalCount }})
     </div>
+    <div class="flex items-center justify-between w-full space-x-2">
 
-    <button 
-        (click)="handleAddMovie()"
-        class="standard-write-button flex items-center space-x-2 h-10"
-    >
-        <fa-icon [icon]="faPlus"></fa-icon>
-        <span class="font-semibold">Add Movie</span>
-    </button>
+        <div class="flex items-center space-x-2">
+            <app-search-input
+                (onSearch)="handleSearchTextChange($event)"
+            ></app-search-input>
+
+            <app-selector 
+                [items]="searchConfig.sortOptions" 
+                [defaultItemValue]="'createdAt'" 
+                (selectedItemChange)="handleSortOptionChange($event)"
+                class="ml-8"
+            ></app-selector>
+
+            <button class="standard-action-button" (click)="handleToggleIsAscending()">
+                <fa-icon [icon]="searchParams.isAscending ? faArrowUpWideShort : faArrowDownShortWide"></fa-icon>
+            </button>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <a [routerLink]="'/movies/add-movie'" class="standard-write-button space-x-2 whitespace-nowrap">
+                <fa-icon [icon]="faPlus"></fa-icon>
+                <div>
+                    New Movie
+                </div>
+            </a>
+        </div>
+    </div>
 </div>

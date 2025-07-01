@@ -1,9 +1,12 @@
-<div class="page-std-padding-x page-std-padding-y w-full">
+<div class="page-std-padding-y w-full">
     <app-movies-header
-    
+        [searchParams]="searchParams"
+        [totalCount]="movies?.totalCount"
+        (searchParamsChanged)="searchMovies()"
+        class="w-full border-b border-gray-300 shadow-sm"
     ></app-movies-header>
 
-    <div class="flex w-full h-full py-4">
+    <div class="flex w-full h-full page-std-padding-x py-4">
         <app-movies-list [movies]="movies" class="w-full"></app-movies-list>
     </div>
 </div>

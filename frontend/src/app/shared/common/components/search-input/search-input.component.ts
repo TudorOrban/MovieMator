@@ -1,14 +1,23 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Component, EventEmitter, Output, signal } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-search-input',
-    imports: [CommonModule, FontAwesomeModule],
+    imports: [CommonModule, FontAwesomeModule, FormsModule],
     templateUrl: './search-input.component.html',
     styleUrl: './search-input.component.css'
 })
 export class SearchInputComponent {
-    faMagnifyingGlass = faMagnifyingGlass;
+    @Output() onSearch = new EventEmitter<string>();
+
+    searchText = signal("");
+
+    search(): void {
+        this.onSearch.emit(this.searchText());
+    }
+    
+    faSearch = faSearch;
 }

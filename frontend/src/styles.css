@@ -1,11 +1,16 @@
-@import "tailwindcss";
+@import url('styles/main.css');
+@import url('styles/common.css');
+@import url('styles/buttons.css');
+@import url('styles/forms.css');
 
+@import "tailwindcss";
 
 :root {
     --background-color: #ffffff;
     --text-color: #000000;
     --primary-color: white;
     --secondary-color: rgb(17, 82, 147);
+    --secondary-text-color: white;
     --tertiary-color: rgb(93, 54, 155);
     --tertiary-color-hover: rgb(80, 47, 135);
     --border-color: #dee2e6;
@@ -19,6 +24,7 @@
     --text-color: #ffffff;
     --primary-color: #0056b3;
     --secondary-color: rgb(6, 43, 107);
+    --secondary-text-color: white;
     --border-color: #222121;
     --border-color-secondary: #302f2f;
     --scrollbar-color: #2a2a2a;

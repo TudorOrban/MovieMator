@@ -14,7 +14,6 @@ import com.moviemator.shared.search.models.SearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -35,11 +34,11 @@ public class MovieServiceImpl implements MovieService {
     }
 
     public PaginatedResults<MovieSearchDto> searchMovies(Long userId, SearchParams searchParams) {
-        List<Movie> movies = movieRepository.findByUserId(userId);
+        PaginatedResults<Movie> results = movieRepository.searchMovies(userId, searchParams);
 
         return new PaginatedResults<>(
-                movies.stream().map(MovieDtoMapper.INSTANCE::movieToMovieSearchDto).toList(),
-                (long) movies.size()
+                results.getResults().stream().map(MovieDtoMapper.INSTANCE::movieToMovieSearchDto).toList(),
+                results.getTotalCount()
         );
     }
 

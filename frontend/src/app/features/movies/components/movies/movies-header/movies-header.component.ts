@@ -12,10 +12,7 @@ import { SearchInputComponent } from "../../../../../shared/common/components/se
     styleUrl: './movies-header.component.css'
 })
 export class MoviesHeaderComponent {
-    faPlus = faPlus;
-    faArrowUpWideShort = faArrowUpWideShort;
-    faArrowDownShortWide = faArrowDownShortWide;
-
+    
     constructor(
         private router: Router
     ) {}
@@ -23,4 +20,8 @@ export class MoviesHeaderComponent {
     handleAddMovie() {
         this.router.navigate(["/movie/add-movie"]);
     }
+
+    faPlus = faPlus;
+    faArrowUpWideShort = faArrowUpWideShort;
+    faArrowDownShortWide = faArrowDownShortWide;
 }

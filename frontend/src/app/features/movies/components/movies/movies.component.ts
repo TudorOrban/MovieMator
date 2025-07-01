@@ -33,7 +33,6 @@ export class MoviesComponent implements OnInit {
 
         this.movieService.searchMovies(this.userId, this.searchParams).subscribe({
             next: (data) => {
-                console.log("Movies: ", data);
                 this.movies = data;
             },
             error: (error) => {

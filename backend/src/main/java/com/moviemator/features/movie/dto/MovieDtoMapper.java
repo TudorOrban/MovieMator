@@ -39,15 +39,15 @@ public interface MovieDtoMapper {
     @Mapping(source = "movie.updatedAt", target = "updatedAt")
     MovieDataDto movieToMovieDataDto(Movie movie);
 
-    @Mapping(source = "movie.userId", target = "userId")
-    @Mapping(source = "movie.tmdbId", target = "tmdbId")
-    @Mapping(source = "movie.title", target = "title")
-    @Mapping(source = "movie.releaseYear", target = "releaseYear")
-    @Mapping(source = "movie.posterUrl", target = "posterUrl")
-    @Mapping(source = "movie.director", target = "director")
-    @Mapping(source = "movie.plotSummary", target = "plotSummary")
-    @Mapping(source = "movie.userRating", target = "userRating")
-    @Mapping(source = "movie.userReview", target = "userReview")
-    @Mapping(source = "movie.watchedDate", target = "watchedDate")
+    @Mapping(source = "userId", target = "userId")
+    @Mapping(source = "tmdbId", target = "tmdbId")
+    @Mapping(source = "title", target = "title")
+    @Mapping(source = "releaseYear", target = "releaseYear")
+    @Mapping(source = "posterUrl", target = "posterUrl")
+    @Mapping(source = "director", target = "director")
+    @Mapping(source = "plotSummary", target = "plotSummary")
+    @Mapping(source = "userRating", target = "userRating")
+    @Mapping(source = "userReview", target = "userReview")
+    @Mapping(source = "watchedDate", target = "watchedDate")
     Movie createMovieDtoToMovie(CreateMovieDto movieDto);
 }

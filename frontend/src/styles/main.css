@@ -1,0 +1,4 @@
+.header {
+   background: linear-gradient(135deg, var(--secondary-color), var(--tertiary-color));;
+   height: 15rem;
+}

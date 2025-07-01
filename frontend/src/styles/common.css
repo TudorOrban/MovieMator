@@ -1,0 +1,16 @@
+.page-title {
+    /* padding: 0.5rem; */
+    font-size: 1.6rem;
+    line-height: 2.1rem;
+    font-weight: 600;
+}
+
+.page-std-padding-x {
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.page-std-padding-y {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}

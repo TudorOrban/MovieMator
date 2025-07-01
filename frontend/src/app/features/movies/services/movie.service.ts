@@ -29,7 +29,11 @@ export class MovieService {
         return this.http.put<MovieDataDto>(this.apiUrl, movieDto);
     }
 
-    deleteMovie(id: number) {
-        this.http.delete(`${this.apiUrl}/${id}`);
+    deleteMovie(id: number): Observable<void> {
+        return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    }
+    
+    deleteMovies(ids: number[]): Observable<void> {
+        return this.http.delete<void>(`${this.apiUrl}/bulk`, { body: ids });
     }
 }

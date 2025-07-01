@@ -2,11 +2,19 @@
     <app-movies-header
         [searchParams]="searchParams"
         [totalCount]="movies?.totalCount"
+        [isDeleteModeOn]="isDeleteModeOn"
         (searchParamsChanged)="searchMovies()"
+        (deleteModeToggled)="toggleDeleteMode()"
+        (onDeleteMovies)="deleteMovies()"
         class="w-full border-b border-gray-300 shadow-sm"
     ></app-movies-header>
 
     <div class="flex w-full h-full page-std-padding-x py-4">
-        <app-movies-list [movies]="movies" class="w-full"></app-movies-list>
+        <app-movies-list 
+            [movies]="movies" 
+            [isDeleteModeOn]="isDeleteModeOn"
+            (onNewMovieId)="handleNewMovieId($event)"
+            class="w-full"
+        ></app-movies-list>
     </div>
 </div>

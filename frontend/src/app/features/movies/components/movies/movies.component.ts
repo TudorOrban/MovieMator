@@ -23,6 +23,8 @@ export class MoviesComponent implements OnInit {
         page: 1,
         itemsPerPage: 20
     };
+    isDeleteModeOn: boolean = false;
+    toBeDeletedMovieIds: number[] = [];
 
     constructor(
         private movieService: MovieService,
@@ -45,7 +47,32 @@ export class MoviesComponent implements OnInit {
         });
     }
 
-    handleSearchTextChange(newText: string): void {
-        
+    toggleDeleteMode(): void {
+        this.isDeleteModeOn = !this.isDeleteModeOn;
+    }
+
+    handleNewMovieId(id: number): void {
+        console.log("DASAA");
+        if (this.toBeDeletedMovieIds.includes(id)) {
+            this.toBeDeletedMovieIds = this.toBeDeletedMovieIds.filter(movieId => movieId !== id);
+        } else {
+            this.toBeDeletedMovieIds.push(id);
+        }
+    }
+
+    deleteMovies(): void {
+        console.log("SDA");
+        if (!this.isDeleteModeOn || this.toBeDeletedMovieIds.length === 0) return;
+
+        console.log("TBD", this.toBeDeletedMovieIds);
+
+        // this.movieService.deleteMovies(this.toBeDeletedMovieIds).subscribe({
+        //     next: () => {
+        //         console.log("Movies deleted successfully");
+        //     },
+        //     error: (error) => {
+        //         console.error("Error deleting movies: ", error);
+        //     }
+        // })
     }
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PaginatedResults } from '../../../../../shared/models/Search';
 import { MovieSearchDto } from '../../../models/Movie';
 import { CommonModule } from '@angular/common';
@@ -12,6 +12,10 @@ import { RouterModule } from '@angular/router';
 })
 export class MoviesListComponent {
     @Input() movies?: PaginatedResults<MovieSearchDto>;
+    @Input() isDeleteModeOn?: boolean = false;
+    @Output() onNewMovieId = new EventEmitter<number>();
 
-
+    handleCheckboxChange(movieId: number): void {
+        this.onNewMovieId.emit(movieId);
+    }
 }

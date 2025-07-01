@@ -22,6 +22,21 @@
         </div>
 
         <div class="flex items-center space-x-4">
+            <button *ngIf="!isDeleteModeOn" class="standard-action-button" (click)="handleToggleDeleteMode()">
+                <fa-icon 
+                    [icon]="faTrash" 
+                    class="hover:text-red-700"
+                    [ngClass]="{
+                        'text-red-700': isDeleteModeOn
+                    }"
+                />
+            </button>
+            <button *ngIf="isDeleteModeOn" class="standard-action-button" (click)="deleteMovies()">
+                <fa-icon
+                    [icon]="faCheck"
+                    class="text-red-700"
+                />
+            </button>
             <a [routerLink]="'/movies/add-movies'" class="standard-write-button space-x-2 whitespace-nowrap">
                 <fa-icon [icon]="faPlus"></fa-icon>
                 <div>

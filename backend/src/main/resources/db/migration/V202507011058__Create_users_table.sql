@@ -1,0 +1,9 @@
+-- V202507011058__Create_users_table.sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    cognito_user_id VARCHAR(255) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    display_name VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

@@ -1,4 +1,4 @@
-package com.moviemator.shared.service;
+package com.moviemator.shared.sanitization.service;
 
 import com.moviemator.features.movie.dto.CreateMovieDto;
 import com.moviemator.features.movie.dto.UpdateMovieDto;

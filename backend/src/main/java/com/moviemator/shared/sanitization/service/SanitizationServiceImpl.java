@@ -1,4 +1,4 @@
-package com.moviemator.shared.service;
+package com.moviemator.shared.sanitization.service;
 
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;

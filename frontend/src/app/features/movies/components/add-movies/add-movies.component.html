@@ -1,0 +1,169 @@
+<div class="page-std-padding-x page-std-padding-y">
+    <div class="text-2xl font-semibold py-8">
+        Create Movie
+    </div>
+
+    <form (ngSubmit)="onSubmit()">
+        <!-- Title -->
+        <div class="space-y-2">
+            <label for="title" class="form-label">Movie Name</label>
+            <input 
+                type="text" 
+                id="title" 
+                name="name" 
+                [(ngModel)]="movie.title"
+                required 
+                minlength="3"
+                class="form-input"
+                #movieTitleInput="ngModel"
+            >
+            <div 
+                *ngIf="hasBeenSubmitted() && movieTitleInput.invalid" 
+                class="form-error"
+            >
+                <div *ngIf="movieTitleInput.errors?.['required']">Movie title is required.</div>
+                <div *ngIf="movieTitleInput.errors?.['minlength']">Movie title must be at least 3 characters.</div>
+            </div>
+        </div>
+
+        <!-- Release Year -->
+        <div class="space-y-2 mt-4">
+            <label for="releaseYear" class="form-label">Release Year</label>
+            <input 
+                type="number"
+                id="releaseYear"
+                name="releaseYear"
+                [(ngModel)]="movie.releaseYear"
+                class="form-input"
+                #releaseYearInput="ngModel"
+                min="1800"
+                max="2025"
+                pattern="^[0-9]*$"
+            >
+            <div 
+                *ngIf="hasBeenSubmitted() && releaseYearInput.invalid" 
+                class="form-error"
+            >
+                <div *ngIf="releaseYearInput.errors?.['pattern']">Release year must be a valid number.</div>
+                <div *ngIf="releaseYearInput.errors?.['type']">Release year must be a valid number.</div>
+                <div *ngIf="releaseYearInput.errors?.['min']">Release year is too early (min {{ releaseYearInput.errors?.['min']?.min }}).</div>
+                <div *ngIf="releaseYearInput.errors?.['max']">Release year cannot be in the future (max {{ releaseYearInput.errors?.['max']?.max }}).</div>
+            </div>
+        </div>
+
+        <!-- Poster URL -->
+        <div class="space-y-2 mt-4">
+            <label for="posterUrl" class="form-label">Poster URL</label>
+            <input 
+                type="url"
+                id="posterUrl" 
+                name="posterUrl" 
+                [(ngModel)]="movie.posterUrl"
+                class="form-input"
+                #posterUrlInput="ngModel"
+            >
+            <div 
+                *ngIf="hasBeenSubmitted() && posterUrlInput.invalid" 
+                class="form-error"
+            >
+                <div *ngIf="posterUrlInput.errors?.['url']">Please enter a valid URL.</div>
+                <div *ngIf="posterUrlInput.errors?.['type']">Please enter a valid URL.</div>
+            </div>
+        </div>
+
+        <!-- Director -->
+        <div class="space-y-2 mt-4">
+            <label for="director" class="form-label">Director</label>
+            <input 
+                type="text" 
+                id="director" 
+                name="director" 
+                [(ngModel)]="movie.director"
+                class="form-input"
+                #directorInput="ngModel"
+                minlength="2" 
+                maxlength="100" 
+            >
+            <div 
+                *ngIf="hasBeenSubmitted() && directorInput.invalid" 
+                class="form-error"
+            >
+                <div *ngIf="directorInput.errors?.['minlength']">Director name must be at least 2 characters.</div>
+                <div *ngIf="directorInput.errors?.['maxlength']">Director name cannot exceed 100 characters.</div>
+            </div>
+        </div>
+
+        <!-- Plot Summary -->
+        <div class="space-y-2 mt-4">
+            <label for="plotSummary" class="form-label">Plot Summary</label>
+            <textarea 
+                id="plotSummary" 
+                name="plotSummary" 
+                [(ngModel)]="movie.plotSummary"
+                class="form-input"
+                rows="4"
+                minlength="10"
+                maxlength="1000"
+                #plotSummaryInput="ngModel"
+            ></textarea>
+            <div 
+                *ngIf="hasBeenSubmitted() && plotSummaryInput.invalid" 
+                class="form-error"
+            >
+                <div *ngIf="plotSummaryInput.errors?.['minlength']">Plot summary must be at least 10 characters.</div>
+                <div *ngIf="plotSummaryInput.errors?.['maxlength']">Plot summary cannot exceed 1000 characters.</div>
+            </div>
+        </div>
+
+        <!-- User Rating -->
+        <div class="space-y-2 mt-4">
+            <label for="userRating" class="form-label">Your Rating (1-10)</label>
+            <input 
+                type="number" 
+                id="userRating" 
+                name="userRating" 
+                [(ngModel)]="movie.userRating"
+                class="form-input"
+                #userRatingInput="ngModel"
+                min="1"
+                max="10"
+                pattern="^(10|[1-9])$"
+            >
+            <div 
+                *ngIf="hasBeenSubmitted() && userRatingInput.invalid" 
+                class="form-error"
+            >
+                <div *ngIf="userRatingInput.errors?.['pattern']">Rating must be a digit between 1 and 10.</div>
+                <div *ngIf="userRatingInput.errors?.['type']">Rating must be a valid number.</div>
+                <div *ngIf="userRatingInput.errors?.['min']">Rating must be at least {{ userRatingInput.errors?.['min']?.min }}.</div>
+                <div *ngIf="userRatingInput.errors?.['max']">Rating cannot exceed {{ userRatingInput.errors?.['max']?.max }}.</div>
+            </div>
+        </div>
+
+        <!-- User Review -->
+        <div class="space-y-2 mt-4">
+            <label for="userReview" class="form-label">Your Review</label>
+            <textarea 
+                id="userReview" 
+                name="userReview" 
+                [(ngModel)]="movie.userReview"
+                class="form-input"
+                rows="3" 
+                minlength="5"
+                maxlength="500"
+                #userReviewInput="ngModel"
+            ></textarea>
+            <div 
+                *ngIf="hasBeenSubmitted() && userReviewInput.invalid" 
+                class="form-error"
+            >
+                <div *ngIf="userReviewInput.errors?.['minlength']">Review must be at least 5 characters.</div>
+                <div *ngIf="userReviewInput.errors?.['maxlength']">Review cannot exceed 500 characters.</div>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-end w-full mt-4">
+            <button type="submit" class="standard-write-button">Create Movie</button>
+        </div>
+    </form>
+</div>

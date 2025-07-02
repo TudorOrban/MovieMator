@@ -48,6 +48,12 @@ export class MoviesComponent implements OnInit {
         });
     }
 
+    handleMovieFiltersChange(newFilters: MovieFilters): void {
+        console.log("Change: ", newFilters);
+        this.movieFilters = newFilters;
+        this.searchMovies();
+    }
+
     toggleDeleteMode(): void {
         this.isDeleteModeOn = !this.isDeleteModeOn;
     }

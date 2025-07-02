@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FilterOption, FilterType, MovieFilters } from '../../../../../../shared/models/Search';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { faCaretDown, faCaretUp, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { debounceTime, Subject, Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-filters-bar',
@@ -11,11 +12,29 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     templateUrl: './filters-bar.component.html',
     styleUrl: './filters-bar.component.css'
 })
-export class FiltersBarComponent {
+export class FiltersBarComponent implements OnInit , OnDestroy{
     @Input() movieFilters: MovieFilters = {};
     @Input() filterOptions: FilterOption[] = [];
     @Output() movieFiltersChanged = new EventEmitter<MovieFilters>();
     isExpanded: boolean = false;
+
+    private directorChangeSubject = new Subject<string | null>();
+    private directorSubscription!: Subscription;
+    
+    ngOnInit(): void {
+        this.directorSubscription = this.directorChangeSubject.pipe(
+            debounceTime(500)
+        ).subscribe(value => {
+            this.movieFilters.director = value || undefined;
+            this.emitFiltersChanged();
+        });
+    }
+
+    ngOnDestroy(): void {
+        if (this.directorSubscription) {
+            this.directorSubscription.unsubscribe();
+        }
+    }
 
     toggleExpanded(): void {
         this.isExpanded = !this.isExpanded;
@@ -27,8 +46,7 @@ export class FiltersBarComponent {
     }
 
     handleDirectorChange(value: string | null): void {
-        this.movieFilters.director = value || undefined;
-        this.emitFiltersChanged();
+        this.directorChangeSubject.next(value);
     }
 
     handleUserRatingChange(value: string | null, type: "From" | "To"): void {
@@ -37,7 +55,11 @@ export class FiltersBarComponent {
     }
 
     handleWatchedDateChange(value: string | null, type: "From" | "To"): void {
-        this.movieFilters[type === "From" ? "watchedDateFrom" : "watchedDateTo"] = value ? new Date(value) : undefined;
+        if (type === "From") {
+            this.movieFilters.watchedDateFrom = value || undefined;
+        } else {
+            this.movieFilters.watchedDateTo = value || undefined;
+        }
         this.emitFiltersChanged();
     }
     

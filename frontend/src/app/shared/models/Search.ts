@@ -28,8 +28,8 @@ export interface MovieFilters {
     director?: string;
     userRatingFrom?: number;
     userRatingTo?: number;
-    watchedDateFrom?: Date;
-    watchedDateTo?: Date;
+    watchedDateFrom?: string;
+    watchedDateTo?: string;
 }
 
 export interface FilterOption {

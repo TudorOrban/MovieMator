@@ -24,8 +24,8 @@ export class MovieService {
                     ...(movieFilters.director != null ? { director: movieFilters.director } : {}),
                     ...(movieFilters.userRatingFrom != null ? { userRatingFrom: movieFilters.userRatingFrom } : {}),
                     ...(movieFilters.userRatingTo != null ? { userRatingTo: movieFilters.userRatingTo } : {}),
-                    ...(movieFilters.watchedDateFrom != null ? { watchedDateFrom: movieFilters.watchedDateFrom.toISOString().split("T")[0] } : {}),
-                    ...(movieFilters.watchedDateTo != null ? { watchedDateTo: movieFilters.watchedDateTo.toISOString().split("T")[0] } : {}),
+                    ...(movieFilters.watchedDateFrom != null ? { watchedDateFrom: movieFilters.watchedDateFrom } : {}),
+                    ...(movieFilters.watchedDateTo != null ? { watchedDateTo: movieFilters.watchedDateTo } : {}),
                 }
             }
         );

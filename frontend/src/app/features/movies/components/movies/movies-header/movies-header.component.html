@@ -52,5 +52,6 @@
 
     <app-filters-bar
         [filterOptions]="searchConfig.filterOptions"
+        (movieFiltersChanged)="handleMovieFiltersChange($event)"
     ></app-filters-bar>
 </div>

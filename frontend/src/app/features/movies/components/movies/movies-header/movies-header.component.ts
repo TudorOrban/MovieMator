@@ -22,7 +22,7 @@ export class MoviesHeaderComponent {
     @Input() movieFilters: MovieFilters = {};
     @Input() isDeleteModeOn: boolean = false;
     @Output() searchParamsChanged = new EventEmitter<void>();
-    @Output() movieFiltersChanged = new EventEmitter<void>();
+    @Output() movieFiltersChanged = new EventEmitter<MovieFilters>();
     @Output() deleteModeToggled = new EventEmitter<void>();
     @Output() onDeleteMovies = new EventEmitter<void>();
 
@@ -43,9 +43,9 @@ export class MoviesHeaderComponent {
         this.searchParamsChanged.emit();
     }
 
-    handleDirectorFilterChange(directorText: string): void {
-        this.movieFilters.director = directorText;
-        this.movieFiltersChanged.emit();
+    handleMovieFiltersChange(newFilters: MovieFilters) {
+        this.movieFilters = newFilters;
+        this.movieFiltersChanged.emit(newFilters);
     }
 
     handleToggleDeleteMode(): void {

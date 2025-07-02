@@ -8,12 +8,6 @@
     margin-bottom: 1.5rem;
 }
 
-.filter-group-wrapper {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1rem;
-}
-
 .filter-group {
     display: flex;
     flex-direction: column;

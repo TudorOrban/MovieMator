@@ -123,7 +123,6 @@ export class AuthService {
                 }
             },
             error: (error) => {
-                console.error("AuthService: Error checking user existence in backend:", error);
                 this.createDatabaseUser(cognitoUserId, email); 
             }
         });

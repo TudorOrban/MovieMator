@@ -1,5 +1,6 @@
 package com.moviemator.features.movie.controller;
 
+import com.moviemator.core.user.service.UserService;
 import com.moviemator.features.movie.dto.CreateMovieDto;
 import com.moviemator.features.movie.dto.MovieDataDto;
 import com.moviemator.features.movie.dto.MovieSearchDto;
@@ -11,6 +12,7 @@ import com.moviemator.shared.search.models.SearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -21,13 +23,19 @@ import java.util.List;
 public class MovieController {
 
     private final MovieService movieService;
+    private final UserService userService;
 
     @Autowired
-    public MovieController(MovieService movieService) {
+    public MovieController(
+            MovieService movieService,
+            UserService userService
+    ) {
         this.movieService = movieService;
+        this.userService = userService;
     }
 
     @GetMapping("/search/user/{userId}")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isSearchingOwnMovies(#userId, authentication)")
     public ResponseEntity<PaginatedResults<MovieSearchDto>> searchMovies(
             @PathVariable Long userId,
             @RequestParam(value = "searchText", required = false, defaultValue = "") String searchText,
@@ -57,30 +65,35 @@ public class MovieController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isMovieOwnerById(#id, authentication)")
     public ResponseEntity<MovieDataDto> getMovieById(@PathVariable Long id) {
         MovieDataDto movie = movieService.getMovieById(id);
         return ResponseEntity.ok(movie);
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isMovieOwnerForCreate(#movieDto, authentication)")
     public ResponseEntity<MovieDataDto> createMovie(@RequestBody CreateMovieDto movieDto) {
         MovieDataDto createdMovie = movieService.createMovie(movieDto);
         return ResponseEntity.ok(createdMovie);
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isMovieOwnerForUpdate(#movieDto, authentication)")
     public ResponseEntity<MovieDataDto> updateMovie(@RequestBody UpdateMovieDto movieDto) {
         MovieDataDto updatedMovie = movieService.updateMovie(movieDto);
         return ResponseEntity.ok(updatedMovie);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isMovieOwnerById(#id, authentication)")
     public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
         movieService.deleteMovie(id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/bulk")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.areAllMoviesOwnedByAuthenticatedUser(#ids, authentication)")
     public ResponseEntity<Void> deleteMovies(@RequestBody List<Long> ids) {
         movieService.deleteMovies(ids);
         return ResponseEntity.ok().build();

@@ -59,9 +59,9 @@ public class MovieServiceImpl implements MovieService {
         if (!userRepository.existsById(sanitizedDto.getUserId())) {
             throw new ResourceNotFoundException(sanitizedDto.getUserId().toString(), ResourceType.USER, ResourceIdentifierType.ID);
         }
-        if (movieRepository.hasNonUniqueTitle(sanitizedDto.getUserId(), sanitizedDto.getTitle())) {
-            throw new ResourceAlreadyExistsException(sanitizedDto.getTitle(), ResourceType.MOVIE, ResourceIdentifierType.TITLE);
-        }
+//        if (movieRepository.hasNonUniqueTitle(sanitizedDto.getUserId(), sanitizedDto.getTitle())) {
+//            throw new ResourceAlreadyExistsException(sanitizedDto.getTitle(), ResourceType.MOVIE, ResourceIdentifierType.TITLE);
+//        }
 
         Movie movie = MovieDtoMapper.INSTANCE.createMovieDtoToMovie(sanitizedDto);
 

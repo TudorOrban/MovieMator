@@ -37,16 +37,14 @@ public class UserController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.canCreateUserWithCognitoId(#userDto, authentication)")
     public ResponseEntity<UserDataDto> createUser(@RequestBody CreateUserDto userDto, Authentication authentication) {
-        if (!userDto.getCognitoUserId().equals(authentication.getName())) { // Check within method due to @RequestBody timing issues
-            throw new AccessDeniedException("User cannot create a user with a different Cognito ID.");
-        }
         UserDataDto createdUser = userService.createUser(userDto);
         return ResponseEntity.ok(createdUser);
     }
 
     @PutMapping
-    @PreAuthorize("hasRole('ADMIN') or (#userDto.id == @userService.getUserByCognitoUserId(#authentication.name).id)")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.canUpdateUser(#userDto, authentication)")
     public ResponseEntity<UserDataDto> updateUser(@RequestBody UpdateUserDto userDto) {
         UserDataDto updatedUser = userService.updateUser(userDto);
         return ResponseEntity.ok(updatedUser);

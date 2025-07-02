@@ -1,5 +1,7 @@
 package com.moviemator.shared.sanitization.service;
 
+import com.moviemator.core.user.dto.CreateUserDto;
+import com.moviemator.core.user.dto.UpdateUserDto;
 import com.moviemator.features.movie.dto.CreateMovieDto;
 import com.moviemator.features.movie.dto.UpdateMovieDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,19 @@ public class EntitySanitizerServiceImpl implements EntitySanitizerService {
     @Autowired
     public EntitySanitizerServiceImpl(SanitizationService sanitizationService) {
         this.sanitizationService = sanitizationService;
+    }
+
+    public CreateUserDto sanitizeCreateUserDto(CreateUserDto userDto) {
+        userDto.setCognitoUserId(sanitizationService.sanitize(userDto.getCognitoUserId()));
+        userDto.setEmail(sanitizationService.sanitize(userDto.getEmail()));
+
+        return userDto;
+    }
+
+    public UpdateUserDto sanitizeUpdateUserDto(UpdateUserDto userDto) {
+        userDto.setDisplayName(sanitizationService.sanitize(userDto.getDisplayName()));
+
+        return userDto;
     }
 
     public CreateMovieDto sanitizeCreateMovieDto(CreateMovieDto movieDto) {

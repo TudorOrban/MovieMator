@@ -7,6 +7,8 @@ import com.moviemator.features.movie.dto.UpdateMovieDto;
 import com.moviemator.shared.search.models.PaginatedResults;
 import com.moviemator.shared.search.models.SearchParams;
 
+import java.util.List;
+
 public interface MovieService {
 
     PaginatedResults<MovieSearchDto> searchMovies(Long userId, SearchParams searchParams);
@@ -14,4 +16,5 @@ public interface MovieService {
     MovieDataDto createMovie(CreateMovieDto movieDto);
     MovieDataDto updateMovie(UpdateMovieDto movieDto);
     void deleteMovie(Long id);
+    void deleteMovies(List<Long> ids);
 }

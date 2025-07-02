@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/movies")
 public class MovieController {
@@ -61,6 +63,12 @@ public class MovieController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
         movieService.deleteMovie(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/bulk")
+    public ResponseEntity<Void> deleteMovies(@RequestBody List<Long> ids) {
+        movieService.deleteMovies(ids);
         return ResponseEntity.ok().build();
     }
 }

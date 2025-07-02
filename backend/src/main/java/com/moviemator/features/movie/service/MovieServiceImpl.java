@@ -11,8 +11,11 @@ import com.moviemator.shared.error.types.ResourceType;
 import com.moviemator.shared.sanitization.service.EntitySanitizerService;
 import com.moviemator.shared.search.models.PaginatedResults;
 import com.moviemator.shared.search.models.SearchParams;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -89,5 +92,14 @@ public class MovieServiceImpl implements MovieService {
                 .orElseThrow(() -> new ResourceNotFoundException(id.toString(), ResourceType.MOVIE, ResourceIdentifierType.ID));
 
         movieRepository.delete(existingMovie);
+    }
+
+    @Transactional
+    public void deleteMovies(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return;
+        }
+
+        movieRepository.deleteAllById(ids);
     }
 }

@@ -9,7 +9,7 @@ const amplifyConfig: ResourcesConfig = {
         Cognito: {
             userPoolId: "us-east-1_EArhE3MoU",
             userPoolClientId: "21h2ksv965lm901q9vum6ekhll",
-            identityPoolId: "us-east-1:dummy-identity-pool-id",
+            // identityPoolId: "us-east-1:dummy-identity-pool-id",
         },
     },
 };

@@ -17,7 +17,7 @@ public interface UserDtoMapper {
     @Mapping(source = "user.updatedAt", target = "updatedAt")
     UserDataDto userToUserDataDto(User user);
 
-    @Mapping(source = "user.cognitoUserId", target = "cognitoUserId")
-    @Mapping(source = "user.email", target = "email")
+    @Mapping(source = "cognitoUserId", target = "cognitoUserId")
+    @Mapping(source = "email", target = "email")
     User createUserDtoToUser(CreateUserDto userDto);
 }

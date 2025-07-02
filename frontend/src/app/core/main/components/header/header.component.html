@@ -8,10 +8,16 @@
         <a [href]="'/movies'" class="text-xl font-semibold">Movies</a>
     </div>
 
-    <a [routerLink]="'/signup'">
-        Sign Up
-    </a>
-    <a [routerLink]="'/login'">
-        Login
-    </a>
+    <div *ngIf="!isLoggedIn" class="flex items-center space-x-4">
+        <a [routerLink]="'/signup'">
+            Sign Up
+        </a>
+        <a [routerLink]="'/login'">
+            Login
+        </a>
+    </div>
+
+    <button *ngIf="isLoggedIn" (click)="logOut()">
+        Logout
+    </button>
 </div>

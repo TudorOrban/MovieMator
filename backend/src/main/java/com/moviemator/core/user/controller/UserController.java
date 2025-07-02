@@ -6,6 +6,9 @@ import com.moviemator.core.user.dto.UserDataDto;
 import com.moviemator.core.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,30 +23,37 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or (#id == @userService.getUserByCognitoUserId(#authentication.name).id)")
     public ResponseEntity<UserDataDto> getUserById(@PathVariable Long id) {
         UserDataDto user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
     @GetMapping("/cognito-id/{cognitoUserId}")
+    @PreAuthorize("hasRole('ADMIN') or (#cognitoUserId == authentication.name)")
     public ResponseEntity<UserDataDto> getUserByCognitoUserId(@PathVariable String cognitoUserId) {
         UserDataDto user = userService.getUserByCognitoUserId(cognitoUserId);
         return ResponseEntity.ok(user);
     }
 
     @PostMapping
-    public ResponseEntity<UserDataDto> createUser(@RequestBody CreateUserDto userDto) {
+    public ResponseEntity<UserDataDto> createUser(@RequestBody CreateUserDto userDto, Authentication authentication) {
+        if (!userDto.getCognitoUserId().equals(authentication.getName())) { // Check within method due to @RequestBody timing issues
+            throw new AccessDeniedException("User cannot create a user with a different Cognito ID.");
+        }
         UserDataDto createdUser = userService.createUser(userDto);
         return ResponseEntity.ok(createdUser);
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('ADMIN') or (#userDto.id == @userService.getUserByCognitoUserId(#authentication.name).id)")
     public ResponseEntity<UserDataDto> updateUser(@RequestBody UpdateUserDto userDto) {
         UserDataDto updatedUser = userService.updateUser(userDto);
         return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok().build();

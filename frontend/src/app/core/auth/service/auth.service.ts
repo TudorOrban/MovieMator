@@ -35,6 +35,8 @@ export class AuthService {
                 this._isAuthenticatedSubject.next(true);
                 this._cognitoUserDataSubject.next(currentUser);
                 this._accessTokenSubject.next(authSession.tokens.accessToken.toString());
+                console.log("Cu", currentUser);
+                console.log("Au", authSession.userSub, authSession.tokens);
                 this.loadCurrentUser(authSession.userSub);
             } else {
                 this.clearAllAuthStates();
@@ -100,7 +102,9 @@ export class AuthService {
         if (result.nextStep) {
             console.log("AuthService: Next step required:", result.nextStep.signInStep);
         }
-        if (!result.isSignedIn) return;
+        if (!result.isSignedIn) {
+            return;
+        }
 
         const session = await fetchAuthSession();
         const cognitoUserId = session.userSub;
@@ -110,7 +114,7 @@ export class AuthService {
             return;
         }
 
-        this.userService.getUserByCognitoUserId(cognitoUserId).pipe(take(1)).subscribe({
+        this.userService.getUserByCognitoUserId(cognitoUserId).subscribe({
             next: (data) => {
                 if (data) {
                     this._currentUserSubject.next(data);
@@ -144,8 +148,10 @@ export class AuthService {
     }
 
     private loadCurrentUser(cognitoUserId: string): void {
-        this.userService.getUserByCognitoUserId(cognitoUserId).pipe(take(1)).subscribe({
-            next: (userData) => this._currentUserSubject.next(userData),
+        this.userService.getUserByCognitoUserId(cognitoUserId).subscribe({
+            next: (userData) => {
+                this._currentUserSubject.next(userData);
+            },
             error: (err) => {
                 console.error("AuthService: Failed to load current app user:", err);
                 this._currentUserSubject.next(null);

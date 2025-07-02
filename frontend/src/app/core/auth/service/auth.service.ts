@@ -1,7 +1,6 @@
 import { inject, Injectable } from "@angular/core";
-import { AuthenticatedResult, LoginResponse, OidcSecurityService } from "angular-auth-oidc-client";
-import { BehaviorSubject, Observable } from "rxjs";
-import { signUp, confirmSignUp, signIn, SignInOutput, fetchAuthSession, signOut, getCurrentUser } from "aws-amplify/auth"; 
+import { BehaviorSubject, Observable, filter, switchMap, take } from "rxjs";
+import { signUp, confirmSignUp, signIn, SignInOutput, fetchAuthSession, signOut, getCurrentUser } from "aws-amplify/auth";
 import { UserService } from "./user.service";
 import { CreateUserDto, UserDataDto } from "../models/User";
 
@@ -9,38 +8,40 @@ import { CreateUserDto, UserDataDto } from "../models/User";
     providedIn: "root"
 })
 export class AuthService {
-    private readonly oidcSecurityService = inject(OidcSecurityService);
+    private _isAuthenticatedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    isAuthenticated$: Observable<boolean> = this._isAuthenticatedSubject.asObservable();
 
-    isAuthenticated$: Observable<AuthenticatedResult> = this.oidcSecurityService.isAuthenticated$;
-    userData$: Observable<any> = this.oidcSecurityService.userData$;
-    accessToken$: Observable<string> = this.oidcSecurityService.getAccessToken();
+    private _cognitoUserDataSubject: BehaviorSubject<any | null> = new BehaviorSubject<any | null>(null);
+    cognitoUserData$: Observable<any | null> = this._cognitoUserDataSubject.asObservable();
+    
+    private _accessTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+    accessToken$: Observable<string | null> = this._accessTokenSubject.asObservable(); 
+    
+    private readonly userService = inject(UserService);
 
-    private _currentUserSubject: BehaviorSubject<UserDataDto | undefined> = new BehaviorSubject<UserDataDto | undefined>(undefined);
-    currentUser$: Observable<UserDataDto | undefined> = this._currentUserSubject.asObservable();
+    private _currentUserSubject: BehaviorSubject<UserDataDto | null> = new BehaviorSubject<UserDataDto | null>(null);
+    currentUser$: Observable<UserDataDto | null> = this._currentUserSubject.asObservable();
 
-    constructor(private readonly userService: UserService) {
-        this.oidcSecurityService.checkAuth().subscribe((response: LoginResponse) => {
-            const { isAuthenticated, userData, accessToken, idToken } = response;
-            console.log("Response: ", response);
-            
-            this.checkAmplifyAuthState(); // Call the diagnostic method here
-            
-            if (isAuthenticated && userData) {
-                this.loadCurrentUser(userData.sub);
-            } else {
-                this._currentUserSubject.next(undefined);
-            }
-        });
+    constructor() {
+        this.loadUserIfAuthenticated();
     }
 
-    private async checkAmplifyAuthState(): Promise<void> {
+    private async loadUserIfAuthenticated(): Promise<void> {
         try {
             const currentUser = await getCurrentUser();
-            console.log("AuthService: DIAGNOSTIC - Amplify's getCurrentUser() result:", currentUser);
             const authSession = await fetchAuthSession();
-            console.log("AuthService: DIAGNOSTIC - Amplify's fetchAuthSession() result:", authSession);
+
+            if (currentUser && authSession.userSub && authSession.tokens?.accessToken) {
+                this._isAuthenticatedSubject.next(true);
+                this._cognitoUserDataSubject.next(currentUser);
+                this._accessTokenSubject.next(authSession.tokens.accessToken.toString());
+                this.loadCurrentUser(authSession.userSub);
+            } else {
+                this.clearAllAuthStates();
+            }
         } catch (e: any) {
-            console.log("AuthService: DIAGNOSTIC - Amplify's Auth state check failed (expected if not signed in):", e.name, e.message);
+            console.log("AuthService: No active Amplify session found on load or session invalid:", e.name);
+            this.clearAllAuthStates();
         }
     }
 
@@ -49,13 +50,8 @@ export class AuthService {
             const result = await signUp({
                 username: email,
                 password: password,
-                options: {
-                    userAttributes: {
-                        email: email
-                    }
-                }
+                options: { userAttributes: { email: email } }
             });
-            console.log("AuthService: SignUp successful:", result);
             return result;
         } catch (error: any) {
             console.error("AuthService: SignUp error:", error);
@@ -66,24 +62,37 @@ export class AuthService {
     async confirmSignUp(email: string, code: string): Promise<any> {
         try {
             const result = await confirmSignUp({ username: email, confirmationCode: code });
-            
             return result;
         } catch (error: any) {
             console.error("AuthService: Confirm SignUp error:", error);
             throw error;
         }
     }
-    
+
     async login(email: string, password: string): Promise<any> {
         try {
             const result = await signIn({ username: email, password: password });
-            
-            await this.runLoginChecks(result, email);
-
+            if (result.isSignedIn) {
+                await this.updateAmplifyAuthStates();
+                await this.runLoginChecks(result, email);
+            }
             return result;
         } catch (error: any) {
             console.error("AuthService: Direct Login error:", error);
             throw error;
+        }
+    }
+
+    private async updateAmplifyAuthStates(): Promise<void> {
+        try {
+            const currentUser = await getCurrentUser();
+            const authSession = await fetchAuthSession();
+            this._isAuthenticatedSubject.next(true);
+            this._cognitoUserDataSubject.next(currentUser);
+            this._accessTokenSubject.next(authSession.tokens?.accessToken?.toString() || null);
+        } catch (e) {
+            console.error("AuthService: Error updating Amplify auth states:", e);
+            this.clearAllAuthStates();
         }
     }
 
@@ -97,63 +106,57 @@ export class AuthService {
         const cognitoUserId = session.userSub;
 
         if (!cognitoUserId) {
-            console.error("Missing Cognito User Id in SignIn response");
+            console.error("AuthService: Missing Cognito User Id in SignIn response");
             return;
         }
 
-        this.userService.getUserByCognitoUserId(cognitoUserId).subscribe({
+        this.userService.getUserByCognitoUserId(cognitoUserId).pipe(take(1)).subscribe({
             next: (data) => {
                 if (data) {
-                    console.log("Found user already: ", data.id);
                     this._currentUserSubject.next(data);
                 } else {
                     this.createDatabaseUser(cognitoUserId, email);
                 }
             },
             error: (error) => {
-                this.createDatabaseUser(cognitoUserId, email);
+                console.error("AuthService: Error checking user existence in backend:", error);
+                this.createDatabaseUser(cognitoUserId, email); 
             }
         });
     }
 
-    private async createDatabaseUser(cognitoUserId: string, email: string): Promise<any> {
-        const userDto: CreateUserDto = {
-            cognitoUserId: cognitoUserId,
-            email: email
-        };
-
-        this.userService.createUser(userDto).subscribe({
-            next: (data) => {
-                console.log("User created successfully: ", data.id);
-                this._currentUserSubject.next(data);
-            },
-            error: (error) => {
-                console.error("Error creating user: ", error);
-            }
+    private async createDatabaseUser(cognitoUserId: string, email: string): Promise<void> {
+        const userDto: CreateUserDto = { cognitoUserId: cognitoUserId, email: email };
+        this.userService.createUser(userDto).pipe(take(1)).subscribe({
+            next: (data) => this._currentUserSubject.next(data),
+            error: (error) => console.error("AuthService: Error creating user:", error)
         });
-    }
-
-    redirectToHostedLogin(): void {
-        this.oidcSecurityService.authorize();
     }
 
     async logout(): Promise<void> {
-        await signOut();
-        this._currentUserSubject.next(undefined);
-        this.oidcSecurityService.logoff();
+        try {
+            await signOut();
+            this.clearAllAuthStates();
+        } catch (error: any) {
+            console.error("AuthService: Error during logout:", error);
+            this.clearAllAuthStates();
+        }
     }
 
     private loadCurrentUser(cognitoUserId: string): void {
-        console.log("SDA");
-        this.userService.getUserByCognitoUserId(cognitoUserId).subscribe({
-            next: (userData) => {
-                this._currentUserSubject.next(userData);
-                console.log("AuthService: Current app user loaded:", userData);
-            },
+        this.userService.getUserByCognitoUserId(cognitoUserId).pipe(take(1)).subscribe({
+            next: (userData) => this._currentUserSubject.next(userData),
             error: (err) => {
                 console.error("AuthService: Failed to load current app user:", err);
-                this._currentUserSubject.next(undefined);
+                this._currentUserSubject.next(null);
             }
         });
+    }
+
+    private clearAllAuthStates(): void {
+        this._isAuthenticatedSubject.next(false);
+        this._cognitoUserDataSubject.next(null);
+        this._accessTokenSubject.next(null);
+        this._currentUserSubject.next(null);
     }
 }

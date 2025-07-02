@@ -1,29 +1,33 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../auth/service/auth.service';
 import { CommonModule } from '@angular/common';
+import { UserbarComponent } from "../userbar/userbar.component";
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-header',
-    imports: [CommonModule, RouterModule],
+    imports: [CommonModule, RouterModule, UserbarComponent],
     templateUrl: './header.component.html',
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
     isLoggedIn: boolean = false;
+
+    private subscription: Subscription = new Subscription();
 
     constructor(
         private readonly authService: AuthService
     ) {}
 
     ngOnInit(): void {
-        this.authService.isAuthenticated$.subscribe({
+        this.subscription = this.authService.isAuthenticated$.subscribe({
             next: (data) => {
-                this.isLoggedIn = data.isAuthenticated;
+                this.isLoggedIn = data;
             }
         });
     }
 
-    logOut(): void {
-        this.authService.logout();
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 }

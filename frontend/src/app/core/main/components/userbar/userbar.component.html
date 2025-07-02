@@ -1,1 +1,20 @@
-<p>userbar works!</p>
+<div class="relative">
+    <button class="w-10 h-10 bg-purple-600 rounded-full cursor-pointer" (click)="toggleExpanded()">
+        <fa-icon [icon]="faUser"/>
+    </button>
+    <div *ngIf="isExpanded" class="absolute top-0 right-0 mt-12 w-40 p-4 space-y-4 bg-white border border-gray-300 rounded-b-md shadow-md text-black">
+        <div class="text-lg font-semibold">
+            {{ currentUser?.displayName ?? 'Username: ?' }}
+        </div>
+
+        <div>
+            <a [routerLink]="'/edit-profile'" class="py-2 text-gray-800 font-semibold hover:text-black cursor-pointer">
+                Edit Profile
+            </a>
+        </div>
+
+        <button (click)="logOut()" class="standard-auth-button">
+            Logout
+        </button>
+    </div>
+</div>

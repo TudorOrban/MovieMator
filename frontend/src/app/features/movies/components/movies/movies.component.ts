@@ -1,20 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MovieFilters, PaginatedResults, SearchParams } from '../../../../shared/models/Search';
 import { MovieSearchDto } from '../../models/Movie';
 import { MovieService } from '../../services/movie.service';
 import { MoviesHeaderComponent } from "./movies-header/movies-header.component";
 import { MoviesListComponent } from "./movies-list/movies-list.component";
+import { AuthService } from '../../../../core/auth/service/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-movies',
     imports: [CommonModule, FontAwesomeModule, MoviesHeaderComponent, MoviesListComponent],
     templateUrl: './movies.component.html',
 })
-export class MoviesComponent implements OnInit {
+export class MoviesComponent implements OnInit, OnDestroy {
     movies?: PaginatedResults<MovieSearchDto>;
-    userId?: number = 1; // Placeholder
+    userId?: number;
     searchParams: SearchParams = {
         searchText: "",
         sortBy: "createdAt",
@@ -27,12 +29,27 @@ export class MoviesComponent implements OnInit {
     isDeleteModeOn: boolean = false;
     toBeDeletedMovieIds: number[] = [];
 
+    private subscription: Subscription = new Subscription();
+
     constructor(
-        private movieService: MovieService,
+        private readonly movieService: MovieService,
+        private readonly authService: AuthService
     ) {}
 
     ngOnInit() {
-        this.searchMovies();
+        this.subscription = this.authService.currentUser$.subscribe({
+            next: (data) => {
+                this.userId = data?.id;
+                this.searchMovies();
+            },
+            error: (error) => {
+                console.error("Error getting current user: ", error);
+            }
+        })
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
     searchMovies(): void {
@@ -49,7 +66,6 @@ export class MoviesComponent implements OnInit {
     }
 
     handleMovieFiltersChange(newFilters: MovieFilters): void {
-        console.log("Change: ", newFilters);
         this.movieFilters = newFilters;
         this.searchMovies();
     }

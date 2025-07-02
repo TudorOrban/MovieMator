@@ -1,32 +1,58 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { CreateMovieDto } from '../../models/Movie';
 import { MovieService } from '../../services/movie.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../../core/auth/service/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-add-movies',
     imports: [CommonModule, FormsModule],
     templateUrl: './add-movies.component.html',
 })
-export class AddMoviesComponent {
+export class AddMoviesComponent implements OnInit, OnDestroy {
     movie: CreateMovieDto = {
-        userId: 1, // Placeholder
+        userId: -1,
         tmdbId: -1,
         title: ""
     }
     hasBeenSubmitted = signal(false);
 
+    private subscription: Subscription = new Subscription();
+
     constructor(
         private readonly movieService: MovieService,
+        private readonly authService: AuthService,
         private readonly router: Router
     ) {}
+
+    ngOnInit() {
+        this.subscription = this.authService.currentUser$.subscribe({
+            next: (data) => {
+                if (!data) {
+                    this.router.navigate(["/signup"]);
+                    return;
+                }
+                this.movie.userId = data?.id;
+            },
+            error: (error) => {
+                console.error("Error getting current user: ", error);
+                this.router.navigate(["/signup"]);
+            }
+        })
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
+    }
 
     onSubmit(): void {
         this.hasBeenSubmitted.set(true);
         
-        if (!this.movie.title) {
+        if (!this.movie.userId || !this.movie.title) {
+            console.error("Missing userId or title");
             return;
         }
         

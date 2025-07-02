@@ -4,20 +4,20 @@
     </div>
 
     <div class="flex items-center space-x-20">
-        <a [href]="''" class="text-xl font-semibold">Home</a>
-        <a [href]="'/movies'" class="text-xl font-semibold">Movies</a>
+        <a [routerLink]="''" class="text-xl font-semibold">Home</a>
+        <a [routerLink]="'/movies'" class="text-xl font-semibold">Movies</a>
     </div>
 
     <div *ngIf="!isLoggedIn" class="flex items-center space-x-4">
-        <a [routerLink]="'/signup'">
+        <a [routerLink]="'/signup'" class="standard-auth-button">
             Sign Up
         </a>
-        <a [routerLink]="'/login'">
+        <a [routerLink]="'/login'" class="standard-auth-button">
             Login
         </a>
     </div>
 
-    <button *ngIf="isLoggedIn" (click)="logOut()">
-        Logout
-    </button>
+    <div *ngIf="isLoggedIn">
+        <app-userbar></app-userbar>
+    </div>
 </div>

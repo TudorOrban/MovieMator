@@ -6,8 +6,7 @@ import { HeaderComponent } from "./core/main/components/header/header.component"
     selector: 'app-root',
     imports: [RouterOutlet, HeaderComponent],
     templateUrl: './app.component.html',
-    styleUrl: './app.component.css'
 })
 export class AppComponent {
-    title = "movie-mator";
+    
 }

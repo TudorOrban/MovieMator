@@ -8,7 +8,6 @@ import { RouterModule } from '@angular/router';
     selector: 'app-movies-list',
     imports: [CommonModule, RouterModule],
     templateUrl: './movies-list.component.html',
-    styleUrl: './movies-list.component.css'
 })
 export class MoviesListComponent {
     @Input() movies?: PaginatedResults<MovieSearchDto>;

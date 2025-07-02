@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { PaginatedResults, SearchParams } from '../../../../shared/models/Search';
+import { MovieFilters, PaginatedResults, SearchParams } from '../../../../shared/models/Search';
 import { MovieSearchDto } from '../../models/Movie';
 import { MovieService } from '../../services/movie.service';
 import { MoviesHeaderComponent } from "./movies-header/movies-header.component";
@@ -11,7 +11,6 @@ import { MoviesListComponent } from "./movies-list/movies-list.component";
     selector: 'app-movies',
     imports: [CommonModule, FontAwesomeModule, MoviesHeaderComponent, MoviesListComponent],
     templateUrl: './movies.component.html',
-    styleUrl: './movies.component.css'
 })
 export class MoviesComponent implements OnInit {
     movies?: PaginatedResults<MovieSearchDto>;
@@ -23,6 +22,8 @@ export class MoviesComponent implements OnInit {
         page: 1,
         itemsPerPage: 20
     };
+    movieFilters: MovieFilters = {}
+
     isDeleteModeOn: boolean = false;
     toBeDeletedMovieIds: number[] = [];
 
@@ -37,7 +38,7 @@ export class MoviesComponent implements OnInit {
     searchMovies(): void {
         if (!this.userId) return;
 
-        this.movieService.searchMovies(this.userId, this.searchParams).subscribe({
+        this.movieService.searchMovies(this.userId, this.searchParams, this.movieFilters).subscribe({
             next: (data) => {
                 this.movies = data;
             },
@@ -64,7 +65,6 @@ export class MoviesComponent implements OnInit {
 
         this.movieService.deleteMovies(this.toBeDeletedMovieIds).subscribe({
             next: () => {
-                console.log("Movies deleted successfully");
                 this.isDeleteModeOn = false;
                 this.searchMovies();
             },

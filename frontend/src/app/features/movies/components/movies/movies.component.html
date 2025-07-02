@@ -2,6 +2,7 @@
     <app-movies-header
         [searchParams]="searchParams"
         [totalCount]="movies?.totalCount"
+        [movieFilters]="movieFilters"
         [isDeleteModeOn]="isDeleteModeOn"
         (searchParamsChanged)="searchMovies()"
         (deleteModeToggled)="toggleDeleteMode()"

@@ -3,23 +3,26 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus, faArrowUpWideShort, faArrowDownShortWide, faTrash, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { SearchInputComponent } from "../../../../../shared/common/components/search-input/search-input.component";
-import { PageSearchConfiguration, SearchParams } from '../../../../../shared/models/Search';
+import { MovieFilters, PageSearchConfiguration, SearchParams } from '../../../../../shared/models/Search';
 import { pagesSearchConfiguration } from '../../../../../core/main/config/pagesStandardConfig';
 import { UIItem } from '../../../../../shared/models/UI';
 import { RouterModule } from '@angular/router';
 import { SelectorComponent } from "../../../../../shared/common/components/selector/selector.component";
+import { FiltersBarComponent } from "./filters-bar/filters-bar.component";
 
 @Component({
     selector: 'app-movies-header',
-    imports: [CommonModule, RouterModule, FontAwesomeModule, SearchInputComponent, SelectorComponent],
+    imports: [CommonModule, RouterModule, FontAwesomeModule, SearchInputComponent, SelectorComponent, FiltersBarComponent],
     templateUrl: './movies-header.component.html',
     styleUrl: './movies-header.component.css'
 })
 export class MoviesHeaderComponent {
     @Input() searchParams!: SearchParams;
     @Input() totalCount?: number = 0;
+    @Input() movieFilters: MovieFilters = {};
     @Input() isDeleteModeOn: boolean = false;
     @Output() searchParamsChanged = new EventEmitter<void>();
+    @Output() movieFiltersChanged = new EventEmitter<void>();
     @Output() deleteModeToggled = new EventEmitter<void>();
     @Output() onDeleteMovies = new EventEmitter<void>();
 
@@ -38,6 +41,11 @@ export class MoviesHeaderComponent {
     handleToggleIsAscending(): void {
         this.searchParams.isAscending = !this.searchParams.isAscending;
         this.searchParamsChanged.emit();
+    }
+
+    handleDirectorFilterChange(directorText: string): void {
+        this.movieFilters.director = directorText;
+        this.movieFiltersChanged.emit();
     }
 
     handleToggleDeleteMode(): void {

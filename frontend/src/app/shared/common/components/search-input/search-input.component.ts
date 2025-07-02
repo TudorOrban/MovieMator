@@ -8,7 +8,6 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-search-input',
     imports: [CommonModule, FontAwesomeModule, FormsModule],
     templateUrl: './search-input.component.html',
-    styleUrl: './search-input.component.css'
 })
 export class SearchInputComponent {
     @Output() onSearch = new EventEmitter<string>();

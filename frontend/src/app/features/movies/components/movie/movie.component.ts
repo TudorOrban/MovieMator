@@ -7,7 +7,6 @@ import { MovieDataDto } from '../../models/Movie';
     selector: 'app-movie',
     imports: [],
     templateUrl: './movie.component.html',
-    styleUrl: './movie.component.css'
 })
 export class MovieComponent {
     movieId?: number;

@@ -9,6 +9,7 @@ import com.moviemator.shared.error.types.ResourceIdentifierType;
 import com.moviemator.shared.error.types.ResourceNotFoundException;
 import com.moviemator.shared.error.types.ResourceType;
 import com.moviemator.shared.sanitization.service.EntitySanitizerService;
+import com.moviemator.shared.search.models.MovieFilters;
 import com.moviemator.shared.search.models.PaginatedResults;
 import com.moviemator.shared.search.models.SearchParams;
 import jakarta.transaction.Transactional;
@@ -36,8 +37,8 @@ public class MovieServiceImpl implements MovieService {
         this.sanitizerService = sanitizerService;
     }
 
-    public PaginatedResults<MovieSearchDto> searchMovies(Long userId, SearchParams searchParams) {
-        PaginatedResults<Movie> results = movieRepository.searchMovies(userId, searchParams);
+    public PaginatedResults<MovieSearchDto> searchMovies(Long userId, SearchParams searchParams, MovieFilters movieFilters) {
+        PaginatedResults<Movie> results = movieRepository.searchMovies(userId, searchParams, movieFilters);
 
         return new PaginatedResults<>(
                 results.getResults().stream().map(MovieDtoMapper.INSTANCE::movieToMovieSearchDto).toList(),

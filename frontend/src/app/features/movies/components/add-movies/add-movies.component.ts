@@ -9,7 +9,6 @@ import { FormsModule } from '@angular/forms';
     selector: 'app-add-movies',
     imports: [CommonModule, FormsModule],
     templateUrl: './add-movies.component.html',
-    styleUrl: './add-movies.component.css'
 })
 export class AddMoviesComponent {
     movie: CreateMovieDto = {

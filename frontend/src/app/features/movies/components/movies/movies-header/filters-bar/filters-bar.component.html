@@ -1,0 +1,94 @@
+<div class="flex items-center space-x-4 mb-2 ml-2">
+    <div class="text-xl font-semibold">Filters</div>
+    <button class="standard-action-button" (click)="toggleExpanded()">
+        <fa-icon [icon]="isExpanded ? faCaretUp : faCaretDown"/>
+    </button>
+</div>
+<div *ngIf="isExpanded" class="filters-bar-container">
+    <div class="filter-group-wrapper">
+        <div *ngFor="let filter of filterOptions" class="filter-group rounded-lg shadow-sm p-3 bg-white flex flex-col sm:flex-row items-start sm:items-center gap-2">
+            <label class="font-semibold text-gray-700 w-full sm:w-auto">{{ filter.key.label }}:</label>
+
+            <ng-container [ngSwitch]="filter.key.value">
+                <div *ngSwitchCase="'releaseYear'" class="flex flex-col sm:flex-row gap-2 w-full">
+                    <input
+                        type="number"
+                        placeholder="Starting"
+                        class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                        [(ngModel)]="movieFilters.releaseYearFrom"
+                        (ngModelChange)="handleReleaseYearChange($event, 'From')"
+                    >
+                    <input
+                        type="number"
+                        placeholder="Until"
+                        class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                        [(ngModel)]="movieFilters.releaseYearTo"
+                        (ngModelChange)="handleReleaseYearChange($event, 'To')"
+                    >
+                </div>
+
+                <input
+                    *ngSwitchCase="'director'"
+                    type="text"
+                    placeholder="Director"
+                    class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                    [(ngModel)]="movieFilters.director"
+                    (ngModelChange)="handleDirectorChange($event)"
+                >
+
+                <div *ngSwitchCase="'userRating'" class="flex flex-col sm:flex-row gap-2 w-full">
+                    <input
+                        type="number"
+                        placeholder="Starting"
+                        class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                        [(ngModel)]="movieFilters.userRatingFrom"
+                        (ngModelChange)="handleUserRatingChange($event, 'From')"
+                    >
+                    <input
+                        type="number"
+                        placeholder="Up To"
+                        class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                        [(ngModel)]="movieFilters.userRatingTo"
+                        (ngModelChange)="handleUserRatingChange($event, 'To')"
+                    >
+                </div>
+
+                <div *ngSwitchCase="'watchedDate'" class="flex flex-col sm:flex-row gap-2 w-full">
+                    <input
+                        type="date"
+                        placeholder="Watched Date From"
+                        class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                        [(ngModel)]="movieFilters.watchedDateFrom"
+                        (ngModelChange)="handleWatchedDateChange($event, 'From')"
+                    >
+                    <input
+                        type="date"
+                        placeholder="Watched Date To"
+                        class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                        [(ngModel)]="movieFilters.watchedDateTo"
+                        (ngModelChange)="handleWatchedDateChange($event, 'To')"
+                    >
+                </div>
+
+                </ng-container>
+
+            <button
+                *ngIf="isFilterActive(filter.key.value)"
+                (click)="clearFilter(filter.key.value)"
+                class="clear-filter-btn ml-2 p-2 rounded-full bg-red-100 text-red-700 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-200"
+                aria-label="Clear filter"
+            >
+                <fa-icon [icon]="faTimesCircle"></fa-icon>
+            </button>
+        </div>
+    </div>
+
+    <div class="clear-all-filters-section mt-4 text-center">
+        <button
+            (click)="clearAllFilters()"
+            class="clear-all-btn px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-full shadow-lg hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 transition-all duration-300 ease-in-out transform hover:scale-105"
+        >
+            Clear All
+        </button>
+    </div>
+</div>

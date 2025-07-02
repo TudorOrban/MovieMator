@@ -19,4 +19,28 @@ export interface PagesSearchConfiguration {
 
 export interface PageSearchConfiguration {
     sortOptions: UIItem[];
+    filterOptions: FilterOption[];
+}
+
+export interface MovieFilters {
+    releaseYearFrom?: number;
+    releaseYearTo?: number;
+    director?: string;
+    userRatingFrom?: number;
+    userRatingTo?: number;
+    watchedDateFrom?: Date;
+    watchedDateTo?: Date;
+}
+
+export interface FilterOption {
+    key: UIItem;
+    valueOptions: UIItem[];
+    filterType: FilterType;
+}
+
+export enum FilterType {
+    NUMBER = "NUMBER",
+    ENUM = "ENUM",
+    DATE = "DATE",
+    TEXT = "TEXT"
 }

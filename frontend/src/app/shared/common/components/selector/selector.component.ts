@@ -4,10 +4,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { UIItem } from '../../../models/UI';
 
 @Component({
-  selector: 'app-selector',
-  imports: [CommonModule, FontAwesomeModule],
-  templateUrl: './selector.component.html',
-  styleUrl: './selector.component.css'
+    selector: 'app-selector',
+    imports: [CommonModule, FontAwesomeModule],
+    templateUrl: './selector.component.html',
 })
 export class SelectorComponent {
     @Input() items: UIItem[] = [];

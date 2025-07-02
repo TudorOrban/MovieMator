@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../../../../environments/environment.dev";
 import { HttpClient } from "@angular/common/http";
-import { PaginatedResults, SearchParams } from "../../../shared/models/Search";
+import { MovieFilters, PaginatedResults, SearchParams } from "../../../shared/models/Search";
 import { Observable } from "rxjs";
 import { CreateMovieDto, MovieDataDto, MovieSearchDto, UpdateMovieDto } from "../models/Movie";
 
@@ -13,8 +13,22 @@ export class MovieService {
 
     constructor(private readonly http: HttpClient) {}
 
-    searchMovies(userId: number, searchParams: SearchParams): Observable<PaginatedResults<MovieSearchDto>> {
-        return this.http.get<PaginatedResults<MovieSearchDto>>(`${this.apiUrl}/search/user/${userId}`, { params: { ...searchParams } });
+    searchMovies(userId: number, searchParams: SearchParams, movieFilters: MovieFilters): Observable<PaginatedResults<MovieSearchDto>> {
+        return this.http.get<PaginatedResults<MovieSearchDto>>(
+            `${this.apiUrl}/search/user/${userId}`,
+            {
+                params: {
+                    ...searchParams,
+                    ...(movieFilters.releaseYearFrom != null ? { releaseYearFrom: movieFilters.releaseYearFrom } : {}),
+                    ...(movieFilters.releaseYearTo != null ? { releaseYearTo: movieFilters.releaseYearTo } : {}),
+                    ...(movieFilters.director != null ? { director: movieFilters.director } : {}),
+                    ...(movieFilters.userRatingFrom != null ? { userRatingFrom: movieFilters.userRatingFrom } : {}),
+                    ...(movieFilters.userRatingTo != null ? { userRatingTo: movieFilters.userRatingTo } : {}),
+                    ...(movieFilters.watchedDateFrom != null ? { watchedDateFrom: movieFilters.watchedDateFrom.toISOString().split("T")[0] } : {}),
+                    ...(movieFilters.watchedDateTo != null ? { watchedDateTo: movieFilters.watchedDateTo.toISOString().split("T")[0] } : {}),
+                }
+            }
+        );
     }
 
     getMovieById(id: number): Observable<MovieDataDto> {

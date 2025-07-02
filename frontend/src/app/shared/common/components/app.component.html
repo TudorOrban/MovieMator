@@ -1,0 +1,24 @@
+<!-- Header -->
+<div *ngIf="!isDashboardRoute()">
+    <app-header></app-header>
+</div>
+
+<!-- Sidebar and Main Content-->
+<main class="flex overflow-hidden h-full">
+    <div class="flex w-full h-full">
+        <app-sidebar
+            *ngIf="isDashboardRoute()"
+            class="fixed h-full max-w-64 bg-white shadow-md overflow-auto"
+        ></app-sidebar>
+        <div 
+            [ngClass]="{
+                'ml-64': isDashboardRoute()
+            }"
+            class="w-full overflow-y-auto bg-white"
+        >
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</main>
+
+<app-toast-manager></app-toast-manager>

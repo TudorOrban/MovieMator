@@ -1,0 +1,7 @@
+<div class="fixed top-20 right-4 flex flex-col space-y-4 z-50">
+    <app-toast 
+        *ngFor="let toast of toasts" 
+        [item]="toast" 
+        (close)="removeToast($event)"
+    ></app-toast>
+</div>

@@ -1,19 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../../service/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { SignUpDto } from '../../models/Auth';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ToastManagerService } from '../../../../shared/common/services/toast-manager.service';
+import { ToastType } from '../../../../shared/models/UI';
 
 @Component({
     selector: 'app-sign-up',
     imports: [CommonModule, FormsModule, RouterModule],
     templateUrl: './sign-up.component.html',
 })
-export class SignUpComponent implements OnInit {
+export class SignUpComponent {
     
     constructor(
         private readonly authService: AuthService,
+        private readonly toastService: ToastManagerService,
         private readonly router: Router
     ) {}
 
@@ -29,15 +32,6 @@ export class SignUpComponent implements OnInit {
     loading: boolean = false;
     errorMessage?: string;
     successMessage?: string;
-
-    ngOnInit(): void {
-        this.authService.isAuthenticated$.subscribe(isAuthenticated => {
-            if (isAuthenticated) {
-                console.log("Authenticated, redirecting...");
-                // this.router.navigate(["/"]);
-            }
-        });
-    }
 
     async onSubmit(form: NgForm): Promise<void> {
         this.formSubmitted = true;
@@ -80,8 +74,10 @@ export class SignUpComponent implements OnInit {
             this.signUpData.password = "";
             this.signUpData.confirmPassword = "";
             this.confirmationCode = "";
+            this.toastService.addToast({ title: "Success", details: "Sign Up successful!", type: ToastType.SUCCESS });
             this.router.navigate(["/login"]);
         } catch (error: any) {
+            this.toastService.addToast({ title: "Error", details: "An error occurred signing up. Please try again later.", type: ToastType.ERROR });
             console.error("Confirm signup error:", error);
             this.errorMessage = error.message || "An unexpected error occurred during confirmation.";
         } finally {

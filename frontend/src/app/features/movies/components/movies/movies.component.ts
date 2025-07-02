@@ -8,6 +8,8 @@ import { MoviesHeaderComponent } from "./movies-header/movies-header.component";
 import { MoviesListComponent } from "./movies-list/movies-list.component";
 import { AuthService } from '../../../../core/auth/service/auth.service';
 import { Subscription } from 'rxjs';
+import { ToastManagerService } from '../../../../shared/common/services/toast-manager.service';
+import { ToastType } from '../../../../shared/models/UI';
 
 @Component({
     selector: 'app-movies',
@@ -33,7 +35,8 @@ export class MoviesComponent implements OnInit, OnDestroy {
 
     constructor(
         private readonly movieService: MovieService,
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
+        private readonly toastService: ToastManagerService,
     ) {}
 
     ngOnInit() {
@@ -89,9 +92,11 @@ export class MoviesComponent implements OnInit, OnDestroy {
         this.movieService.deleteMovies(this.toBeDeletedMovieIds).subscribe({
             next: () => {
                 this.isDeleteModeOn = false;
+                this.toastService.addToast({ title: "Success", details: "Movies deleted successfully.", type: ToastType.SUCCESS });
                 this.searchMovies();
             },
             error: (error) => {
+                this.toastService.addToast({ title: "Error", details: "An error occurred deleting the movies.", type: ToastType.ERROR });
                 console.error("Error deleting movies: ", error);
             }
         })

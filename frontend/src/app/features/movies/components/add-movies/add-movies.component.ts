@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../../core/auth/service/auth.service';
 import { Subscription } from 'rxjs';
+import { ToastManagerService } from '../../../../shared/common/services/toast-manager.service';
+import { ToastType } from '../../../../shared/models/UI';
 
 @Component({
     selector: 'app-add-movies',
@@ -25,6 +27,7 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
     constructor(
         private readonly movieService: MovieService,
         private readonly authService: AuthService,
+        private readonly toastService: ToastManagerService,
         private readonly router: Router
     ) {}
 
@@ -58,12 +61,12 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
         
         this.movieService.createMovie(this.movie).subscribe({
             next: (data) => {
-                // this.toastService.addToast({ title: "Success", details: "Movie created successfully.", type: ToastType.SUCCESS });
+                this.toastService.addToast({ title: "Success", details: "Movie created successfully.", type: ToastType.SUCCESS });
                 this.router.navigate([`/movies/${data?.id}`]);
             },
             error: (error) => {
                 console.error("Failed to create movie:", error);
-                // this.toastService.addToast({ title: "Error", details: "An error occurred creating movie.", type: ToastType.ERROR });
+                this.toastService.addToast({ title: "Error", details: "An error occurred creating movie.", type: ToastType.ERROR });
             }
         });
     }

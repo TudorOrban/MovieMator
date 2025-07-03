@@ -1,5 +1,10 @@
+# backend/buildspec.yml
 
 version: 0.2
+
+env:
+  variables:
+    IMAGE_TAG: "latest"
 
 phases:
   install:
@@ -12,7 +17,7 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REPO_URI
-      - REPO_NAME=$(echo $ECR_REPO_URI | cut -d '/' -f 2)
+      - export REPO_NAME=$(echo $ECR_REPO_URI | cut -d '/' -f 2)
       - export IMAGE_TAG=${CODEBUILD_RESOLVED_SOURCE_VERSION:-latest}
       - echo "Using IMAGE_TAG: $IMAGE_TAG"
 
@@ -31,7 +36,7 @@ phases:
       - echo Pushing the Docker image to ECR...
       - docker push $ECR_REPO_URI:$IMAGE_TAG
       - docker push $ECR_REPO_URI:latest
-      
+
       - echo "Writing image definitions file..."
       - cd $CODEBUILD_SRC_DIR
       - printf '[{"name":"%s","imageUri":"%s"}]' $REPO_NAME $ECR_REPO_URI:$IMAGE_TAG > imageDefinitions.json

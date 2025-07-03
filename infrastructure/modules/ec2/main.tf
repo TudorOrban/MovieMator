@@ -22,7 +22,7 @@ resource "aws_security_group" "ec2_sg" {
         cidr_blocks = [var.my_public_ip_cidr]
     }
 
-    # Allow all outbound traaffic
+    # Allow all outbound traffic
     egress {
         from_port = 0
         to_port = 0
@@ -60,6 +60,7 @@ resource "aws_iam_role" "ec2_role" {
     }
 }
 
+# Resources: (SSM, CloudWatch, ECR Read-Only)
 resource "aws_iam_role_policy_attachment" "ssm_attach" {
     role = aws_iam_role.ec2_role.name
     policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonSSMManagedInstanceCore"
@@ -69,6 +70,12 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_attach" {
     role = aws_iam_role.ec2_role.name
     policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
+
+resource "aws_iam_role_policy_attachment" "ecr_read_only_attach" {
+    role = aws_iam_role.ec2_role.name
+    policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
+
 
 data "aws_partition" "current" {}
 
@@ -109,14 +116,22 @@ resource "aws_instance" "spring_boot" {
     user_data = <<-EOF
             #!/bin/bash
             sudo yum update -y
-            sudo amazon-linux-extras install docker -y # Install Docker
+
+            # Install Docker
+            sudo amazon-linux-extras install docker -y
             sudo service docker start
-            sudo usermod -a -G docker ec2-user # Add ec2-user to docker group
+            sudo usermod -a -G docker ec2-user
 
-            YOUR_ECR_REPO_URI="<YOUR_ECR_REPOSITORY_URI>" # e.g., 123456789012.dkr.ecr.eu-central-1.amazonaws.com/moviemator-app:latest
+            sudo systemctl enable docker
 
-            docker pull ${YOUR_ECR_REPO_URI}
-            docker run -d --restart=always -p 8080:8080 --name spring-boot-app ${YOUR_ECR_REPO_URI}
+            # Get and start Spring Boot image
+            ECR_REPO_URI = "${var.ecr_repository_url}" 
+
+            aws ecr get-login-password --region ${var.region} | docker login --username AWS --password-stdin ${split("/", ECR_REPO_URI)[0]}
+
+            docker pull ${ECR_REPO_URI}:latest
+
+            docker-run -d --restart=always -p 8080:8080 --name moviemator-spring-boot-app ${ECR_REPO_URI}:latest
             EOF
     
     tags = {

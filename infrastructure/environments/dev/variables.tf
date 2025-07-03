@@ -91,15 +91,9 @@ variable "my_public_ip_cidr" {
     default = "94.53.42.151/32"
 }
 
-# Your public SSH key string
-# To get this, run `cat ~/.ssh/id_rsa.pub` (if you have one)
-# or generate a new one specifically for AWS with:
-# `ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa_aws`
-# Then copy the content of `~/.ssh/id_rsa_aws.pub` here.
 variable "ssh_public_key" {
     description = "The public key string for your SSH key pair"
     type = string
-    default = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD3....YOUR_PUBLIC_KEY_CONTENT_HERE.... user@hostname" # REPLACE THIS WITH YOUR ACTUAL PUBLIC KEY
 }
 
 # ECR Variables

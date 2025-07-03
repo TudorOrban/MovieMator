@@ -32,6 +32,15 @@ module "rds" {
     db_multi_az = var.db_multi_az
 }
 
+module "ecr" {
+    source = "../../modules/ecr"
+
+    repository_name = var.ecr_repository_name
+    env = var.env
+    project_name = var.project_name
+    region = var.region
+}
+
 module "ec2" {
     source = "../../modules/ec2"
 
@@ -50,8 +59,11 @@ module "ec2" {
     db_name = var.db_name
     db_username = var.db_username
     db_password = var.db_password
+
+    ecr_repository_url = module.ecr.repository_url
 }
 
+# Network
 output "dev_vpc_id" {
     value = module.network.vpc_id
 }
@@ -64,6 +76,7 @@ output "dev_private_subnet_ids" {
     value = module.network.private_subnet_ids
 }
 
+# RDS
 output "dev_rds_endpoint" {
     description = "The connection endpoint for the dev RDS instance"
     value = module.rds.rds_endpoint
@@ -84,6 +97,13 @@ output "dev_rds_security_group_id" {
     value = module.rds.rds_security_group_id
 }
 
+# ECR
+output "dev_ecr_repository_url" {
+    description = "The URL of the ECR repository for the Spring Boot app"
+    value = module.ecr.repository_url
+}
+
+# EC2
 output "dev_ec2_public_ip" {
     description = "The public IP address of the dev EC2 instance"
     value = module.ec2.ec2_public_ip

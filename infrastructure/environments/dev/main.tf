@@ -106,7 +106,7 @@ module "cicd_iam" {
     ecr_repository_arn = module.ecr.repository_arn
     frontend_s3_bucket_arn = module.s3_cloudfront_frontend.s3_bucket_arn
     cloudfront_distribution_arn = module.s3_cloudfront_frontend.cloudfront_distribution_arn
-    codestar_connection_arn = module.codestar_connection.connection_arn
+    codestar_connection_arn = "arn:aws:codeconnections:eu-central-1:474668403865:connection/831b9d46-9ac5-4a0e-adc7-eb2127b4bd3b"
 }
 
 # CodeBuild Projects
@@ -136,12 +136,12 @@ module "codedeploy_components" {
 }
 
 # CodeStar Connection
-module "codestar_connection" {
-    source = "../../modules/codestar-connection"
+# module "codestar_connection" {
+#     source = "../../modules/codestar-connection"
 
-    env = var.env
-    project_name = var.project_name
-}
+#     env = var.env
+#     project_name = var.project_name
+# }
 
 # CodePipeline
 module "codepipeline" {
@@ -157,7 +157,7 @@ module "codepipeline" {
     github_repo_name = var.github_repo_name
     github_branch = var.github_branch
     github_oauth_token = var.github_oauth_token
-    codestar_connection_arn = module.codestar_connection.connection_arn
+    codestar_connection_arn = "arn:aws:codeconnections:eu-central-1:474668403865:connection/831b9d46-9ac5-4a0e-adc7-eb2127b4bd3b"
     
     backend_build_project_name = module.codebuild_projects.backend_build_project_name
     frontend_build_project_name = module.codebuild_projects.frontend_build_project_name
@@ -305,15 +305,15 @@ output "dev_codedeploy_deployment_group_name" {
 }
 
 #CodeStar Connection
-output "dev_codestar_connection_arn" {
-    description = "ARN of the CodeStar Connection"
-    value = module.codestar_connection.connection_arn
-}
+# output "dev_codestar_connection_arn" {
+#     description = "ARN of the CodeStar Connection"
+#     value = module.codestar_connection.connection_arn
+# }
 
-output "dev_codestar_connection_name" {
-    description = "Name of the CodeStar Connection"
-    value = module.codestar_connection.connection_name
-}
+# output "dev_codestar_connection_name" {
+#     description = "Name of the CodeStar Connection"
+#     value = module.codestar_connection.connection_name
+# }
 
 # CodePipeline
 output "dev_pipeline_name" {

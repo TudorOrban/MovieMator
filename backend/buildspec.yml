@@ -1,7 +1,17 @@
 
 version: 0.2
 
+env:
+  variables:
+    IMAGE_TAG: "latest"
+
 phases:
+  install:
+    commands:
+      - echo "Installing Java runtime..."
+    runtime-versions:
+      java: corretto21
+      
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...

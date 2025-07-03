@@ -11,10 +11,15 @@ phases:
     commands:
       - cd $CODEBUILD_SRC_DIR/frontend
       - echo Updating Angular environment for production build...
-      - sed -i "s|http://ALB_PLACEHOLDER_URL/api/v1|http://${ALB_DNS_NAME}/api/v1|g" src/environments/environment.prod.ts
-      - sed -i "s|http://CLOUDFRONT_PLACEHOLDER_URL|http://${CLOUDFRONT_DOMAIN_NAME}|g" src/environments/environment.prod.ts
-      - cat src/environments/environment.prod.ts
+      - |
+        echo "export const environment = {
+          production: true,
+          apiUrl: 'http://${ALB_DNS_NAME}/api/v1',
+          cloudfrontUrl: 'http://${CLOUDFRONT_DOMAIN_NAME}'
+        };" > src/environments/environment.prod.ts
 
+      - cat src/environments/environment.prod.ts
+      
   build:
     commands:
       - cd $CODEBUILD_SRC_DIR/frontend

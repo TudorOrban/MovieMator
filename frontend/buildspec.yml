@@ -20,7 +20,6 @@ phases:
         echo "export const environment = {
           production: true,
           apiUrl: 'http://${ALB_DNS_NAME}/api/v1',
-          cloudfrontUrl: 'http://${CLOUDFRONT_DOMAIN_NAME}'
         };" > src/environments/environment.prod.ts
 
       - cat src/environments/environment.prod.ts

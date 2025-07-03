@@ -43,4 +43,4 @@ testem.log
 Thumbs.db
 
 # Angular
-src/environments/
+src/environments/environment.prod.ts

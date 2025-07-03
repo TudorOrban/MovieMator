@@ -2,6 +2,11 @@ provider "aws" {
     region = var.region
 }
 
+provider "aws" {
+    alias = "us_east_1"
+    region = "us-east-1"
+}
+
 module "network" {
     source = "../../modules/network"
 
@@ -75,6 +80,20 @@ module "alb" {
     ec2_instance_id = module.ec2.ec2_instance_id
 }
 
+# S3/CloudFront
+module "s3_cloudfront_frontend" {
+    source = "../../modules/s3-cloudfront-frontend"
+
+    project_name = var.project_name
+    env = var.env
+    region = var.region
+    alb_dns_name = module.alb.alb_dns_name
+    providers = {
+        aws = aws
+        aws.us_east_1 = aws.us_east_1
+    }
+}
+
 # Network
 output "dev_vpc_id" {
     value = module.network.vpc_id
@@ -140,4 +159,15 @@ output "dev_alb_dns_name" {
 output "dev_alb_security_group_id" {
     description = "The security group ID for the ALB"
     value = module.alb.alb_security_group_id
+}
+
+# Frontend
+output "dev_frontend_s3_bucket_name" {
+    description = "The S3 bucket name for the Angular frontend"
+    value = module.s3_cloudfront_frontend.s3_bucket_name
+}
+
+output "dev_frontend_cloudfront_domain_name" {
+    description = "The CloudFront domain name for the Angular frontend"
+    value = module.s3_cloudfront_frontend.cloudfront_domain_name
 }

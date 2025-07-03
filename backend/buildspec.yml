@@ -18,8 +18,6 @@ phases:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REPO_URI
       - export REPO_NAME=$(echo $ECR_REPO_URI | cut -d '/' -f 2)
-      - export IMAGE_TAG=${CODEBUILD_RESOLVED_SOURCE_VERSION:-latest}
-      - echo "Using IMAGE_TAG: $IMAGE_TAG"
 
   build:
     commands:

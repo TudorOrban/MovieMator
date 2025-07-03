@@ -22,3 +22,8 @@ output "ssh_key_name" {
     description = "The name of the SSH key pair"
     value = aws_key_pair.main_key.key_name
 }
+
+output "ec2_instance_id" {
+    description = "The ID of the EC2 instance"
+    value = aws_instance.spring_boot.id
+}

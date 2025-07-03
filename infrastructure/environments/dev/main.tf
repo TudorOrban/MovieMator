@@ -61,6 +61,18 @@ module "ec2" {
     db_password = var.db_password
 
     ecr_repository_url = module.ecr.repository_url
+    alb_security_group_id = module.alb.alb_security_group_id
+}
+
+module "alb" {
+    source = "../../modules/alb" 
+    
+    vpc_id = module.network.vpc_id
+    public_subnet_ids = module.network.public_subnet_ids
+    env = var.env
+    project_name = var.project_name
+    region = var.region
+    ec2_instance_id = module.ec2.ec2_instance_id
 }
 
 # Network
@@ -117,4 +129,15 @@ output "dev_ec2_security_group_id" {
 output "dev_ssh_key_name" {
     description = "The name of the SSH key pair for the dev EC2 instance"
     value = module.ec2.ssh_key_name
+}
+
+# ALB
+output "dev_alb_dns_name" {
+    description = "The DNS name of the Application Load Balancer"
+    value = module.alb.alb_dns_name
+}
+
+output "dev_alb_security_group_id" {
+    description = "The security group ID for the ALB"
+    value = module.alb.alb_security_group_id
 }

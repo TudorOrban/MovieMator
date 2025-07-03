@@ -30,7 +30,6 @@ export class MovieComponent {
 
         this.movieService.getMovieById(this.movieId).subscribe({
             next: (data) => {
-                console.log("Dat", data);
                 this.movie = data;
             },
             error: (error) => {

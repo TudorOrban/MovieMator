@@ -68,3 +68,8 @@ variable "ecr_repository_url" {
     description = "URL of the ECR repository where the backend Docker image is"
     type = string   
 }
+
+variable "alb_security_group_id" {
+    description = "The ID of the ALB's security group"
+    type = string
+}

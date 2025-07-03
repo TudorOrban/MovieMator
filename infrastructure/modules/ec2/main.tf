@@ -6,11 +6,11 @@ resource "aws_security_group" "ec2_sg" {
 
     # For HTTP
     ingress {
-        description = "Allow HTTP access to Spring Boot app"
+        description = "Allow HTTP access from ALB"
         from_port = 8080
         to_port = 8080
         protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
+        security_groups = [var.alb_security_group_id]
     }
 
     # For SSH

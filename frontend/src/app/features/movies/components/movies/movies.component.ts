@@ -42,7 +42,6 @@ export class MoviesComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.subscription = this.authService.currentUser$.subscribe({
             next: (data) => {
-                console.log("Data", data);
                 this.userId = data?.id;
                 this.searchMovies();
             },

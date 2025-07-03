@@ -35,8 +35,6 @@ export class AuthService {
                 this._isAuthenticatedSubject.next(true);
                 this._cognitoUserDataSubject.next(currentUser);
                 this._accessTokenSubject.next(authSession.tokens.accessToken.toString());
-                console.log("Cu", currentUser);
-                console.log("Au", authSession.userSub, authSession.tokens);
                 this.loadCurrentUser(authSession.userSub);
             } else {
                 this.clearAllAuthStates();
@@ -100,7 +98,7 @@ export class AuthService {
 
     private async runLoginChecks(result: SignInOutput, email: string): Promise<any> {
         if (result.nextStep) {
-            console.log("AuthService: Next step required:", result.nextStep.signInStep);
+            // console.log("AuthService: Next step required:", result.nextStep.signInStep);
         }
         if (!result.isSignedIn) {
             return;

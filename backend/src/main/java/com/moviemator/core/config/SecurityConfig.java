@@ -24,10 +24,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints
-                        .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/info").permitAll()
                         .requestMatchers("/topic/**").permitAll()
                         .requestMatchers("/app/**").permitAll()
+                        .requestMatchers("/actuator/health").permitAll()
                         // Protected endpoints
                         .requestMatchers("/api/v1/users/**").permitAll()
                         .requestMatchers("/api/v1/movies/**").permitAll()

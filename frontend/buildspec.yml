@@ -4,12 +4,12 @@ phases:
   install:
     commands:
       - echo Installing Node.js dependencies...
-      - cd frontend
+      - cd $CODEBUILD_SRC_DIR/frontend
       - npm install
     
   pre_build:
     commands:
-      - cd frontend
+      - cd $CODEBUILD_SRC_DIR/frontend
       - echo Updating Angular environment for production build...
       - sed -i "s|http://ALB_PLACEHOLDER_URL/api/v1|http://${ALB_DNS_NAME}/api/v1|g" src/environments/environment.prod.ts
       - sed -i "s|http://CLOUDFRONT_PLACEHOLDER_URL|http://${CLOUDFRONT_DOMAIN_NAME}|g" src/environments/environment.prod.ts
@@ -17,7 +17,7 @@ phases:
 
   build:
     commands:
-      - cd frontend
+      - cd $CODEBUILD_SRC_DIR/frontend
       - echo Building the Angular application...
       - npm run build -- --configuration=production
 

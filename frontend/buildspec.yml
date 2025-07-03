@@ -11,6 +11,9 @@ phases:
     commands:
       - cd $CODEBUILD_SRC_DIR/frontend
       - echo Updating Angular environment for production build...
+      
+      - mkdir -p src/environments/
+      
       - |
         echo "export const environment = {
           production: true,

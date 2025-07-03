@@ -67,6 +67,8 @@ module "ec2" {
 
     ecr_repository_url = module.ecr.repository_url
     alb_security_group_id = module.alb.alb_security_group_id
+    alb_dns_name = module.alb.alb_dns_name
+    frontend_cloudfront_domain_name = module.s3_cloudfront_frontend.cloudfront_domain_name
 }
 
 module "alb" {
@@ -93,6 +95,18 @@ module "s3_cloudfront_frontend" {
         aws.us_east_1 = aws.us_east_1
     }
 }
+
+module "cicd_iam" {
+    source = "../../modules/cicd-iam"
+
+    env = var.env
+    project_name = var.project_name
+    region = var.region
+    ecr_repository_arn = module.ecr.repository_arn
+    frontend_s3_bucket_arn = module.s3_cloudfront_frontend.s3_bucket_arn
+    cloudfront_distribution_arn = module.s3_cloudfront_frontend.cloudfront_distribution_arn
+}
+
 
 # Network
 output "dev_vpc_id" {
@@ -170,4 +184,30 @@ output "dev_frontend_s3_bucket_name" {
 output "dev_frontend_cloudfront_domain_name" {
     description = "The CloudFront domain name for the Angular frontend"
     value = module.s3_cloudfront_frontend.cloudfront_domain_name
+}
+
+# CI/CD IAM
+output "dev_codepipeline_role_arn" {
+    description = "ARN of the IAM role for CodePipeline"
+    value = module.cicd_iam.codepipeline_role_arn
+}
+
+output "dev_codepipeline_artifact_bucket_id" {
+    description = "ID of the S3 bucket for CodePipeline artifacts"
+    value = module.cicd_iam.codepipeline_artifact_bucket_id
+}
+
+output "dev_codebuild_backend_role_arn" {
+    description = "ARN of the IAM role for CodeBuild (backend)"
+    value = module.cicd_iam.codebuild_backend_role_arn
+}
+
+output "dev_codebuild_frontend_role_arn" {
+    description = "ARN of the IAM role for CodeBuild (frontend)"
+    value = module.cicd_iam.codebuild_frontend_role_arn
+}
+
+output "dev_codedeploy_role_arn" {
+    description = "ARN of the IAM role for CodeDeploy"
+    value = module.cicd_iam.codedeploy_role_arn
 }

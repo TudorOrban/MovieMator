@@ -73,3 +73,13 @@ variable "alb_security_group_id" {
     description = "The ID of the ALB's security group"
     type = string
 }
+
+variable "alb_dns_name" {
+    description = "The DNS name of the ALB for backend API calls"
+    type = string
+}
+
+variable "frontend_cloudfront_domain_name" {
+    description = "The CloudFront domain name for the Angular frontend"
+    type = string
+}

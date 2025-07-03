@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../../service/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { LoginDto } from '../../models/Auth';
@@ -12,7 +12,7 @@ import { ToastType } from '../../../../shared/models/UI';
     imports: [CommonModule, FormsModule, RouterModule],
     templateUrl: './log-in.component.html',
 })
-export class LogInComponent implements OnInit {
+export class LogInComponent {
 
     constructor(
         private readonly authService: AuthService,
@@ -28,15 +28,6 @@ export class LogInComponent implements OnInit {
     formSubmitted: boolean = false;
     loading: boolean = false;
     errorMessage?: string;
-
-    ngOnInit(): void {
-        this.authService.isAuthenticated$.subscribe(isAuthenticated => {
-            if (isAuthenticated) {
-                console.log("LoginComponent: Authenticated, redirecting to home.");
-                // this.router.navigate(["/"]);
-            }
-        });
-    }
 
     async onSubmit(form: NgForm): Promise<void> {
         this.formSubmitted = true;

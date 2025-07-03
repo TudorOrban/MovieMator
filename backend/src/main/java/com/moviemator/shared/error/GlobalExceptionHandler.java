@@ -26,21 +26,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
-        logger.error("Resource Not Found Exception: {}", errorDetails);
+        logger.warn("Resource Not Found Exception: {}", errorDetails);
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
     public ResponseEntity<ErrorDetails> handleResourceAlreadyExistsException(ResourceAlreadyExistsException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
-        logger.error("Resource Already Exists Exception: {}", errorDetails);
+        logger.warn("Resource Already Exists Exception: {}", errorDetails);
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ErrorDetails> handleValidationException(ValidationException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
-        logger.error("Validation Exception: {}", errorDetails);
+        logger.warn("Validation Exception: {}", errorDetails);
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 

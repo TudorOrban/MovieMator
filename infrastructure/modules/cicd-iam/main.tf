@@ -91,8 +91,7 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
 
 resource "aws_s3_bucket" "codepipeline_artifact_bucket" {
     bucket = "${var.project_name}-${var.env}-codepipeline-artifacts-${random_string.suffix.id}"
-    acl = "private"
-
+    
     tags = {
         Environment = var.env
         Project = var.project_name

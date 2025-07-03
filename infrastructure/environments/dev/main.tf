@@ -96,6 +96,7 @@ module "s3_cloudfront_frontend" {
     }
 }
 
+# CI/CD IAM Roles
 module "cicd_iam" {
     source = "../../modules/cicd-iam"
 
@@ -105,6 +106,22 @@ module "cicd_iam" {
     ecr_repository_arn = module.ecr.repository_arn
     frontend_s3_bucket_arn = module.s3_cloudfront_frontend.s3_bucket_arn
     cloudfront_distribution_arn = module.s3_cloudfront_frontend.cloudfront_distribution_arn
+}
+
+# CodeBuild Projects
+module "codebuild_projects" {
+    source = "../../modules/codebuild-projects"
+
+    env = var.env
+    project_name = var.project_name
+    region = var.region
+    codebuild_backend_role_arn = module.cicd_iam.codebuild_backend_role_arn
+    codebuild_frontend_role_arn = module.cicd_iam.codebuild_frontend_role_arn 
+    ecr_repository_url = module.ecr.repository_url
+    alb_dns_name = module.alb.alb_dns_name
+    cloudfront_domain_name = module.s3_cloudfront_frontend.cloudfront_domain_name
+    frontend_s3_bucket_name = module.s3_cloudfront_frontend.s3_bucket_name
+    cloudfront_distribution_id = module.s3_cloudfront_frontend.cloudfront_distribution_id
 }
 
 
@@ -210,4 +227,25 @@ output "dev_codebuild_frontend_role_arn" {
 output "dev_codedeploy_role_arn" {
     description = "ARN of the IAM role for CodeDeploy"
     value = module.cicd_iam.codedeploy_role_arn
+}
+
+# CodeBuild projects
+output "dev_backend_build_project_name" {
+    description = "Name of the CodeBuild project for the backend"
+    value = module.codebuild_projects.backend_build_project_name
+}
+
+output "dev_backend_build_project_arn" {
+    description = "ARN of the CodeBuild project for the backend"
+    value = module.codebuild_projects.backend_build_project_arn
+}
+
+output "dev_frontend_build_project_name" {
+    description = "Name of the CodeBuild project for the frontend"
+    value = module.codebuild_projects.frontend_build_project_name
+}
+
+output "dev_frontend_build_project_arn" {
+    description = "ARN of the CodeBuild project for the frontend"
+    value = module.codebuild_projects.frontend_build_project_arn
 }

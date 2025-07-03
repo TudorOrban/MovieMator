@@ -1,51 +1,36 @@
-variable "region" {
-    description = "AWS region for the deployment"
+variable "vpc_id" {
+    description = "The ID of the VPC"
     type = string
-    default = "eu-central-1"
+}
+
+variable "vpc_cidr" {
+    description = "The CIDR block of the VPC"
+    type = string
+}
+
+variable "private_subnet_ids" {
+    description = "A list of IDs of the private subnets for the DB Subnet Group"
+    type = list(string)
 }
 
 variable "env" {
-    description = "Environment name (e.g., dev, prod)"
+    description = "The environment name (e.g., 'dev', 'prod')"
     type = string
-    default = "dev"
 }
 
 variable "project_name" {
-    description = "Name of the project"
+    description = "The name of the project"
     type = string
-    default = "moviemator"
 }
 
-# Network
-variable "vpc_cidr" {
-    description = "CIDR block for the VPC"
-    type = string
-    default = "10.0.0.0/16"
-}
-
-variable "public_subnet_cidrs" {
-    description = "List of CIDR blocks for public subnets"
-    type = list(string)
-    default = ["10.0.1.0/24", "10.0.2.0/24"]
-}
-
-variable "private_subnet_cidrs" {
-    description = "List of CIDR blocks for private subnets"
-    type = list(string)
-    default = ["10.0.101.0/24", "10.0.102.0/24"]
-}
-
-# RDS
 variable "db_name" {
     description = "The name of the database"
     type = string
-    default = "moviemator_db"
 }
 
 variable "db_username" {
     description = "The master username for the database"
     type = string
-    default = "postgres"
 }
 
 variable "db_password" {
@@ -57,13 +42,11 @@ variable "db_password" {
 variable "db_instance_class" {
     description = "The instance type for the RDS database"
     type = string
-    default = "db.t3.micro"
 }
 
 variable "db_allocated_storage" {
     description = "The allocated storage in GB for the database"
     type = number
-    default = 20
 }
 
 variable "db_skip_final_snapshot" {
@@ -76,4 +59,9 @@ variable "db_multi_az" {
     description = "Specifies if the DB instance is a Multi-AZ deployment"
     type = bool
     default = false
+}
+
+variable "region" {
+    description = "AWS region for the deployment"
+    type = string
 }

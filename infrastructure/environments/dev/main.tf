@@ -124,6 +124,15 @@ module "codebuild_projects" {
     cloudfront_distribution_id = module.s3_cloudfront_frontend.cloudfront_distribution_id
 }
 
+# CodeDeploy Components
+module "codedeploy_components" {
+    source = "../../modules/codedeploy-components"
+
+    env = var.env
+    project_name = var.project_name
+    codedeploy_role_arn = module.cicd_iam.codedeploy_role_arn
+    alb_target_group_name = module.alb.alb_target_group_name
+}
 
 # Network
 output "dev_vpc_id" {
@@ -248,4 +257,15 @@ output "dev_frontend_build_project_name" {
 output "dev_frontend_build_project_arn" {
     description = "ARN of the CodeBuild project for the frontend"
     value = module.codebuild_projects.frontend_build_project_arn
+}
+
+# CodeDeploy components
+output "dev_codedeploy_app_name" {
+    description = "Name of the CodeDeploy app for the backend"
+    value = module.codedeploy_components.codedeploy_app_name
+}
+
+output "dev_codedeploy_deployment_group_name" {
+    description = "Name of the CodeDeploy deployment group for the backend"
+    value = module.codedeploy_components.codedeploy_deployment_group_name
 }

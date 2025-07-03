@@ -142,7 +142,7 @@ resource "aws_instance" "spring_boot" {
             EOF
     
     tags = {
-        Name = "${var.env}-spring-boot-app"
+        Name = "${var.project_name}-${var.env}-spring-boot-instance"
         Environment = var.env
         Project = var.project_name
     }

@@ -33,3 +33,9 @@ variable "github_token_secret_arn" {
     type = string
     default = ""
 }
+
+variable "codestar_connection_arn" {
+    description = "ARN of the AWS CodeStar Connection to GitHub"
+    type = string
+    default = ""
+}

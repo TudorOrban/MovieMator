@@ -84,6 +84,15 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
                     Effect = "Allow",
                     Resource = var.github_token_secret_arn
                 }
+            ] : [],
+            var.codestar_connection_arn != "" ? [ # Check if the variable is not empty
+                {
+                    Action = [
+                        "codestar-connections:UseConnection",
+                    ],
+                    Effect = "Allow",
+                    Resource = var.codestar_connection_arn, # Use the variable here
+                }
             ] : []
         ),
     })

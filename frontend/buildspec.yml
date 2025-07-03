@@ -1,0 +1,33 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Installing Node.js dependencies...
+      - cd frontend
+      - npm install
+    
+  pre_build:
+    commands:
+      - echo Updating Angular environment for production build...
+      - sed -i "s|http://ALB_PLACEHOLDER_URL/api/v1|http://${ALB_DNS_NAME}/api/v1|g" src/environments/environment.prod.ts
+      - sed -i "s|http://CLOUDFRONT_PLACEHOLDER_URL|http://${CLOUDFRONT_DOMAIN_NAME}|g" src/environments/environment.prod.ts
+      - cat src/environments/environment.prod.ts
+
+  build:
+    commands:
+      - echo Building the Angular application...
+      - npm run build -- --configuration=production
+
+  post_build:
+    commands:
+      - echo Deploying Angular application to S3...
+      - aws s3 sync dist/movie-mator/browser/ s3://${FRONTEND_S3_BUCKET_NAME} --delete
+      - echo Invalidating CloudFront cache...
+      - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} --paths "/*"
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: frontend/dist/movie-mator/browser
+  discard-paths: yes

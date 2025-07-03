@@ -19,6 +19,7 @@ resource "aws_s3_bucket_public_access_block" "frontend_bucket_public_access_bloc
 }
 
 resource "aws_cloudfront_origin_access_identity" "frontend_oai" {
+    provider = aws.us_east_1
     comment = "OAI for ${var.project_name}-${var.env} frontend CloudFront distribution"
 }
 
@@ -43,6 +44,7 @@ resource "aws_s3_bucket_policy" "frontend_bucket_policy" {
 }
 
 resource "aws_cloudfront_distribution" "frontend_distribution" {
+    provider = aws.us_east_1
     origin {
         domain_name = aws_s3_bucket.frontend_bucket.bucket_regional_domain_name
         origin_id = "S3-moviemator-frontend"

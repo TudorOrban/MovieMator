@@ -102,3 +102,26 @@ variable "ecr_repository_name" {
     type = string
     default = "moviemator-spring-boot-app"
 }
+
+# CodePipeline
+variable "github_repo_owner" {
+    description = "The owner (username or organization) of the GitHub repository"
+    type = string
+}
+
+variable "github_repo_name" {
+    description = "The name of the GitHub repository"
+    type = string
+}
+
+variable "github_branch" {
+    description = "The branch in the GitHub repository to monitor for changes"
+    type = string
+    default = "main"
+}
+
+variable "github_oauth_token" {
+    description = "GitHub Personal Access Token (PAT) for CodePipeline. Must have 'repo' and 'admin:repo_hook' scopes."
+    type = string
+    sensitive = true
+}

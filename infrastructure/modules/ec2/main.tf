@@ -108,7 +108,7 @@ resource "aws_instance" "spring_boot" {
     ami = data.aws_ami.amazon_linux_2.id
     instance_type = var.ec2_instance_type
     subnet_id = element(var.public_subnet_ids, 0)
-    vps_security_group_ids = [aws_security_group.ec2_sg.id]
+    vpc_security_group_ids = [aws_security_group.ec2_sg.id]
     associate_public_ip_address = true
     key_name = aws_key_pair.main_key.key_name
     iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
@@ -127,11 +127,11 @@ resource "aws_instance" "spring_boot" {
             # Get and start Spring Boot image
             ECR_REPO_URI = "${var.ecr_repository_url}" 
 
-            aws ecr get-login-password --region ${var.region} | docker login --username AWS --password-stdin ${split("/", ECR_REPO_URI)[0]}
+            aws ecr get-login-password --region ${var.region} | docker login --username AWS --password-stdin $$(split("/", $$ECR_REPO_URI)[0])
 
-            docker pull ${ECR_REPO_URI}:latest
+            docker pull $$ECR_REPO_URI:latest
 
-            docker-run -d --restart=always -p 8080:8080 --name moviemator-spring-boot-app ${ECR_REPO_URI}:latest
+            docker run -d --restart=always -p 8080:8080 --name moviemator-spring-boot-app $$ECR_REPO_URI:latest
             EOF
     
     tags = {

@@ -82,11 +82,6 @@ output "dev_rds_endpoint" {
     value = module.rds.rds_endpoint
 }
 
-output "dev_rds_endpoint" {
-    description = "The connection endpoint for the dev RDS instance"
-    value = module.rds.rds_endpoint
-}
-
 output "dev_rds_port" {
     description = "The port for the dev RDS instance"
     value = module.rds.rds_port

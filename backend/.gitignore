@@ -35,3 +35,5 @@ build/
 
 # App Properties
 src/main/resources/application.properties
+src/main/resources/application-docker-dev.properties
+src/main/resources/application-docker-prod.properties

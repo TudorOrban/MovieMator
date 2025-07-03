@@ -63,3 +63,8 @@ variable "region" {
     description = "AWS region for the deployment"
     type = string
 }
+
+variable "ecr_repository_url" {
+    description = "URL of the ECR repository where the backend Docker image is"
+    type = string   
+}

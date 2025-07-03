@@ -66,8 +66,8 @@ resource "aws_lb_target_group" "spring_boot_tg" {
 
 resource "aws_lb_target_group_attachment" "spring_boot_attachment" {
     target_group_arn = aws_lb_target_group.spring_boot_tg.arn
-    target_id        = var.ec2_instance_id
-    port             = 8080 
+    target_id = var.ec2_instance_id
+    port = 8080
 }
 
 resource "aws_lb_listener" "http_listener" {

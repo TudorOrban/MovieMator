@@ -22,6 +22,6 @@ echo "Pulling Docker image: $IMAGE_URI"
 docker pull $IMAGE_URI
 
 echo "Running Docker container: $IMAGE_URI"
-docker run -d --name moviemator-spring-boot-app -p 80:8080 $IMAGE_URI
+docker run -d --name moviemator-spring-boot-app -p 8080:8080 $IMAGE_URI
 
 echo "Docker container started."

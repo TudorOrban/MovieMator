@@ -4,10 +4,11 @@
 
 echo "Validating service health..."
 
-HEALTH_CHECK_URL="http://localhost/api/v1/health" 
+HEALTH_CHECK_URL="http://localhost/actuator/health" 
 
 MAX_RETRIES=10
 RETRY_DELAY=15 
+
 for i in $(seq 1 $MAX_RETRIES); do
   echo "Attempt $i/$MAX_RETRIES: Checking health at $HEALTH_CHECK_URL..."
   HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" $HEALTH_CHECK_URL)

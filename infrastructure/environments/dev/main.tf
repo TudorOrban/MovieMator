@@ -170,7 +170,7 @@ module "codebuild_projects" {
     codebuild_backend_role_arn = module.cicd_iam.codebuild_backend_role_arn
     codebuild_frontend_role_arn = module.cicd_iam.codebuild_frontend_role_arn 
     ecr_repository_url = module.ecr.repository_url
-    alb_dns_name = module.alb.alb_dns_name
+    domain_name = var.domain_name
     cloudfront_domain_name = module.s3_cloudfront_frontend.cloudfront_domain_name
     frontend_s3_bucket_name = module.s3_cloudfront_frontend.s3_bucket_name
     cloudfront_distribution_id = module.s3_cloudfront_frontend.cloudfront_distribution_id

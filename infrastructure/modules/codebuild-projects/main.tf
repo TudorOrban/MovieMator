@@ -24,10 +24,6 @@ resource "aws_codebuild_project" "backend_build" {
             value = var.ecr_repository_url
         }
         environment_variable {
-            name = "ALB_DNS_NAME"
-            value = var.alb_dns_name
-        }
-        environment_variable {
             name = "CLOUDFRONT_DOMAIN_NAME"
             value = var.cloudfront_domain_name
         }
@@ -65,8 +61,8 @@ resource "aws_codebuild_project" "frontend_build" {
             value = var.region
         }
         environment_variable {
-            name = "ALB_DNS_NAME"
-            value = var.alb_dns_name
+            name = "DOMAIN_NAME"
+            value = var.domain_name
         }
         environment_variable {
             name = "CLOUDFRONT_DOMAIN_NAME"

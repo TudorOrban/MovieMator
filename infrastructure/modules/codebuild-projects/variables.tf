@@ -28,8 +28,8 @@ variable "ecr_repository_url" {
     type = string
 }
 
-variable "alb_dns_name" {
-    description = "DNS name of the Application Load Balancer"
+variable "domain_name" {
+    description = "Domain name of the Application Load Balancer"
     type = string
 }
 

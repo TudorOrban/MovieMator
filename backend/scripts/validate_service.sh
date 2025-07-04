@@ -4,7 +4,7 @@
 
 echo "Validating service health..."
 
-HEALTH_CHECK_URL="http://localhost/actuator/health" 
+HEALTH_CHECK_URL="http://localhost:8080/actuator/health" 
 
 MAX_RETRIES=10
 RETRY_DELAY=15 

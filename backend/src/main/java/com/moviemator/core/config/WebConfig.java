@@ -11,8 +11,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-@Configuration
-public class WebConfig implements WebMvcConfigurer {
+//@Configuration
+public class WebConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(WebConfig.class);
 
@@ -22,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
         this.env = env;
     }
 
-    @Override
+//    @Override
     public void addCorsMappings(CorsRegistry registry) {
         String allowedOriginsCsv = env.getProperty("ALLOWED_CORS_ORIGINS");
 

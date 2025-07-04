@@ -108,6 +108,8 @@ module "route53" {
     domain_name = var.domain_name
     env = var.env
     project_name = var.project_name
+    alb_dns_name = module.alb.alb_dns_name  # Pass ALB DNS name
+    alb_zone_id  = module.alb.alb_zone_id 
 }
 
 # ACM

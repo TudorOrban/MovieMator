@@ -18,6 +18,15 @@ if [ -z "$IMAGE_URI" ]; then
   exit 1
 fi
 
+ECR_REGISTRY_URI=$(echo "$IMAGE_URI" | cut -d'/' -f1)
+
+echo "Logging in to ECR registry: $ECR_REGISTRY_URI..."
+aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin "$ECR_REGISTRY_URI"
+echo "ECR login successful."
+
+echo "Removing local Docker image to force fresh pull: $IMAGE_URI"
+docker rmi "$IMAGE_URI" || true
+
 echo "Pulling Docker image: $IMAGE_URI"
 docker pull $IMAGE_URI
 

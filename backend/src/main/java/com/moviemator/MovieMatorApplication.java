@@ -9,7 +9,7 @@ public class MovieMatorApplication {
 	public MovieMatorApplication() {
 		System.out.println("MovieMatorApplication constructor called! ####################################");
 	}
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(MovieMatorApplication.class, args);
 	}

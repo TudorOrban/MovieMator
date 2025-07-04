@@ -24,8 +24,6 @@ docker pull $IMAGE_URI
 echo "Running Docker container: $IMAGE_URI"
 docker run -d --restart=always -p 8080:8080 --name moviemator-spring-boot-app \
     -e SPRING_PROFILES_ACTIVE="docker-prod" \
-    # -e BACKEND_API_URL="http://${BACKEND_API_URL_VALUE}/api/v1" \
-    # -e FRONTEND_API_URL="http://${FRONTEND_API_URL_VALUE}" \
     $IMAGE_URI
 
 echo "Docker container started."

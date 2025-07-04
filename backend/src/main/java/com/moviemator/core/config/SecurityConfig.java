@@ -34,6 +34,7 @@ public class SecurityConfig {
     private final Environment env;
 
     public SecurityConfig(Environment env) {
+        System.out.println("Initiating SecurityConfig####################################################");
         this.env = env;
     }
 
@@ -79,6 +80,7 @@ public class SecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+        System.out.println("Configurating CORS####################################################");
         CorsConfiguration configuration = new CorsConfiguration();
 
         String allowedOriginsCsv = env.getProperty("ALLOWED_CORS_ORIGINS");
@@ -86,8 +88,11 @@ public class SecurityConfig {
 
         if (allowedOriginsCsv != null && !allowedOriginsCsv.isEmpty()) {
             allowedOriginsSet.addAll(Arrays.asList(allowedOriginsCsv.split(",")));
+            System.out.println("FOUND####################################################");
+
             logger.info("Spring Security CORS configured with allowed origins: {}", allowedOriginsSet);
         } else {
+            System.out.println("NOT FOUND####################################################");
             logger.warn("ALLOWED_CORS_ORIGINS environment variable not set for Spring Security CORS. Falling back to localhost.");
             allowedOriginsSet.add("http://localhost:4200");
         }

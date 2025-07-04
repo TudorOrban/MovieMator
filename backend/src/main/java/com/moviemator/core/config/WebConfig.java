@@ -7,6 +7,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
@@ -20,14 +24,20 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        String frontendApiUrl = env.getProperty("FRONTEND_API_URL");
-        if (frontendApiUrl == null) {
-            logger.warn("FRONTEND_API_URL environment variable not set. CORS might not work correctly.");
-            frontendApiUrl = "http://localhost:4200";
+        String allowedOriginsCsv = env.getProperty("ALLOWED_CORS_ORIGINS");
+
+        Set<String> allowedOrigins = new HashSet<>();
+        if (allowedOriginsCsv != null && !allowedOriginsCsv.isEmpty()) {
+            allowedOrigins.addAll(Arrays.asList(allowedOriginsCsv.split(",")));
+            logger.info("Configuring CORS with allowed origins: {}", allowedOrigins);
+        } else {
+            logger.warn("ALLOWED_CORS_ORIGINS environment variable not set. Falling back to localhost.");
+            allowedOrigins.add("http://localhost:4200");
         }
 
+
         registry.addMapping("/**")
-                .allowedOrigins(frontendApiUrl)
+                .allowedOrigins(allowedOrigins.toArray(new String[0]))
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);

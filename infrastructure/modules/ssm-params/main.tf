@@ -31,11 +31,11 @@ resource "aws_ssm_parameter" "rds_password" {
     }
 }
 
-resource "aws_ssm_parameter" "frontend_api_url" {
-    name = "/${var.project_name}/${var.env}/frontend_api_url"
-    description = "Frontend CloudFront domain name for ${var.project_name} ${var.env} backend CORS."
+resource "aws_ssm_parameter" "allowed_cors_origins" {
+    name = "/${var.project_name}/${var.env}/ALLOWED_CORS_ORIGINS"
+    description = "Comma-separated list of allowed origins for CORS policy."
     type = "String"
-    value = var.frontend_cloudfront_domain_name
+    value = var.allowed_cors_origins
     tags = {
         Environment = var.env
         Project = var.project_name

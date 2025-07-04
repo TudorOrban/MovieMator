@@ -39,9 +39,9 @@ DB_URL=$(aws ssm get-parameter --name "/${PROJECT_NAME}/${ENV}/rds_datasource_ur
 DB_USERNAME=$(aws ssm get-parameter --name "/${PROJECT_NAME}/${ENV}/rds_username" --with-decryption --query Parameter.Value --output text)
 DB_PASSWORD=$(aws ssm get-parameter --name "/${PROJECT_NAME}/${ENV}/rds_password" --with-decryption --query Parameter.Value --output text)
 
-FRONTEND_API_URL=$(aws ssm get-parameter --name "/${PROJECT_NAME}/${ENV}/frontend_api_url" --query Parameter.Value --output text)
+ALLOWED_CORS_ORIGINS=$(aws ssm get-parameter --name "/${PROJECT_NAME}/${ENV}/ALLOWED_CORS_ORIGINS" --query Parameter.Value --output text)
 
-if [ -z "$DB_URL" ] || [ -z "$DB_USERNAME" ] || [ -z "$DB_PASSWORD" ] || [ -z "$FRONTEND_API_URL" ]; then
+if [ -z "$DB_URL" ] || [ -z "$DB_USERNAME" ] || [ -z "$DB_PASSWORD" ] || [ -z "$ALLOWED_CORS_ORIGINS" ]; then
     echo "Error: One or more critical environment variables could not be retrieved from SSM Parameter Store."
     exit 1
 fi
@@ -52,7 +52,7 @@ docker run -d --restart=always -p 8080:8080 --name moviemator-spring-boot-app \
     -e SPRING_DATASOURCE_URL="$DB_URL" \
     -e SPRING_DATASOURCE_USERNAME="$DB_USERNAME" \
     -e SPRING_DATASOURCE_PASSWORD="$DB_PASSWORD" \
-    -e FRONTEND_API_URL="$FRONTEND_API_URL" \
+    -e ALLOWED_CORS_ORIGINS="$ALLOWED_CORS_ORIGINS" \
     $IMAGE_URI
 
 echo "Docker container started."

@@ -1,6 +1,5 @@
 
 resource "aws_acm_certificate" "main" {
-    # provider = aws.us_east_1
     domain_name = var.domain_name
     validation_method = "DNS"
 
@@ -19,7 +18,6 @@ resource "aws_route53_record" "main_validation" {
         for dvo in aws_acm_certificate.main.domain_validation_options : dvo.domain_name => dvo
     }
 
-    # provider = aws.us_east_1
     zone_id = var.route53_zone_id
     name = each.value.resource_record_name
     type = each.value.resource_record_type
@@ -28,7 +26,6 @@ resource "aws_route53_record" "main_validation" {
 }
 
 resource "aws_acm_certificate_validation" "main" {
-    # provider = aws.us_east_1
     certificate_arn = aws_acm_certificate.main.arn
     validation_record_fqdns = [for record in aws_route53_record.main_validation : record.fqdn]
 

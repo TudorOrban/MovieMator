@@ -22,3 +22,13 @@ variable "project_name" {
     description = "Name of the project."
     type = string
 }
+
+variable "cloudfront_dns_name" {
+    description = "The domain name of the CloudFront distribution."
+    type = string
+}
+
+variable "cloudfront_zone_id" {
+    description = "The hosted zone ID of the CloudFront distribution."
+    type = string
+}

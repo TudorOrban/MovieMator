@@ -36,7 +36,7 @@ variable "db_password" {
     sensitive = true
 }
 
-variable "frontend_cloudfront_domain_name" {
-    description = "The domain name of the frontend CloudFront distribution."
+variable "allowed_cors_origins" {
+    description = "Comma-separated list of allowed origins for CORS policy."
     type = string
 }

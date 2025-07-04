@@ -102,14 +102,21 @@ module "s3_cloudfront_frontend" {
 }
 
 # Route 53
+data "aws_cloudfront_distribution" "s3_distribution_data" {
+    id = module.s3_cloudfront_frontend.cloudfront_distribution_id
+}
+
 module "route53" {
     source = "../../modules/route53"
 
     domain_name = var.domain_name
     env = var.env
     project_name = var.project_name
-    alb_dns_name = module.alb.alb_dns_name  # Pass ALB DNS name
+    alb_dns_name = module.alb.alb_dns_name
     alb_zone_id  = module.alb.alb_zone_id 
+
+    cloudfront_dns_name = module.s3_cloudfront_frontend.cloudfront_domain_name
+    cloudfront_zone_id  = data.aws_cloudfront_distribution.s3_distribution_data.hosted_zone_id
 }
 
 # ACM
@@ -126,7 +133,7 @@ module "cloudfront_acm" {
 
 module "alb_acm" {
     source = "../../modules/acm" 
-    domain_name = var.domain_name
+    domain_name = "api.${var.domain_name}" 
     route53_zone_id = module.route53.zone_id 
     env = var.env
     project_name = var.project_name
@@ -144,7 +151,11 @@ module "ssm_params" {
     db_name = var.db_name
     db_username = var.db_username
     db_password = var.db_password
-    frontend_cloudfront_domain_name = module.s3_cloudfront_frontend.cloudfront_domain_name
+    allowed_cors_origins = join(",", [
+        "https://${module.s3_cloudfront_frontend.cloudfront_domain_name}",
+        "https://${var.domain_name}",                                
+        "https://www.${var.domain_name}"                             
+    ])
 }
 
 # CI/CD IAM Roles

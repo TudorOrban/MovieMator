@@ -1,4 +1,4 @@
-FROM openjdk:21-jdk
+FROM public.ecr.aws/amazoncorretto/amazoncorretto:21
 
 WORKDIR /app
 

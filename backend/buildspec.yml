@@ -41,6 +41,6 @@ phases:
 artifacts:
   files:
     - imageDefinitions.json
-    - appspec.yml
-    - scripts/**/*
+    - backend/appspec.yml
+    - backend/scripts/**/*
   discard-paths: yes

@@ -306,7 +306,7 @@ resource "aws_iam_role" "codedeploy_role" {
                 },
             },
         ],
-    }) 
+    })  
 
     tags = {
         Environment = var.env,

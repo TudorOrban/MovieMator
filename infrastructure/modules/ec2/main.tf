@@ -76,6 +76,11 @@ resource "aws_iam_role_policy_attachment" "ecr_read_only_attach" {
     policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
+resource "aws_iam_role_policy_attachment" "ec2_s3_read_access" {
+    role = aws_iam_role.ec2_role.name
+    policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonS3ReadOnlyAccess"
+}
+
 
 data "aws_partition" "current" {}
 

@@ -15,5 +15,5 @@ output "spring_boot_target_group_arn" {
 
 output "alb_target_group_name" {
     description = "The name of the ALB target group"
-    value       = aws_lb_target_group.spring_boot_tg.name
+    value = aws_lb_target_group.spring_boot_tg.name
 }

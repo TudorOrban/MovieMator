@@ -14,14 +14,16 @@ variable "region" {
 }
 
 variable "alb_dns_name" {
-    description = "The DNS name of the ALB for backend API calls"
+    description = "The DNS name of the Application Load Balancer for API requests."
     type = string
 }
 
-/*
-variable "custom_domain_name" {
-    description = "Custom domain name for the CloudFront distribution"
+variable "cloudfront_certificate_arn" {
+    description = "The ARN of the ACM certificate for the CloudFront distribution (must be in us-east-1)."
     type = string
-    default = null
 }
-*/
+
+variable "domain_name" {
+    description = "The custom domain name to associate with the CloudFront distribution."
+    type = string
+}

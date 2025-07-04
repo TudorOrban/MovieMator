@@ -45,11 +45,24 @@ resource "aws_s3_bucket_policy" "frontend_bucket_policy" {
 
 resource "aws_cloudfront_distribution" "frontend_distribution" {
     provider = aws.us_east_1
+
     origin {
         domain_name = aws_s3_bucket.frontend_bucket.bucket_regional_domain_name
         origin_id = "S3-moviemator-frontend"
         s3_origin_config {
             origin_access_identity = aws_cloudfront_origin_access_identity.frontend_oai.cloudfront_access_identity_path
+        }
+    }
+
+    origin {
+        domain_name = var.alb_dns_name
+        origin_id = "ALB-moviemator-backend"
+        
+        custom_origin_config {
+            http_port = 80
+            https_port = 443
+            origin_protocol_policy = "https-only"
+            origin_ssl_protocols = ["TLSv1.2"]
         }
     }
 
@@ -62,7 +75,7 @@ resource "aws_cloudfront_distribution" "frontend_distribution" {
         allowed_methods = ["GET", "HEAD", "OPTIONS"]
         cached_methods = ["GET", "HEAD", "OPTIONS"]
         target_origin_id = "S3-moviemator-frontend"
-        viewer_protocol_policy = "allow-all"
+        viewer_protocol_policy = "redirect-to-https"
         min_ttl = 0
         default_ttl = 86400
         max_ttl = 31536000
@@ -73,6 +86,25 @@ resource "aws_cloudfront_distribution" "frontend_distribution" {
                 forward = "none"
             }
             headers = ["Origin"]
+        }
+    }
+
+    ordered_cache_behavior {
+        path_pattern = "/api/*"
+        allowed_methods = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+        cached_methods = ["GET", "HEAD", "OPTIONS"]
+        target_origin_id = "ALB-moviemator-backend"
+        viewer_protocol_policy = "redirect-to-https"
+        min_ttl = 0
+        default_ttl = 0
+        max_ttl = 0
+        compress = true
+        forwarded_values {
+            query_string = true
+            cookies {
+                forward = "all"
+            }
+            headers = ["Origin", "Authorization", "Content-Type"]
         }
     }
 
@@ -90,9 +122,13 @@ resource "aws_cloudfront_distribution" "frontend_distribution" {
     }
     
     viewer_certificate {
-        cloudfront_default_certificate = true
+        acm_certificate_arn = var.cloudfront_certificate_arn
+        ssl_support_method = "sni-only"
+        minimum_protocol_version = "TLSv1.2_2021"
     }
 
+    aliases = [var.domain_name]
+    
     restrictions {
         geo_restriction {
             restriction_type = "none"

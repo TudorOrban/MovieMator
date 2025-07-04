@@ -82,6 +82,7 @@ module "alb" {
     project_name = var.project_name
     region = var.region
     ec2_instance_id = module.ec2.ec2_instance_id
+    alb_certificate_arn = module.alb_acm.certificate_arn
 }
 
 # S3/CloudFront
@@ -92,10 +93,41 @@ module "s3_cloudfront_frontend" {
     env = var.env
     region = var.region
     alb_dns_name = module.alb.alb_dns_name
+    cloudfront_certificate_arn = module.cloudfront_acm.certificate_arn
+    domain_name = var.domain_name
     providers = {
         aws = aws
         aws.us_east_1 = aws.us_east_1
     }
+}
+
+# Route 53
+module "route53" {
+    source = "../../modules/route53"
+
+    domain_name = var.domain_name
+    env = var.env
+    project_name = var.project_name
+}
+
+# ACM
+module "cloudfront_acm" {
+    source = "../../modules/acm"
+    providers = {
+        aws = aws.us_east_1
+    }
+    domain_name = var.domain_name
+    route53_zone_id = module.route53.zone_id
+    env = var.env
+    project_name = var.project_name
+}
+
+module "alb_acm" {
+    source = "../../modules/acm" 
+    domain_name = var.domain_name
+    route53_zone_id = module.route53.zone_id 
+    env = var.env
+    project_name = var.project_name
 }
 
 # SSM

@@ -11,6 +11,14 @@ resource "aws_security_group" "alb_sg" {
         cidr_blocks = ["0.0.0.0/0"]
     }
 
+    ingress {
+        description = "Allow HTTPS access from anywhere"
+        from_port = 443
+        to_port = 443
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
     egress {
         from_port = 0
         to_port = 0
@@ -84,5 +92,24 @@ resource "aws_lb_listener" "http_listener" {
         Name        = "${var.env}-http-listener"
         Environment = var.env
         Project     = var.project_name
+    }
+}
+
+resource "aws_lb_listener" "https_listener" {
+    load_balancer_arn = aws_lb.main.arn
+    port = 443
+    protocol = "HTTPS"
+    ssl_policy = "ELBSecurityPolicy-2016-08"
+    certificate_arn = var.alb_certificate_arn
+
+    default_action {
+        type = "forward"
+        target_group_arn = aws_lb_target_group.spring_boot_tg.arn
+    }
+
+    tags = {
+        Name = "${var.env}-https-listener"
+        Environment = var.env
+        Project = var.project_name
     }
 }

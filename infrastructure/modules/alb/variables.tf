@@ -27,3 +27,8 @@ variable "ec2_instance_id" {
     description = "The ID of the EC2 instance to attach to the ALB target group"
     type = string
 }
+
+variable "alb_certificate_arn" {
+    description = "The ARN of the load Balancer certificate"
+    type = string
+}

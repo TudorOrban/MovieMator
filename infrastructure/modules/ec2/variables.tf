@@ -24,12 +24,12 @@ variable "ec2_instance_type" {
 }
 
 variable "my_public_ip_cidr" {
-    description = "Your public IP address in CIDR format for SSH access"
+    description = "The Public IP address in CIDR format for SSH access"
     type = string
 }
 
 variable "ssh_public_key" {
-    description = "The public key string for your SSH key pair"
+    description = "The public key string for the SSH key pair"
     type = string
 }
 

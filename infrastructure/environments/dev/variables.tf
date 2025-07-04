@@ -92,13 +92,13 @@ variable "ec2_instance_type" {
 }
 
 variable "my_public_ip_cidr" {
-    description = "Your public IP address in CIDR format for SSH access"
+    description = "The public IP address in CIDR format for SSH access"
     type = string
     default = "94.53.42.151/32"
 }
 
 variable "ssh_public_key" {
-    description = "The public key string for your SSH key pair"
+    description = "The public key string for the SSH key pair"
     type = string
 }
 
@@ -107,6 +107,18 @@ variable "ecr_repository_name" {
     description = "Name of the ECR repository for the Spring Boot application"
     type = string
     default = "moviemator-spring-boot-app"
+}
+
+# R53
+variable "domain_name" {
+    description = "Custom domain name for Route 53 and ACM."
+    type = string
+    default = "moviemator.org"
+}
+
+variable "route53_zone_id" {
+    description = "The ID of the Route 53 Hosted Zone."
+    type = string
 }
 
 # CodePipeline

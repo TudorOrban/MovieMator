@@ -81,8 +81,45 @@ resource "aws_iam_role_policy_attachment" "ec2_s3_read_access" {
     policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonS3ReadOnlyAccess"
 }
 
+resource "aws_iam_role_policy" "ec2_ssm_params_read_access" {
+    name = "${var.env}-ec2-ssm-params-read-access"
+    role = aws_iam_role.ec2_role.id
+
+    policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+            {
+                Effect = "Allow"
+                Action = [
+                    "ssm:GetParameters",
+                    "ssm:GetParameter",
+                    "ssm:GetParametersByPath"
+                ]
+                Resource = [
+                    "arn:${data.aws_partition.current.partition}:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/${var.project_name}/${var.env}/*"
+                ]
+            },
+            {
+                Effect = "Allow"
+                Action = [
+                    "kms:Decrypt"
+                ]
+                Resource = "arn:${data.aws_partition.current.partition}:kms:${var.region}:${data.aws_caller_identity.current.account_id}:key/*"
+                Condition = {
+                    StringEquals = {
+                        "kms:ViaService" = "ssm.${var.region}.amazonaws.com"
+                    }
+                    StringLike = {
+                        "kms:EncryptionContext:PARAMETER_ARN" = "arn:${data.aws_partition.current.partition}:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/${var.project_name}/${var.env}/*"
+                    }
+                }
+            }
+        ]
+    })
+}
 
 data "aws_partition" "current" {}
+data "aws_caller_identity" "current" {}
 
 resource "aws_iam_instance_profile" "ec2_profile" {
     name = "${var.env}-ec2-profile"

@@ -31,6 +31,7 @@ module "rds" {
     db_name = var.db_name
     db_username = var.db_username
     db_password = var.db_password
+    rds_port = var.rds_port
     db_instance_class = var.db_instance_class
     db_allocated_storage = var.db_allocated_storage
     db_skip_final_snapshot = var.db_skip_final_snapshot
@@ -71,6 +72,7 @@ module "ec2" {
     frontend_cloudfront_domain_name = module.s3_cloudfront_frontend.cloudfront_domain_name
 }
 
+# Load Balancer
 module "alb" {
     source = "../../modules/alb" 
     
@@ -94,6 +96,21 @@ module "s3_cloudfront_frontend" {
         aws = aws
         aws.us_east_1 = aws.us_east_1
     }
+}
+
+# SSM
+module "ssm_params" {
+    source = "../../modules/ssm-params"
+
+    project_name = var.project_name
+    env = var.env
+
+    rds_endpoint = module.rds.rds_endpoint
+    rds_port = var.rds_port
+    db_name = var.db_name
+    db_username = var.db_username
+    db_password = var.db_password
+    frontend_cloudfront_domain_name = module.s3_cloudfront_frontend.cloudfront_domain_name
 }
 
 # CI/CD IAM Roles

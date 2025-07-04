@@ -16,8 +16,8 @@ resource "aws_security_group" "rds_sg" {
 
     ingress {
         description = "Allow PostgreSQL acces from within the VPC"
-        from_port = 5432
-        to_port = 5432
+        from_port = var.rds_port
+        to_port = var.rds_port
         protocol = "tcp"
         cidr_blocks = [var.vpc_cidr] # TODO: Restrict to the SG of the application servers
     }

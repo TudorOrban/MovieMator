@@ -21,9 +21,38 @@ fi
 echo "Pulling Docker image: $IMAGE_URI"
 docker pull $IMAGE_URI
 
+PROJECT_NAME="moviemator"
+ENV="dev"
+
+echo "Installing AWS CLI v2..."
+sudo yum install -y unzip
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
+cd /tmp
+unzip awscliv2.zip
+sudo ./aws/install --update
+rm -rf awscliv2.zip aws/
+cd - > /dev/null
+
+echo "Retrieving environment variables from SSM Parameter Store for ${PROJECT_NAME}/${ENV}..."
+
+DB_URL=$(aws ssm get-parameter --name "/${PROJECT_NAME}/${ENV}/rds_datasource_url" --with-decryption --query Parameter.Value --output text)
+DB_USERNAME=$(aws ssm get-parameter --name "/${PROJECT_NAME}/${ENV}/rds_username" --with-decryption --query Parameter.Value --output text)
+DB_PASSWORD=$(aws ssm get-parameter --name "/${PROJECT_NAME}/${ENV}/rds_password" --with-decryption --query Parameter.Value --output text)
+
+FRONTEND_API_URL=$(aws ssm get-parameter --name "/${PROJECT_NAME}/${ENV}/frontend_api_url" --query Parameter.Value --output text)
+
+if [ -z "$DB_URL" ] || [ -z "$DB_USERNAME" ] || [ -z "$DB_PASSWORD" ] || [ -z "$FRONTEND_API_URL" ]; then
+    echo "Error: One or more critical environment variables could not be retrieved from SSM Parameter Store."
+    exit 1
+fi
+
 echo "Running Docker container: $IMAGE_URI"
 docker run -d --restart=always -p 8080:8080 --name moviemator-spring-boot-app \
     -e SPRING_PROFILES_ACTIVE="docker-prod" \
+    -e SPRING_DATASOURCE_URL="$DB_URL" \
+    -e SPRING_DATASOURCE_USERNAME="$DB_USERNAME" \
+    -e SPRING_DATASOURCE_PASSWORD="$DB_PASSWORD" \
+    -e FRONTEND_API_URL="$FRONTEND_API_URL" \
     $IMAGE_URI
 
 echo "Docker container started."

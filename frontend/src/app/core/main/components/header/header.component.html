@@ -1,14 +1,15 @@
-<div class="header border-b border-gray-300 shadow-sm">
-    <div>
+<div class="header">
+    <div class="logo-container">
         <img src="/assets/images/Logo.png" class="w-23 h-15"/>
     </div>
 
-    <div class="flex items-center space-x-20">
+    <div class="nav-links space-x-4 md:space-x-12 xl:space-x-20">
         <a [routerLink]="''" class="text-xl font-semibold">Home</a>
         <a [routerLink]="'/movies'" class="text-xl font-semibold">Movies</a>
+        <a [routerLink]="'/statistics'" class="text-xl font-semibold">Stats</a>
     </div>
 
-    <div *ngIf="!isLoggedIn" class="flex items-center space-x-4">
+    <div *ngIf="!isLoggedIn" class="auth-buttons">
         <a [routerLink]="'/signup'" class="standard-auth-button">
             Sign Up
         </a>
@@ -17,7 +18,7 @@
         </a>
     </div>
 
-    <div *ngIf="isLoggedIn">
+    <div *ngIf="isLoggedIn" class="user-bar-container">
         <app-userbar></app-userbar>
     </div>
 </div>

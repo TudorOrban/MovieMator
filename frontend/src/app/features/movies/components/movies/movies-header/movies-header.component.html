@@ -1,57 +1,64 @@
-<div class="w-full px-20 border-b border-gray-300 pb-4">
-    <div class="text-2xl font-semibold pb-4">
-        Movies ({{ totalCount }})
-    </div>
-    <div class="flex items-center justify-between w-full space-x-2 flex-wrap">
+<div class="w-full page-std-padding-x border-b border-gray-300 pb-4">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Movies ({{ totalCount }})</h2>
+        </div>
 
-        <div class="flex items-center space-x-2 flex-wrap">
-            <app-search-input
-                (onSearch)="handleSearchTextChange($event)"
-            ></app-search-input>
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full space-y-4 md:space-y-0 md:space-x-4">
 
-            <app-selector 
-                [items]="searchConfig.sortOptions" 
-                [defaultItemValue]="'createdAt'" 
-                (selectedItemChange)="handleSortOptionChange($event)"
-                class="ml-8"
-            ></app-selector>
+        <div class="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <div class="flex-grow">
+                <app-search-input
+                    (onSearch)="handleSearchTextChange($event)"
+                ></app-search-input>
+            </div>
 
-            <button class="standard-action-button" (click)="handleToggleIsAscending()">
-                <fa-icon [icon]="searchParams.isAscending ? faArrowUpWideShort : faArrowDownShortWide"></fa-icon>
-            </button>
+            <div class="flex items-center space-x-2">
+                <div>
+                    <app-selector
+                        [items]="searchConfig.sortOptions"
+                        [defaultItemValue]="'createdAt'"
+                        (selectedItemChange)="handleSortOptionChange($event)"
+                        class="w-full sm:w-auto"
+                    ></app-selector>
+                </div>
+
+                <div>
+                    <button class="standard-action-button w-12" (click)="handleToggleIsAscending()">
+                        <fa-icon [icon]="searchParams.isAscending ? faArrowUpWideShort : faArrowDownShortWide"></fa-icon>
+                    </button>
+                </div>
+            </div>
         </div>
 
         <div class="flex items-center space-x-4">
-            <button *ngIf="!isDeleteModeOn" class="standard-action-button" (click)="handleToggleDeleteMode()">
-                <fa-icon 
-                    [icon]="faTrash" 
-                    class="hover:text-red-700"
-                    [ngClass]="{
-                        'text-red-700': isDeleteModeOn
-                    }"
-                />
-            </button>
-            <button *ngIf="isDeleteModeOn" class="standard-action-button" (click)="deleteMovies()">
-                <fa-icon
-                    [icon]="faCheck"
-                    class="text-red-700"
-                />
-            </button>
-            <a [routerLink]="'/movies/add-movies'" class="standard-write-button space-x-2 whitespace-nowrap">
+            <ng-container *ngIf="!isDeleteModeOn; else confirmDeleteButton">
+                <button class="standard-action-button w-12" (click)="handleToggleDeleteMode()">
+                    <fa-icon
+                        [icon]="faTrash"
+                        class="text-gray-700 hover:text-red-700"
+                    />
+                </button>
+            </ng-container>
+            <ng-template #confirmDeleteButton>
+                <button class="standard-action-button bg-red-600 hover:bg-red-700 text-white w-12" (click)="deleteMovies()">
+                    <fa-icon [icon]="faCheck"/>
+                </button>
+            </ng-template>
+
+            <a [routerLink]="'/movies/add-movies'" class="standard-write-button w-full sm:w-auto flex items-center justify-center space-x-2 whitespace-nowrap">
                 <fa-icon [icon]="faPlus"></fa-icon>
-                <div>
-                    Add Movies
-                </div>
+                <div>Add Movies</div>
             </a>
         </div>
     </div>
 
-    <div class="py-4">
-
+    <div class="mt-6">
+        <app-filters-bar
+            [filterOptions]="searchConfig.filterOptions"
+            (movieFiltersChanged)="handleMovieFiltersChange($event)"
+        ></app-filters-bar>
     </div>
 
-    <app-filters-bar
-        [filterOptions]="searchConfig.filterOptions"
-        (movieFiltersChanged)="handleMovieFiltersChange($event)"
-    ></app-filters-bar>
+    <div class="py-4">
+        </div>
 </div>

@@ -68,7 +68,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
         this.userService.updateUser(this.editProfileData).subscribe({
             next: (data) => {
                 this.toastService.addToast({ title: "Success", details: "Profile edited successfully.", type: ToastType.SUCCESS });
-                this.router.navigate(["/"]);
+                this.router.navigate(["/user-profile"]);
             },
             error: (error) => {
                 this.toastService.addToast({ title: "Error", details: "An error occurred editing the profile. Please try again later.", type: ToastType.ERROR });

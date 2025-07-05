@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPlus, faArrowUpWideShort, faArrowDownShortWide, faTrash, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faArrowUpWideShort, faArrowDownShortWide, faTrash, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { SearchInputComponent } from "../../../../../shared/common/components/search-input/search-input.component";
 import { MovieFilters, PageSearchConfiguration, SearchParams } from '../../../../../shared/models/Search';
 import { pagesSearchConfiguration } from '../../../../../core/main/config/pagesStandardConfig';
@@ -61,4 +61,5 @@ export class MoviesHeaderComponent {
     faArrowDownShortWide = faArrowDownShortWide;
     faTrash = faTrash;
     faCheck = faCheck;
+    faTimes = faTimes;
 }

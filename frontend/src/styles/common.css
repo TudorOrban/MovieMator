@@ -11,6 +11,20 @@
 }
 
 .page-std-padding-y {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+    .page-std-padding-x {
+        padding-left: 4rem;
+        padding-right: 4rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .page-std-padding-x {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
 }

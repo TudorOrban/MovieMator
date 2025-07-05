@@ -1,38 +1,53 @@
-<div class="page-std-padding-x py-8">
-    <div class="w-full text-3xl font-semibold text-center">
-        MovieMator
+<div class="w-full min-h-screen flex flex-col items-center justify-center py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-900">
+    <div class="text-center space-y-8 max-w-4xl mx-auto p-8 sm:p-10 bg-white rounded-xl shadow-lg border border-gray-200">
+
+        <h1 class="text-6xl font-extrabold text-indigo-700 leading-tight">
+            MovieMator
+        </h1>
+        <p class="text-2xl text-gray-700 mt-4 leading-relaxed">
+            Your personal companion for tracking your cinematic journey.
+        </p>
+
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+            <div class="bg-indigo-50 p-6 rounded-lg shadow-sm">
+                <h3 class="text-xl font-bold text-indigo-800 mb-2">🎬 Track Your Watches</h3>
+                <p class="text-gray-700">
+                    Easily record the films you've watched, keeping a detailed log of your viewing history.
+                </p>
+            </div>
+            <div class="bg-blue-50 p-6 rounded-lg shadow-sm">
+                <h3 class="text-xl font-bold text-blue-800 mb-2">⭐ Rate & Review</h3>
+                <p class="text-gray-700">
+                    Give films a personal rating and add your unique reviews and notes.
+                </p>
+            </div>
+            <div class="bg-purple-50 p-6 rounded-lg shadow-sm">
+                <h3 class="text-xl font-bold text-purple-800 mb-2">🔍 Explore & Organize</h3>
+                <p class="text-gray-700">
+                    Search and filter your movie collection with ease by director, genre, release year, and more.
+                </p>
+            </div>
+            <div class="bg-green-50 p-6 rounded-lg shadow-sm">
+                <h3 class="text-xl font-bold text-green-800 mb-2">📊 Gain Insights (Coming Soon!)</h3>
+                <p class="text-gray-700">
+                    Discover fascinating statistics about your movie watching habits and trends.
+                </p>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-12">
+            <a [routerLink]="'/movies/add-movies'" class="standard-write-button space-x-2 px-8 py-4 text-xl shadow-md transform hover:scale-105 transition duration-300">
+                <fa-icon [icon]="faPlus"></fa-icon> 
+                <div>Add Your First Movie</div>
+            </a>
+            <a [routerLink]="'/movies'" class="standard-action-button space-x-2 px-8 py-4 text-xl shadow-md transform hover:scale-105 transition duration-300">
+                <fa-icon [icon]="faFilm"></fa-icon> 
+                <div>View My Movies</div>
+            </a>
+        </div>
     </div>
 
-    <div class="mt-12 text-center max-w-2xl mx-auto space-y-6">
-        <p class="text-lg text-gray-700">
-            Welcome to MovieMator, your personal movie tracking companion! Easily record the films you've watched, rate them, and keep a curated list of your cinematic journey.
-        </p>
-
-        <p class="text-lg text-gray-700">
-            Get started by adding your first movie, or explore your existing collection.
-        </p>
-
-        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
-            <a [routerLink]="'/movies/add-movies'" class="standard-write-button px-6 py-3 text-lg">
-                Add a New Movie
-            </a>
-            <a [routerLink]="'/movies'" class="standard-action-button px-6 py-3 text-lg">
-                View My Movies
-            </a>
-        </div>
-
-        <div class="mt-12 border-t pt-8 border-gray-200">
-            <h3 class="text-2xl font-semibold text-gray-800 mb-4">What you can do:</h3>
-            <ul class="list-disc list-inside text-left mx-auto max-w-sm text-gray-600 space-y-2">
-                <li>🎬 Track movies you've watched.</li>
-                <li>⭐ Rate films on a scale of 1-10 and add personal reviews.</li>
-                <li>🔍 Search and filter your movie collection by director, release year, and more.</li>
-                <li>📊 See basic statistics about your movie watching habits (coming soon!).</li>
-            </ul>
-        </div>
-
-        <div class="mt-12 text-gray-500 text-sm">
-            Ready to build your ultimate movie library?
-        </div>
+    <div class="mt-12 text-center text-sm text-gray-500">
+        <p>&copy; 2025 All rights reserved.</p>
     </div>
 </div>

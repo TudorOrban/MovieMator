@@ -28,7 +28,8 @@ module "rds" {
   project_name       = var.project_name
   region             = var.region
 
-  my_public_ip_cidr = var.my_public_ip_cidr
+  app_server_security_group_id = module.ec2.ec2_security_group_id
+  admin_public_ip_cidr         = var.admin_public_ip_cidr
 
   db_name                = var.db_name
   db_username            = var.db_username
@@ -58,9 +59,9 @@ module "ec2" {
   project_name      = var.project_name
   region            = var.region
 
-  ec2_instance_type = var.ec2_instance_type
-  my_public_ip_cidr = var.my_public_ip_cidr
-  ssh_public_key    = var.ssh_public_key
+  ec2_instance_type    = var.ec2_instance_type
+  admin_public_ip_cidr = var.admin_public_ip_cidr
+  ssh_public_key       = var.ssh_public_key
 
   rds_endpoint = module.rds.rds_endpoint
   rds_port     = module.rds.rds_port

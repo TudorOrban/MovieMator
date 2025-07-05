@@ -19,16 +19,20 @@ resource "aws_security_group" "rds_sg" {
     from_port   = var.rds_port
     to_port     = var.rds_port
     protocol    = "tcp"
-    cidr_blocks = [var.vpc_cidr] # TODO: Restrict to the SG of the application servers
+    security_groups = [var.app_server_security_group_id] 
   }
 
-  #   ingress {
-  #     description = "Allow PostgreSQL access from specific public IP for admin/debugging"
-  #     from_port   = var.rds_port
-  #     to_port     = var.rds_port
-  #     protocol    = "tcp"
-  #     cidr_blocks = [var.my_public_ip_cidr]
-  #   }
+  # For dev, allow access from a specific admin IP address
+  dynamic "ingress" {
+    for_each = var.env == "dev" && var.admin_public_ip_cidr != null ? [1] : []
+    content {
+      description = "Allow PostgreSQL access from specific public IP for admin/debugging (Dev Only)"
+      from_port   = var.rds_port
+      to_port     = var.rds_port
+      protocol    = "tcp"
+      cidr_blocks = [var.admin_public_ip_cidr]
+    }
+  }
 
   egress {
     from_port   = 0

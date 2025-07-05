@@ -39,9 +39,15 @@ variable "db_password" {
   sensitive   = true
 }
 
-variable "my_public_ip_cidr" {
-  description = "The public IP address in CIDR format for SSH access"
+variable "app_server_security_group_id" {
+  description = "The ID of the security group for application servers (e.g., EC2) that need to connect to RDS."
   type        = string
+}
+
+variable "admin_public_ip_cidr" {
+  description = "Public IP CIDR for administrative access to RDS (only for dev environments). Set to null for prod."
+  type        = string
+  default     = null
 }
 
 variable "rds_port" {

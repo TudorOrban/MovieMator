@@ -18,6 +18,29 @@ module "network" {
   region               = var.region
 }
 
+# SSM
+module "ssm_params" {
+  source = "../../modules/ssm-params"
+
+  project_name = var.project_name
+  env          = var.env
+
+  github_oauth_token      = var.github_oauth_token
+  codestar_connection_arn = var.codestar_connection_arn
+  rds_endpoint            = module.rds.rds_endpoint
+  rds_port                = var.rds_port
+  db_name                 = var.db_name
+  db_username             = var.db_username
+  db_password             = var.db_password
+  allowed_cors_origins = join(",", [
+    "https://${module.s3_cloudfront_frontend.cloudfront_domain_name}",
+    "https://${var.domain_name}",
+    "https://www.${var.domain_name}"
+  ])
+  cognito_issuer_uri = module.cognito.user_pool_issuer_uri
+}
+
+# RDS database
 module "rds" {
   source = "../../modules/rds"
 
@@ -28,7 +51,8 @@ module "rds" {
   project_name       = var.project_name
   region             = var.region
 
-  my_public_ip_cidr = var.my_public_ip_cidr
+  app_server_security_group_id = module.ec2.ec2_security_group_id
+  admin_public_ip_cidr         = null
 
   db_name                = var.db_name
   db_username            = var.db_username
@@ -52,26 +76,38 @@ module "ecr" {
 module "ec2" {
   source = "../../modules/ec2"
 
+  env          = var.env
+  project_name = var.project_name
+  region       = var.region
+
   vpc_id            = module.network.vpc_id
   public_subnet_ids = module.network.public_subnet_ids
-  env               = var.env
-  project_name      = var.project_name
-  region            = var.region
-
   ec2_instance_type = var.ec2_instance_type
-  my_public_ip_cidr = var.my_public_ip_cidr
   ssh_public_key    = var.ssh_public_key
 
-  rds_endpoint = module.rds.rds_endpoint
-  rds_port     = module.rds.rds_port
-  db_name      = var.db_name
-  db_username  = var.db_username
-  db_password  = var.db_password
+  alb_security_group_id = module.alb.alb_security_group_id
+  alb_target_group_arn  = module.alb.alb_target_group_arn
+  alb_dns_name          = module.alb.alb_dns_name
 
-  ecr_repository_url              = module.ecr.repository_url
-  alb_security_group_id           = module.alb.alb_security_group_id
-  alb_dns_name                    = module.alb.alb_dns_name
   frontend_cloudfront_domain_name = module.s3_cloudfront_frontend.cloudfront_domain_name
+
+  ecr_repository_url = module.ecr.repository_url
+
+  admin_public_ip_cidr = var.admin_public_ip_cidr
+
+  rds_datasource_url_ssm_param_name   = module.ssm_params.rds_datasource_url_param_name
+  rds_username_ssm_param_name         = module.ssm_params.rds_username_param_name
+  rds_password_ssm_param_name         = module.ssm_params.rds_password_param_name
+  allowed_cors_origins_ssm_param_name = module.ssm_params.allowed_cors_origins_param_name
+  cognito_issuer_uri_ssm_param_name   = module.ssm_params.cognito_issuer_uri_param_name
+
+  asg_min_size_dev           = var.asg_min_size_dev
+  asg_max_size_dev           = var.asg_max_size_dev
+  asg_desired_capacity_dev   = var.asg_desired_capacity_dev
+  asg_min_size_prod          = var.asg_min_size_prod
+  asg_max_size_prod          = var.asg_max_size_prod
+  asg_desired_capacity_prod  = var.asg_desired_capacity_prod
+  asg_target_cpu_utilization = var.asg_target_cpu_utilization
 }
 
 # Load Balancer
@@ -151,28 +187,6 @@ module "cognito" {
   frontend_cloudfront_domain_name = module.s3_cloudfront_frontend.cloudfront_domain_name
 }
 
-# SSM
-module "ssm_params" {
-  source = "../../modules/ssm-params"
-
-  project_name = var.project_name
-  env          = var.env
-
-  github_oauth_token   = var.github_oauth_token
-  codestar_connection_arn = var.codestar_connection_arn
-  rds_endpoint = module.rds.rds_endpoint
-  rds_port     = var.rds_port
-  db_name      = var.db_name
-  db_username  = var.db_username
-  db_password  = var.db_password
-  allowed_cors_origins = join(",", [
-    "https://${module.s3_cloudfront_frontend.cloudfront_domain_name}",
-    "https://${var.domain_name}",
-    "https://www.${var.domain_name}"
-  ])
-  cognito_issuer_uri = module.cognito.user_pool_issuer_uri
-}
-
 # CI/CD IAM Roles
 module "cicd_iam" {
   source = "../../modules/cicd-iam"
@@ -232,11 +246,11 @@ module "codepipeline" {
   codepipeline_role_arn           = module.cicd_iam.codepipeline_role_arn
   codepipeline_artifact_bucket_id = module.cicd_iam.codepipeline_artifact_bucket_id
 
-  github_repo_owner       = var.github_repo_owner
-  github_repo_name        = var.github_repo_name
-  github_branch           = var.github_branch
-  github_oauth_token      = var.github_oauth_token
-  codestar_connection_arn = "arn:aws:codeconnections:eu-central-1:474668403865:connection/831b9d46-9ac5-4a0e-adc7-eb2127b4bd3b"
+  github_repo_owner                      = var.github_repo_owner
+  github_repo_name                       = var.github_repo_name
+  github_branch                          = var.github_branch
+  codestar_connection_arn_ssm_param_name = module.ssm_params.codestar_connection_arn_param_name
+  github_oauth_token_ssm_param_name      = module.ssm_params.github_oauth_token_param_name
 
   backend_build_project_name  = module.codebuild_projects.backend_build_project_name
   frontend_build_project_name = module.codebuild_projects.frontend_build_project_name

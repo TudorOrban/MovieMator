@@ -91,7 +91,7 @@ variable "ec2_instance_type" {
   default     = "t2.micro"
 }
 
-variable "my_public_ip_cidr" {
+variable "admin_public_ip_cidr" {
   description = "The public IP address in CIDR format for SSH access"
   type        = string
 }
@@ -99,6 +99,49 @@ variable "my_public_ip_cidr" {
 variable "ssh_public_key" {
   description = "The public key string for the SSH key pair"
   type        = string
+}
+
+
+variable "asg_min_size_dev" {
+  description = "Minimum size of the Auto Scaling Group for development."
+  type        = number
+  default     = 1
+}
+
+variable "asg_max_size_dev" {
+  description = "Maximum size of the Auto Scaling Group for development."
+  type        = number
+  default     = 1
+}
+
+variable "asg_desired_capacity_dev" {
+  description = "Desired capacity of the Auto Scaling Group for development."
+  type        = number
+  default     = 1
+}
+
+variable "asg_min_size_prod" {
+  description = "Minimum size of the Auto Scaling Group for production."
+  type        = number
+  default     = 1
+}
+
+variable "asg_max_size_prod" {
+  description = "Maximum size of the Auto Scaling Group for production."
+  type        = number
+  default     = 4
+}
+
+variable "asg_desired_capacity_prod" {
+  description = "Desired capacity of the Auto Scaling Group for production."
+  type        = number
+  default     = 1
+}
+
+variable "asg_target_cpu_utilization" {
+  description = "Target CPU utilization percentage for ASG scaling policies."
+  type        = number
+  default     = 50
 }
 
 # ECR Variables
@@ -118,7 +161,7 @@ variable "domain_name" {
 # SSM
 variable "codestar_connection_arn" {
   description = "ARN of the Codestar connection (created outside of Terraform)"
-  type = string
+  type        = string
 }
 
 # CodePipeline

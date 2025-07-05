@@ -91,7 +91,7 @@ variable "ec2_instance_type" {
   default     = "t2.micro"
 }
 
-variable "my_public_ip_cidr" {
+variable "admin_public_ip_cidr" {
   description = "The public IP address in CIDR format for SSH access"
   type        = string
 }

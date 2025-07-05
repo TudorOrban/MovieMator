@@ -1,3 +1,4 @@
+
 resource "aws_db_subnet_group" "main" {
   name       = "${var.env}-rds-subnet-group"
   subnet_ids = var.private_subnet_ids
@@ -10,8 +11,24 @@ resource "aws_db_subnet_group" "main" {
 
 resource "aws_security_group" "rds_sg" {
   name        = "${var.env}-rds-sg"
-  description = "Security group for RDS instance"
+  description = "Allow inbound traffic to RDS from application servers and specific IPs"
   vpc_id      = var.vpc_id
+
+  ingress {
+    description = "Allow PostgreSQL access from within the VPC (e.g., application servers)"
+    from_port   = var.rds_port
+    to_port     = var.rds_port
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr] # TODO: Restrict to the SG of the application servers
+  }
+
+  #   ingress {
+  #     description = "Allow PostgreSQL access from specific public IP for admin/debugging"
+  #     from_port   = var.rds_port
+  #     to_port     = var.rds_port
+  #     protocol    = "tcp"
+  #     cidr_blocks = [var.my_public_ip_cidr]
+  #   }
 
   egress {
     from_port   = 0
@@ -27,32 +44,9 @@ resource "aws_security_group" "rds_sg" {
   }
 }
 
-# Rule for application servers
-resource "aws_security_group_rule" "rds_app_access" {
-  type      = "ingress"
-  from_port = var.rds_port
-  to_port   = var.rds_port
-  protocol  = "tcp"
-  
-  cidr_blocks       = [var.vpc_cidr] # TODO: Restrict to the SG of the application servers
-  security_group_id = aws_security_group.rds_sg.id
-  description       = "Allow PostgreSQL access from within the VPC (e.g., application servers)"
-}
-
-# Rule for admin access from specific public IP
-resource "aws_security_group_rule" "rds_admin_access" {
-  type              = "ingress"
-  from_port         = var.rds_port
-  to_port           = var.rds_port
-  protocol          = "tcp"
-  cidr_blocks       = [var.my_public_ip_cidr]
-  security_group_id = aws_security_group.rds_sg.id
-  description       = "Allow PostgreSQL access from specific public IP for admin/debugging"
-}
-
 resource "aws_db_instance" "postgres" {
   allocated_storage    = var.db_allocated_storage
-  storage_type         = "gp2"
+  storage_type         = "gp3"
   engine               = "postgres"
   engine_version       = "17.4"
   instance_class       = var.db_instance_class

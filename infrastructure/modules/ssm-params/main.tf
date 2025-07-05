@@ -1,3 +1,31 @@
+resource "aws_ssm_parameter" "github_oauth_token" {
+  name        = "/${var.project_name}/${var.env}/github_oauth_token"
+  description = "GitHub OAuth Token for CodePipeline in ${var.project_name} ${var.env}."
+  type        = "SecureString"
+  value       = var.github_oauth_token
+  tags = {
+    Environment = var.env
+    Project     = var.project_name
+  }
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
+
+resource "aws_ssm_parameter" "codestar_connection_arn" {
+  name        = "/${var.project_name}/${var.env}/codestar_connection_arn"
+  description = "CodeStar Connection ARN for ${var.project_name} ${var.env}."
+  type        = "String"
+  value       = var.codestar_connection_arn
+  tags = {
+    Environment = var.env
+    Project     = var.project_name
+  }
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
+
 resource "aws_ssm_parameter" "rds_datasource_url" {
   name        = "/${var.project_name}/${var.env}/rds_datasource_url"
   description = "RDS Datasource URL for ${var.project_name} ${var.env} backend."
@@ -22,12 +50,15 @@ resource "aws_ssm_parameter" "rds_username" {
 
 resource "aws_ssm_parameter" "rds_password" {
   name        = "/${var.project_name}/${var.env}/rds_password"
-  description = "RDS Password for ${var.project_name} ${var.env} backend."
+  description = "RDS DB Password for ${var.project_name} ${var.env}."
   type        = "SecureString"
   value       = var.db_password
   tags = {
     Environment = var.env
     Project     = var.project_name
+  }
+  lifecycle {
+    ignore_changes = [value]
   }
 }
 

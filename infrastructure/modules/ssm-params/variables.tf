@@ -8,6 +8,17 @@ variable "env" {
   type        = string
 }
 
+variable "github_oauth_token" {
+  description = "GitHub Personal Access Token (PAT) for CodePipeline (to be stored in SSM)."
+  type        = string
+  sensitive   = true
+}
+
+variable "codestar_connection_arn" {
+  description = "The ARN of the pre-created CodeStar Connection (to be stored in SSM)."
+  type        = string
+}
+
 variable "rds_endpoint" {
   description = "The endpoint of the RDS instance."
   type        = string

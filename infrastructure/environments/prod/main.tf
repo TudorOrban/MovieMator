@@ -158,13 +158,13 @@ module "ssm_params" {
   project_name = var.project_name
   env          = var.env
 
+  github_oauth_token   = var.github_oauth_token
   codestar_connection_arn = var.codestar_connection_arn
-  github_oauth_token      = var.github_oauth_token
-  rds_endpoint            = module.rds.rds_endpoint
-  rds_port                = var.rds_port
-  db_name                 = var.db_name
-  db_username             = var.db_username
-  db_password             = var.db_password
+  rds_endpoint = module.rds.rds_endpoint
+  rds_port     = var.rds_port
+  db_name      = var.db_name
+  db_username  = var.db_username
+  db_password  = var.db_password
   allowed_cors_origins = join(",", [
     "https://${module.s3_cloudfront_frontend.cloudfront_domain_name}",
     "https://${var.domain_name}",
@@ -183,7 +183,7 @@ module "cicd_iam" {
   ecr_repository_arn          = module.ecr.repository_arn
   frontend_s3_bucket_arn      = module.s3_cloudfront_frontend.s3_bucket_arn
   cloudfront_distribution_arn = module.s3_cloudfront_frontend.cloudfront_distribution_arn
-  codestar_connection_arn     = "arn:aws:codeconnections:eu-central-1:474668403865:connection/831b9d46-9ac5-4a0e-adc7-eb2127b4bd3b"
+  codestar_connection_arn     = var.codestar_connection_arn
 }
 
 # CodeBuild Projects
@@ -232,11 +232,11 @@ module "codepipeline" {
   codepipeline_role_arn           = module.cicd_iam.codepipeline_role_arn
   codepipeline_artifact_bucket_id = module.cicd_iam.codepipeline_artifact_bucket_id
 
-  github_repo_owner                      = var.github_repo_owner
-  github_repo_name                       = var.github_repo_name
-  github_branch                          = var.github_branch
-  codestar_connection_arn_ssm_param_name = module.ssm_params.codestar_connection_arn_param_name
-  github_oauth_token_ssm_param_name      = module.ssm_params.github_oauth_token_param_name
+  github_repo_owner       = var.github_repo_owner
+  github_repo_name        = var.github_repo_name
+  github_branch           = var.github_branch
+  github_oauth_token      = var.github_oauth_token
+  codestar_connection_arn = "arn:aws:codeconnections:eu-central-1:474668403865:connection/831b9d46-9ac5-4a0e-adc7-eb2127b4bd3b"
 
   backend_build_project_name  = module.codebuild_projects.backend_build_project_name
   frontend_build_project_name = module.codebuild_projects.frontend_build_project_name

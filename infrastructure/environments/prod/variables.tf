@@ -5,9 +5,9 @@ variable "region" {
 }
 
 variable "env" {
-  description = "Environment name (e.g., dev, prod)"
+  description = "Environment name (dev, prod)"
   type        = string
-  default     = "dev"
+  default     = "prod"
 }
 
 variable "project_name" {
@@ -63,25 +63,25 @@ variable "rds_port" {
 variable "db_instance_class" {
   description = "The instance type for the RDS database"
   type        = string
-  default     = "db.t3.micro"
+  default     = "db.t3.small"
 }
 
 variable "db_allocated_storage" {
   description = "The allocated storage in GB for the database"
   type        = number
-  default     = 20
+  default     = 30
 }
 
 variable "db_skip_final_snapshot" {
   description = "Whether to skip the final snapshot when deleting the DB instance"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "db_multi_az" {
   description = "Specifies if the DB instance is a Multi-AZ deployment"
   type        = bool
-  default     = false
+  default     = true
 }
 
 # EC2
@@ -118,7 +118,7 @@ variable "domain_name" {
 # SSM
 variable "codestar_connection_arn" {
   description = "ARN of the Codestar connection (created outside of Terraform)"
-  type        = string
+  type = string
 }
 
 # CodePipeline

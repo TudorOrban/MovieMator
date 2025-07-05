@@ -12,20 +12,6 @@ resource "aws_ssm_parameter" "github_oauth_token" {
   }
 }
 
-resource "aws_ssm_parameter" "codestar_connection_arn" {
-  name        = "/${var.project_name}/${var.env}/codestar_connection_arn"
-  description = "CodeStar Connection ARN for ${var.project_name} ${var.env}."
-  type        = "String"
-  value       = var.codestar_connection_arn
-  tags = {
-    Environment = var.env
-    Project     = var.project_name
-  }
-  lifecycle {
-    ignore_changes = [value]
-  }
-}
-
 resource "aws_ssm_parameter" "rds_datasource_url" {
   name        = "/${var.project_name}/${var.env}/rds_datasource_url"
   description = "RDS Datasource URL for ${var.project_name} ${var.env} backend."
@@ -140,4 +126,9 @@ resource "aws_ssm_parameter" "cognito_authorities_prefix" {
     Environment = var.env
     Project     = var.project_name
   }
+}
+
+data "aws_ssm_parameter" "codestar_connection_arn" {
+  name            = "/${var.project_name}/${var.env}/codestar_connection_arn"
+  with_decryption = false
 }

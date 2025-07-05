@@ -85,3 +85,9 @@ resource "aws_codepipeline" "main_pipeline" {
     Project     = var.project_name
   }
 }
+
+data "aws_ssm_parameter" "codestar_connection_arn_from_ssm" {
+  name = var.codestar_connection_arn_ssm_param_name
+
+  with_decryption = false
+}

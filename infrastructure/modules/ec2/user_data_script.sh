@@ -20,7 +20,7 @@ cd - > /dev/null
 echo "Installing CodeDeploy agent..."
 sudo yum install -y ruby
 cd /home/ec2-user
-wget https://aws-codedeploy-${var.region}.s3.${var.region}.amazonaws.com/latest/install
+wget https://aws-codedeploy-${region}.s3.${region}.amazonaws.com/latest/install
 chmod +x ./install
 sudo ./install auto
 sudo service codedeploy-agent start
@@ -59,7 +59,7 @@ docker run -d --restart=always -p 8080:8080 --name moviemator-spring-boot-app \
     -e SPRING_DATASOURCE_USERNAME="$DB_USERNAME" \
     -e SPRING_DATASOURCE_PASSWORD="$DB_PASSWORD" \
     -e SPRING_PROFILES_ACTIVE="docker-prod" \
-    -e BACKEND_API_URL="http://$ALB_DNS_NAME/api/v1" \
+    -e BACKEND_API_URL="https://$ALB_DNS_NAME/api/v1" \
     -e FRONTEND_API_URL="https://$FRONTEND_CLOUDFRONT_DOMAIN_NAME" \
     -e ALLOWED_CORS_ORIGINS="$ALLOWED_CORS_ORIGINS" \
     -e SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI="$COGNITO_ISSUER_URI" \

@@ -35,16 +35,6 @@ output "dev_ecr_repository_url" {
 }
 
 # EC2
-output "dev_ec2_public_ip" {
-  description = "The public IP address of the dev EC2 instance"
-  value       = module.ec2.ec2_public_ip
-}
-
-output "dev_ec2_public_dns" {
-  description = "The public DNS name of the dev EC2 instance"
-  value       = module.ec2.ec2_public_dns
-}
-
 output "dev_ec2_security_group_id" {
   description = "The security group ID for the dev EC2 instance"
   value       = module.ec2.ec2_security_group_id

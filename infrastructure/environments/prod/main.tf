@@ -40,23 +40,38 @@ module "route53_zone" {
 }
 
 # ACM Certificates
-module "cloudfront_acm" {
-  source = "../../modules/acm"
+module "cloudfront_cert_request" {
+  source = "../../modules/acm-certificate-request"
   providers = {
     aws = aws.us_east_1
   }
-  domain_name     = var.domain_name
-  route53_zone_id = module.route53_zone.zone_id
-  env             = var.env
-  project_name    = var.project_name
+  domain_name               = var.domain_name
+  subject_alternative_names = ["*.${var.domain_name}"]
+  env                       = var.env
+  project_name              = var.project_name
 }
 
-module "alb_acm" {
-  source          = "../../modules/acm"
-  domain_name     = "api.${var.domain_name}"
-  route53_zone_id = module.route53_zone.zone_id
-  env             = var.env
-  project_name    = var.project_name
+module "alb_cert_request" {
+  source       = "../../modules/acm-certificate-request"
+  domain_name  = "api.${var.domain_name}"
+  env          = var.env
+  project_name = var.project_name
+}
+
+module "cloudfront_cert_validation" {
+  source = "../../modules/acm-certificate-validation"
+
+  certificate_arn           = module.cloudfront_cert_request.certificate_arn
+  domain_validation_options = module.cloudfront_cert_request.domain_validation_options
+  route53_zone_id           = module.route53_zone.zone_id
+}
+
+module "alb_cert_validation" {
+  source = "../../modules/acm-certificate-validation"
+
+  certificate_arn           = module.alb_cert_request.certificate_arn
+  domain_validation_options = module.alb_cert_request.domain_validation_options
+  route53_zone_id           = module.route53_zone.zone_id
 }
 
 # Load Balancer

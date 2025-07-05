@@ -1,18 +1,5 @@
-resource "aws_route53_zone" "main" {
-  name = var.domain_name
-
-  lifecycle {
-    prevent_destroy = true
-  }
-
-  tags = {
-    Environment = var.env
-    Project     = var.project_name
-  }
-}
-
 resource "aws_route53_record" "api_a_record" {
-  zone_id = aws_route53_zone.main.zone_id
+  zone_id = var.route53_zone_id
   name    = "api.${var.domain_name}"
   type    = "A"
 
@@ -24,7 +11,7 @@ resource "aws_route53_record" "api_a_record" {
 }
 
 resource "aws_route53_record" "frontend_a_record" {
-  zone_id = aws_route53_zone.main.zone_id
+  zone_id = var.route53_zone_id
   name    = var.domain_name
   type    = "A"
 
@@ -36,7 +23,7 @@ resource "aws_route53_record" "frontend_a_record" {
 }
 
 resource "aws_route53_record" "www_frontend_a_record" {
-  zone_id = aws_route53_zone.main.zone_id
+  zone_id = var.route53_zone_id
   name    = "www.${var.domain_name}"
   type    = "A"
 

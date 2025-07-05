@@ -20,17 +20,12 @@ module "network" {
 }
 
 # Route53
-module "route53" {
-  source = "../../modules/route53"
+module "route53_zone" {
+  source = "../../modules/route53-zone"
 
   domain_name  = var.domain_name
   env          = var.env
   project_name = var.project_name
-  alb_dns_name = module.alb.alb_dns_name
-  alb_zone_id  = module.alb.alb_zone_id
-
-  cloudfront_dns_name = module.s3_cloudfront_frontend.cloudfront_domain_name
-  cloudfront_zone_id  = data.aws_cloudfront_distribution.s3_distribution_data.hosted_zone_id
 }
 
 # ACM Certificates
@@ -48,7 +43,7 @@ module "cloudfront_acm" {
 module "alb_acm" {
   source          = "../../modules/acm"
   domain_name     = "api.${var.domain_name}"
-  route53_zone_id = module.route53.zone_id
+  route53_zone_id = module.route53_zone.zone_id
   env             = var.env
   project_name    = var.project_name
 }
@@ -103,11 +98,11 @@ module "rds" {
 module "cognito" {
   source = "../../modules/cognito"
 
-  project_name                    = var.project_name
-  env                             = var.env
-  region                          = var.region
-  domain_name                     = var.domain_name
-  frontend_cloudfront_domain_name = module.s3_cloudfront_frontend.cloudfront_domain_name
+  project_name = var.project_name
+  env          = var.env
+  region       = var.region
+  domain_name  = var.domain_name
+  # frontend_cloudfront_domain_name = module.s3_cloudfront_frontend.cloudfront_domain_name
 }
 
 # SSM
@@ -190,6 +185,21 @@ data "aws_cloudfront_distribution" "s3_distribution_data" {
   id = module.s3_cloudfront_frontend.cloudfront_distribution_id
 }
 
+module "route53_records" {
+  source = "../../modules/route53-records"
+
+  route53_zone_id = module.route53_zone.zone_id
+  domain_name     = var.domain_name
+
+  alb_dns_name        = module.alb.alb_dns_name
+  alb_zone_id         = module.alb.alb_zone_id
+  cloudfront_dns_name = module.s3_cloudfront_frontend.cloudfront_domain_name
+  cloudfront_zone_id  = data.aws_cloudfront_distribution.s3_distribution_data.hosted_zone_id
+
+  env          = var.env
+  project_name = var.project_name
+}
+
 # CI/CD IAM Roles
 module "cicd_iam" {
   source = "../../modules/cicd-iam"
@@ -229,6 +239,7 @@ module "codedeploy_components" {
   project_name          = var.project_name
   codedeploy_role_arn   = module.cicd_iam.codedeploy_role_arn
   alb_target_group_name = module.alb.alb_target_group_name
+  asg_name              = module.ec2.asg_name
 }
 
 # CodeStar Connection

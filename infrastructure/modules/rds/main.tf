@@ -14,12 +14,15 @@ resource "aws_security_group" "rds_sg" {
   description = "Allow inbound traffic to RDS from application servers and specific IPs"
   vpc_id      = var.vpc_id
 
-  ingress {
-    description = "Allow PostgreSQL access from within the VPC (e.g., application servers)"
-    from_port   = var.rds_port
-    to_port     = var.rds_port
-    protocol    = "tcp"
-    security_groups = [var.app_server_security_group_id] 
+  dynamic "ingress" {
+    for_each = var.app_server_security_group_id != null ? [1] : []
+    content {
+      description     = "Allow PostgreSQL access from application servers"
+      from_port       = var.rds_port
+      to_port         = var.rds_port
+      protocol        = "tcp"
+      security_groups = [var.app_server_security_group_id]
+    }
   }
 
   # For dev, allow access from a specific admin IP address

@@ -7,6 +7,7 @@ provider "aws" {
   region = "us-east-1"
 }
 
+# Core Networking
 module "network" {
   source = "../../modules/network"
 
@@ -18,6 +19,58 @@ module "network" {
   region               = var.region
 }
 
+# 1. Route 53 Hosted Zone
+module "route53_zone" {
+  source = "../../modules/route53-zone"
+
+  domain_name  = var.domain_name
+  env          = var.env
+  project_name = var.project_name
+}
+
+# 2. ACM Certificates
+module "cloudfront_acm" {
+  source = "../../modules/acm"
+  providers = {
+    aws = aws.us_east_1
+  }
+  domain_name     = var.domain_name
+  route53_zone_id = module.route53_zone.zone_id
+  env             = var.env
+  project_name    = var.project_name
+}
+
+module "alb_acm" {
+  source          = "../../modules/acm"
+  domain_name     = "api.${var.domain_name}"
+  route53_zone_id = module.route53_zone.zone_id
+  env             = var.env
+  project_name    = var.project_name
+}
+
+# Load Balancer (Depends on Network and ALB ACM certificate)
+module "alb" {
+  source = "../../modules/alb"
+
+  vpc_id              = module.network.vpc_id
+  public_subnet_ids   = module.network.public_subnet_ids
+  env                 = var.env
+  project_name        = var.project_name
+  region              = var.region
+  alb_certificate_arn = module.alb_acm.certificate_arn
+}
+
+# ECR (Independent, but needed by EC2)
+module "ecr" {
+  source = "../../modules/ecr"
+
+  repository_name = var.ecr_repository_name
+  env             = var.env
+  project_name    = var.project_name
+  region          = var.region
+}
+
+# RDS database (Depends on Network. app_server_security_group_id will directly use ec2 SG in dev)
 module "rds" {
   source = "../../modules/rds"
 
@@ -41,54 +94,7 @@ module "rds" {
   db_multi_az            = var.db_multi_az
 }
 
-module "ecr" {
-  source = "../../modules/ecr"
-
-  repository_name = var.ecr_repository_name
-  env             = var.env
-  project_name    = var.project_name
-  region          = var.region
-}
-
-module "ec2" {
-  source = "../../modules/ec2"
-
-  vpc_id            = module.network.vpc_id
-  public_subnet_ids = module.network.public_subnet_ids
-  env               = var.env
-  project_name      = var.project_name
-  region            = var.region
-
-  ec2_instance_type    = var.ec2_instance_type
-  admin_public_ip_cidr = var.admin_public_ip_cidr
-  ssh_public_key       = var.ssh_public_key
-
-  rds_endpoint = module.rds.rds_endpoint
-  rds_port     = module.rds.rds_port
-  db_name      = var.db_name
-  db_username  = var.db_username
-  db_password  = var.db_password
-
-  ecr_repository_url              = module.ecr.repository_url
-  alb_security_group_id           = module.alb.alb_security_group_id
-  alb_dns_name                    = module.alb.alb_dns_name
-  frontend_cloudfront_domain_name = module.s3_cloudfront_frontend.cloudfront_domain_name
-}
-
-# Load Balancer
-module "alb" {
-  source = "../../modules/alb"
-
-  vpc_id              = module.network.vpc_id
-  public_subnet_ids   = module.network.public_subnet_ids
-  env                 = var.env
-  project_name        = var.project_name
-  region              = var.region
-  ec2_instance_id     = module.ec2.ec2_instance_id
-  alb_certificate_arn = module.alb_acm.certificate_arn
-}
-
-# S3/CloudFront
+# S3/CloudFront Frontend (Depends on ALB DNS name and CloudFront ACM certificate)
 module "s3_cloudfront_frontend" {
   source = "../../modules/s3-cloudfront-frontend"
 
@@ -104,44 +110,11 @@ module "s3_cloudfront_frontend" {
   }
 }
 
-# Route 53
 data "aws_cloudfront_distribution" "s3_distribution_data" {
   id = module.s3_cloudfront_frontend.cloudfront_distribution_id
 }
 
-module "route53" {
-  source = "../../modules/route53"
-
-  domain_name  = var.domain_name
-  env          = var.env
-  project_name = var.project_name
-  alb_dns_name = module.alb.alb_dns_name
-  alb_zone_id  = module.alb.alb_zone_id
-
-  cloudfront_dns_name = module.s3_cloudfront_frontend.cloudfront_domain_name
-  cloudfront_zone_id  = data.aws_cloudfront_distribution.s3_distribution_data.hosted_zone_id
-}
-
-# ACM
-module "cloudfront_acm" {
-  source = "../../modules/acm"
-  providers = {
-    aws = aws.us_east_1
-  }
-  domain_name     = var.domain_name
-  route53_zone_id = module.route53.zone_id
-  env             = var.env
-  project_name    = var.project_name
-}
-
-module "alb_acm" {
-  source          = "../../modules/acm"
-  domain_name     = "api.${var.domain_name}"
-  route53_zone_id = module.route53.zone_id
-  env             = var.env
-  project_name    = var.project_name
-}
-
+# Cognito
 module "cognito" {
   source = "../../modules/cognito"
 
@@ -152,17 +125,17 @@ module "cognito" {
   frontend_cloudfront_domain_name = module.s3_cloudfront_frontend.cloudfront_domain_name
 }
 
-# SSM
+# SSM (Depends on RDS, Cognito, and S3/CloudFront outputs)
 module "ssm_params" {
   source = "../../modules/ssm-params"
 
   project_name = var.project_name
   env          = var.env
 
-  codestar_connection_arn = var.codestar_connection_arn
   github_oauth_token      = var.github_oauth_token
+  codestar_connection_arn = var.codestar_connection_arn
   rds_endpoint            = module.rds.rds_endpoint
-  rds_port                = var.rds_port
+  rds_port                = module.rds.rds_port
   db_name                 = var.db_name
   db_username             = var.db_username
   db_password             = var.db_password
@@ -172,6 +145,57 @@ module "ssm_params" {
     "https://www.${var.domain_name}"
   ])
   cognito_issuer_uri = module.cognito.user_pool_issuer_uri
+}
+
+# EC2 (Auto Scaling Group) (Depends on Network, ALB, ECR, SSM, and CloudFront/ALB DNS for user data)
+module "ec2" {
+  source = "../../modules/ec2"
+
+  env          = var.env
+  project_name = var.project_name
+  region       = var.region
+
+  vpc_id             = module.network.vpc_id
+  private_subnet_ids = module.network.private_subnet_ids
+  ec2_instance_type  = var.ec2_instance_type
+  ssh_public_key     = var.ssh_public_key
+
+  alb_security_group_id = module.alb.alb_security_group_id
+  alb_target_group_arn  = module.alb.alb_target_group_arn
+  alb_dns_name          = module.alb.alb_dns_name
+
+  frontend_cloudfront_domain_name = module.s3_cloudfront_frontend.cloudfront_domain_name
+
+  ecr_repository_url = module.ecr.repository_url
+
+  admin_public_ip_cidr = var.admin_public_ip_cidr
+
+  rds_datasource_url_ssm_param_name   = module.ssm_params.rds_datasource_url_param_name
+  rds_username_ssm_param_name         = module.ssm_params.rds_username_param_name
+  rds_password_ssm_param_name         = module.ssm_params.rds_password_param_name
+  allowed_cors_origins_ssm_param_name = module.ssm_params.allowed_cors_origins_param_name
+  cognito_issuer_uri_ssm_param_name   = module.ssm_params.cognito_issuer_uri_param_name
+
+  asg_min_size_dev           = var.asg_min_size_dev
+  asg_max_size_dev           = var.asg_max_size_dev
+  asg_desired_capacity_dev   = var.asg_desired_capacity_dev
+  asg_target_cpu_utilization = var.asg_target_cpu_utilization
+}
+
+# 3. Route 53 Records
+module "route53_records" {
+  source = "../../modules/route53-records"
+
+  route53_zone_id = module.route53_zone.zone_id
+  domain_name     = var.domain_name
+
+  alb_dns_name        = module.alb.alb_dns_name
+  alb_zone_id         = module.alb.alb_zone_id
+  cloudfront_dns_name = module.s3_cloudfront_frontend.cloudfront_domain_name
+  cloudfront_zone_id  = data.aws_cloudfront_distribution.s3_distribution_data.hosted_zone_id
+
+  env          = var.env
+  project_name = var.project_name
 }
 
 # CI/CD IAM Roles
@@ -184,7 +208,7 @@ module "cicd_iam" {
   ecr_repository_arn          = module.ecr.repository_arn
   frontend_s3_bucket_arn      = module.s3_cloudfront_frontend.s3_bucket_arn
   cloudfront_distribution_arn = module.s3_cloudfront_frontend.cloudfront_distribution_arn
-  codestar_connection_arn     = "arn:aws:codeconnections:eu-central-1:474668403865:connection/831b9d46-9ac5-4a0e-adc7-eb2127b4bd3b"
+  codestar_connection_arn     = var.codestar_connection_arn
 }
 
 # CodeBuild Projects

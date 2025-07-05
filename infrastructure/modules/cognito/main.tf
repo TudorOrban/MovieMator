@@ -45,18 +45,15 @@ resource "aws_cognito_user_pool_client" "moviemator_spa_client" {
   allowed_oauth_flows                  = ["code"]
   allowed_oauth_scopes                 = ["openid", "email", "profile"]
 
-  callback_urls = [
-    "https://${var.frontend_cloudfront_domain_name}/",
-    "https://${var.domain_name}/",
-    "https://www.${var.domain_name}/",
-    "http://localhost:4200/"
-  ]
-  logout_urls = [
-    "https://${var.frontend_cloudfront_domain_name}/",
-    "https://${var.domain_name}/",
-    "https://www.${var.domain_name}/",
-    "http://localhost:4200/"
-  ]
+  callback_urls = distinct(compact(concat(
+    var.initial_callback_urls,
+    var.frontend_cloudfront_domain_name != "" ? ["https://${var.frontend_cloudfront_domain_name}/", "https://${var.domain_name}/", "https://www.${var.domain_name}/"] : []
+  )))
+
+  logout_urls = distinct(compact(concat(
+    var.initial_logout_urls,
+    var.frontend_cloudfront_domain_name != "" ? ["https://${var.frontend_cloudfront_domain_name}/", "https://${var.domain_name}/", "https://www.${var.domain_name}/"] : []
+  )))
 
   access_token_validity  = 1
   id_token_validity      = 1

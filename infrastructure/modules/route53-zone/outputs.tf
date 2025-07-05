@@ -7,8 +7,3 @@ output "name_servers" {
   description = "The list of name servers for the hosted zone. These must be set at the domain registrar."
   value       = aws_route53_zone.main.name_servers
 }
-
-output "api_dns_name" {
-  description = "The FQDN for the API endpoint"
-  value       = aws_route53_record.api_a_record.fqdn
-}

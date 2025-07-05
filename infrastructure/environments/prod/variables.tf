@@ -101,7 +101,7 @@ variable "ssh_public_key" {
   type        = string
 }
 
-
+# ASG
 variable "asg_min_size_dev" {
   description = "Minimum size of the Auto Scaling Group for development."
   type        = number

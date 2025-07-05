@@ -101,6 +101,49 @@ variable "ssh_public_key" {
   type        = string
 }
 
+# ASG
+variable "asg_min_size_dev" {
+  description = "Minimum size of the Auto Scaling Group for development."
+  type        = number
+  default     = 1
+}
+
+variable "asg_max_size_dev" {
+  description = "Maximum size of the Auto Scaling Group for development."
+  type        = number
+  default     = 1
+}
+
+variable "asg_desired_capacity_dev" {
+  description = "Desired capacity of the Auto Scaling Group for development."
+  type        = number
+  default     = 1
+}
+
+variable "asg_min_size_prod" {
+  description = "Minimum size of the Auto Scaling Group for production."
+  type        = number
+  default     = 1
+}
+
+variable "asg_max_size_prod" {
+  description = "Maximum size of the Auto Scaling Group for production."
+  type        = number
+  default     = 4
+}
+
+variable "asg_desired_capacity_prod" {
+  description = "Desired capacity of the Auto Scaling Group for production."
+  type        = number
+  default     = 1
+}
+
+variable "asg_target_cpu_utilization" {
+  description = "Target CPU utilization percentage for ASG scaling policies."
+  type        = number
+  default     = 50
+}
+
 # ECR Variables
 variable "ecr_repository_name" {
   description = "Name of the ECR repository for the Spring Boot application"

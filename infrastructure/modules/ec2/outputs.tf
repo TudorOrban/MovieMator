@@ -17,3 +17,9 @@ output "asg_name" {
   description = "The name of the Auto Scaling Group."
   value       = aws_autoscaling_group.spring_boot_asg.name # Assuming your ASG resource is named 'spring_boot_asg'
 }
+
+variable "asg_scale_in_target_cpu_utilization" {
+  description = "The target CPU utilization percentage for ASG scale-in policy."
+  type        = number
+  default     = 30
+}

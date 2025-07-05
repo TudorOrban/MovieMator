@@ -102,7 +102,7 @@ module "s3_cloudfront_frontend" {
   env                        = var.env
   region                     = var.region
   alb_dns_name               = module.alb.alb_dns_name
-  cloudfront_certificate_arn = module.cloudfront_acm.certificate_arn
+  cloudfront_certificate_arn = module.alb_cert_request.certificate_arn
   domain_name                = var.domain_name
   providers = {
     aws           = aws

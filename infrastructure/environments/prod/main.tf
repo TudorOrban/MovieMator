@@ -45,8 +45,9 @@ module "cloudfront_cert_request" {
   providers = {
     aws = aws.us_east_1
   }
+
   domain_name               = var.domain_name
-  subject_alternative_names = ["*.${var.domain_name}"]
+  subject_alternative_names = ["www.${var.domain_name}", "*.${var.domain_name}"]
   env                       = var.env
   project_name              = var.project_name
 }
@@ -60,6 +61,9 @@ module "alb_cert_request" {
 
 module "cloudfront_cert_validation" {
   source = "../../modules/acm-certificate-validation"
+  providers = {
+    aws = aws.us_east_1
+  }
 
   certificate_arn           = module.cloudfront_cert_request.certificate_arn
   domain_validation_options = module.cloudfront_cert_request.domain_validation_options
@@ -83,7 +87,7 @@ module "alb" {
   env                 = var.env
   project_name        = var.project_name
   region              = var.region
-  alb_certificate_arn = module.alb_acm.certificate_arn
+  alb_certificate_arn = module.alb_cert_request.certificate_arn
 }
 
 # ECR
@@ -185,13 +189,14 @@ module "ec2" {
 
   bastion_security_group_id = module.bastion.bastion_security_group_id
 
-  asg_min_size_dev           = var.asg_min_size_dev
-  asg_max_size_dev           = var.asg_max_size_dev
-  asg_desired_capacity_dev   = var.asg_desired_capacity_dev
-  asg_min_size_prod          = var.asg_min_size_prod
-  asg_max_size_prod          = var.asg_max_size_prod
-  asg_desired_capacity_prod  = var.asg_desired_capacity_prod
-  asg_target_cpu_utilization = var.asg_target_cpu_utilization
+  asg_min_size_dev                    = var.asg_min_size_dev
+  asg_max_size_dev                    = var.asg_max_size_dev
+  asg_desired_capacity_dev            = var.asg_desired_capacity_dev
+  asg_min_size_prod                   = var.asg_min_size_prod
+  asg_max_size_prod                   = var.asg_max_size_prod
+  asg_desired_capacity_prod           = var.asg_desired_capacity_prod
+  asg_target_cpu_utilization          = var.asg_target_cpu_utilization
+  asg_scale_in_target_cpu_utilization = var.asg_scale_in_target_cpu_utilization
 
   cognito_issuer_uri_ssm_param_name             = module.ssm_params.cognito_issuer_uri_param_name
   cognito_jwk_set_uri_ssm_param_name            = module.ssm_params.cognito_jwk_set_uri_ssm_param_name
@@ -208,7 +213,7 @@ module "s3_cloudfront_frontend" {
   env                        = var.env
   region                     = var.region
   alb_dns_name               = module.alb.alb_dns_name
-  cloudfront_certificate_arn = module.cloudfront_acm.certificate_arn
+  cloudfront_certificate_arn = module.cloudfront_cert_request.certificate_arn
   domain_name                = var.domain_name
   providers = {
     aws           = aws

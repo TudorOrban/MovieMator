@@ -50,8 +50,8 @@ resource "aws_security_group" "ec2_sg" {
     from_port       = 8080 # Your application port (adjust if different)
     to_port         = 8080
     protocol        = "tcp"
-  security_groups = var.env == "prod" ? [var.bastion_security_group_id] : ["0.0.0.0/0"] # Use your new variable
-  description = "Allow SSH access from Bastion Host (or anywhere in dev)"
+    security_groups = var.env == "prod" ? [var.bastion_security_group_id] : ["0.0.0.0/0"] # Use your new variable
+    description     = "Allow SSH access from Bastion Host (or anywhere in dev)"
   }
 
   ingress {
@@ -115,7 +115,7 @@ resource "aws_autoscaling_group" "spring_boot_asg" {
   force_delete = var.env == "dev" ? true : false
 }
 
-resource "aws_autoscaling_policy" "scale_out" {
+resource "aws_autoscaling_policy" "scale_out" { # This policy will handle both scale-out and scale-in
   name                   = "${var.env}-spring-boot-scale-out-policy"
   autoscaling_group_name = aws_autoscaling_group.spring_boot_asg.name
   policy_type            = "TargetTrackingScaling"
@@ -124,20 +124,6 @@ resource "aws_autoscaling_policy" "scale_out" {
       predefined_metric_type = "ASGAverageCPUUtilization"
     }
     target_value = var.asg_target_cpu_utilization
-  }
-  enabled = var.env == "prod"
-}
-
-resource "aws_autoscaling_policy" "scale_in" {
-  name                   = "${var.env}-spring-boot-scale-in-policy"
-  autoscaling_group_name = aws_autoscaling_group.spring_boot_asg.name
-  policy_type            = "TargetTrackingScaling"
-  target_tracking_configuration {
-    predefined_metric_specification {
-      predefined_metric_type = "ASGAverageCPUUtilization"
-    }
-    target_value     = var.asg_target_cpu_utilization
-    disable_scale_in = false
   }
   enabled = var.env == "prod"
 }

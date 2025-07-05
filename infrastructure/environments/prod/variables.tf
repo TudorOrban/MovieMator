@@ -141,7 +141,13 @@ variable "asg_desired_capacity_prod" {
 variable "asg_target_cpu_utilization" {
   description = "Target CPU utilization percentage for ASG scaling policies."
   type        = number
-  default     = 50
+  default     = 70
+}
+
+variable "asg_scale_in_target_cpu_utilization" {
+  description = "Target CPU utilization for ASG scale-in."
+  type        = number
+  default     = 30
 }
 
 # ECR Variables

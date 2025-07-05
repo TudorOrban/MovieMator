@@ -23,7 +23,4 @@ for i in $(seq 1 $MAX_RETRIES); do
 done
 
 echo "Health check failed after $MAX_RETRIES attempts. Deployment will roll back."
-exit 1 
-
-http://dev-moviemator-alb-1854803683.eu-central-1.…s/cognito-id/8438e418-b0c1-70b4-5931-1b579002e82e
-dev-moviemator-alb-1854803683.eu-central-1.elb.amazonaws.com
+exit 1

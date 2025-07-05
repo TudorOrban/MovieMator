@@ -47,6 +47,16 @@ variable "db_password" {
   sensitive   = true
 }
 
+variable "alb_dns_name" {
+  description = "The DNS name of the Load Balancer"
+  type        = string
+}
+
+variable "cloudfront_domain_name" {
+  description = "The Domain Name of the Cloudfront distribution"
+  type        = string
+}
+
 variable "allowed_cors_origins" {
   description = "Comma-separated list of allowed origins for CORS policy."
   type        = string

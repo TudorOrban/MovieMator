@@ -65,6 +65,24 @@ variable "frontend_cloudfront_domain_name" {
   type        = string
 }
 
+# Cognito
+variable "cognito_jwk_set_uri_ssm_param_name" {
+  description = "SSM param name for Cognito JWK Set URI"
+  type        = string
+}
+variable "cognito_principal_claim_name_ssm_param_name" {
+  description = "SSM param name for Cognito Principal Claim Name"
+  type        = string
+}
+variable "cognito_authorities_claim_name_ssm_param_name" {
+  description = "SSM param name for Cognito Authorities Claim Name"
+  type        = string
+}
+variable "cognito_authorities_prefix_ssm_param_name" {
+  description = "SSM param name for Cognito Authorities Prefix"
+  type        = string
+}
+
 # Autoscaling
 variable "asg_min_size_dev" {
   description = "Minimum size of the Auto Scaling Group for development."

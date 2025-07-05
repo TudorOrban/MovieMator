@@ -62,6 +62,20 @@ resource "aws_ssm_parameter" "rds_password" {
   }
 }
 
+resource "aws_ssm_parameter" "backend_api_url" {
+  name        = "/${var.project_name}/${var.env}/backend_api_url"
+  type        = "String"
+  value       = "https://${var.alb_dns_name}/api/v1"
+  description = "Backend API URL"
+}
+
+resource "aws_ssm_parameter" "frontend_api_url" {
+  name        = "/${var.project_name}/${var.env}/frontend_api_url"
+  type        = "String"
+  value       = "https://${var.cloudfront_domain_name}"
+  description = "Frontend API URL"
+}
+
 resource "aws_ssm_parameter" "allowed_cors_origins" {
   name        = "/${var.project_name}/${var.env}/ALLOWED_CORS_ORIGINS"
   description = "Comma-separated list of allowed origins for CORS policy."

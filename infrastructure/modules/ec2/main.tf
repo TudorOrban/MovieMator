@@ -1,5 +1,3 @@
-
-// New
 resource "aws_launch_template" "spring_boot_lt" {
   name_prefix            = "${var.env}-spring-boot-lt-"
   image_id               = data.aws_ami.amazon_linux_2.id
@@ -9,55 +7,27 @@ resource "aws_launch_template" "spring_boot_lt" {
   iam_instance_profile {
     arn = aws_iam_instance_profile.ec2_profile.arn
   }
-  user_data = base64encode(<<-EOF
-            #!/bin/bash
-            sudo yum update -y
 
-            # Install Docker
-            sudo amazon-linux-extras install docker -y
-            sudo service docker start
-            sudo usermod -a -G docker ec2-user
-            sudo systemctl enable docker
-
-            # Get and start Spring Boot image
-            ECR_REPO_URI="${var.ecr_repository_url}"
-
-            # Login to ECR
-            aws ecr get-login-password --region ${var.region} | docker login --username AWS --password-stdin $(echo ${var.ecr_repository_url} | cut -d/ -f1)
-
-            docker pull $ECR_REPO_URI:latest
-
-            # Use SSM Parameter Store for database credentials
-            DB_DATASOURCE_URL=$(aws ssm get-parameter --name "${var.rds_datasource_url_ssm_param_name}" --query Parameter.Value --output text)
-            DB_USERNAME=$(aws ssm get-parameter --name "${var.rds_username_ssm_param_name}" --query Parameter.Value --output text)
-            DB_PASSWORD=$(aws ssm get-parameter --name "${var.rds_password_ssm_param_name}" --with-decryption --query Parameter.Value --output text)
-            
-            # Get other configs from SSM (if they're stored there) or directly from variables
-            ALLOWED_CORS_ORIGINS=$(aws ssm get-parameter --name "${var.allowed_cors_origins_ssm_param_name}" --query Parameter.Value --output text)
-            COGNITO_ISSUER_URI=$(aws ssm get-parameter --name "${var.cognito_issuer_uri_ssm_param_name}" --query Parameter.Value --output text)
-            
-            # ALB DNS name and CloudFront domain are not in SSM, pass them as instance user data variables
-            ALB_DNS_NAME="${var.alb_dns_name}"
-            FRONTEND_CLOUDFRONT_DOMAIN_NAME="${var.frontend_cloudfront_domain_name}"
-
-            docker run -d --restart=always -p 8080:8080 --name moviemator-spring-boot-app \
-                -e SPRING_DATASOURCE_URL="$DB_DATASOURCE_URL" \
-                -e SPRING_DATASOURCE_USERNAME="$DB_USERNAME" \
-                -e SPRING_DATASOURCE_PASSWORD="$DB_PASSWORD" \
-                -e SPRING_PROFILES_ACTIVE="docker-prod" \
-                -e BACKEND_API_URL="http://$ALB_DNS_NAME/api/v1" \
-                -e FRONTEND_API_URL="https://$FRONTEND_CLOUDFRONT_DOMAIN_NAME" \
-                -e ALLOWED_CORS_ORIGINS="$ALLOWED_CORS_ORIGINS" \
-                -e COGNITO_ISSUER_URI="$COGNITO_ISSUER_URI" \
-                $ECR_REPO_URI:latest
-            EOF
-  )
-
+  user_data = base64encode(templatefile("${path.module}/user_data_script.sh", {
+    region                                        = var.region
+    ecr_repository_url                            = var.ecr_repository_url
+    rds_datasource_url_ssm_param_name             = var.rds_datasource_url_ssm_param_name
+    rds_username_ssm_param_name                   = var.rds_username_ssm_param_name
+    rds_password_ssm_param_name                   = var.rds_password_ssm_param_name
+    allowed_cors_origins_ssm_param_name           = var.allowed_cors_origins_ssm_param_name
+    cognito_issuer_uri_ssm_param_name             = var.cognito_issuer_uri_ssm_param_name
+    alb_dns_name                                  = var.alb_dns_name
+    frontend_cloudfront_domain_name               = var.frontend_cloudfront_domain_name
+    cognito_jwk_set_uri_ssm_param_name            = var.cognito_jwk_set_uri_ssm_param_name
+    cognito_principal_claim_name_ssm_param_name   = var.cognito_principal_claim_name_ssm_param_name
+    cognito_authorities_claim_name_ssm_param_name = var.cognito_authorities_claim_name_ssm_param_name
+    cognito_authorities_prefix_ssm_param_name     = var.cognito_authorities_prefix_ssm_param_name
+  }))
 
   tag_specifications {
     resource_type = "instance"
     tags = {
-      Name        = "${var.project_name}-${var.env}-spring-boot-asg-instance"
+      Name        = "${var.project_name}-${var.env}-spring-boot-instance"
       Environment = var.env
       Project     = var.project_name
     }

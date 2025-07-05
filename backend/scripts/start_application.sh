@@ -30,17 +30,17 @@ docker rmi "$IMAGE_URI" || true
 echo "Pulling Docker image: $IMAGE_URI"
 docker pull $IMAGE_URI
 
-PROJECT_NAME="moviemator"
-ENV="dev"
+echo "Retrieving PROJECT_NAME and ENV from EC2 instance tags..."
 
-echo "Installing AWS CLI v2..."
-sudo yum install -y unzip
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
-cd /tmp
-unzip awscliv2.zip
-sudo ./aws/install --update
-rm -rf awscliv2.zip aws/
-cd - > /dev/null
+PROJECT_NAME=$(aws ec2 describe-tags \
+  --filters "Name=resource-id,Values=$INSTANCE_ID" "Name=key,Values=Project" \
+  --region "$AWS_REGION" \
+  --query 'Tags[0].Value' --output text)
+
+ENV=$(aws ec2 describe-tags \
+  --filters "Name=resource-id,Values=$INSTANCE_ID" "Name=key,Values=Environment" \
+  --region "$AWS_REGION" \
+  --query 'Tags[0].Value' --output text)
 
 echo "Retrieving environment variables from SSM Parameter Store for ${PROJECT_NAME}/${ENV}..."
 

@@ -45,21 +45,23 @@ resource "aws_security_group" "ec2_sg" {
   description = "Security group for ${var.project_name} EC2 instances"
   vpc_id      = var.vpc_id
 
-  # Ingress rules (allow HTTP/HTTPS from ALB, SSH from anywhere)
+  # Rule 1: Allow inbound HTTP/S traffic from the ALB to the application on port 8080
   ingress {
-    from_port       = 8080 # Your application port (adjust if different)
+    from_port       = 8080
     to_port         = 8080
     protocol        = "tcp"
-    security_groups = var.env == "prod" ? [var.bastion_security_group_id] : ["0.0.0.0/0"] # Use your new variable
-    description     = "Allow SSH access from Bastion Host (or anywhere in dev)"
+    security_groups = [var.alb_security_group_id]
+    description     = "Allow HTTP/S traffic from ALB to application on 8080"
   }
 
+  # Rule 2: Allow SSH access from your Bastion Host to the EC2 instances on port 22
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow SSH access"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = var.env == "prod" ? [var.bastion_security_group_id] : []
+    cidr_blocks     = var.env == "dev" ? ["0.0.0.0/0"] : []
+    description     = "Allow SSH access from Bastion Host (or anywhere in dev)"
   }
 
   # Egress rules (allow all outbound traffic)
@@ -70,6 +72,7 @@ resource "aws_security_group" "ec2_sg" {
     cidr_blocks = ["0.0.0.0/0"]
     description = "Allow all outbound traffic"
   }
+
 
   tags = {
     Name        = "${var.project_name}-${var.env}-ec2-sg"
@@ -170,6 +173,11 @@ resource "aws_iam_role_policy_attachment" "ecr_read_only_attach" {
 resource "aws_iam_role_policy_attachment" "ec2_s3_read_access" {
   role       = aws_iam_role.ec2_role.name
   policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonS3ReadOnlyAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "codedeploy_ec2_attach" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy"
 }
 
 resource "aws_iam_role_policy" "ec2_ssm_params_read_access" {

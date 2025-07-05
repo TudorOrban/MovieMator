@@ -111,7 +111,7 @@ module "rds" {
   project_name       = var.project_name
   region             = var.region
 
-  app_server_security_group_id = var.env == "prod" ? null : module.ec2.ec2_security_group_id
+  app_server_security_group_id = module.ec2.ec2_security_group_id
   admin_public_ip_cidr         = (var.env == "dev" ? var.admin_public_ip_cidr : null)
 
   db_name                = var.db_name

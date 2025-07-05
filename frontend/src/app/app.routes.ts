@@ -5,6 +5,7 @@ import { MovieComponent } from './features/movies/components/movie/movie.compone
 import { HomeComponent } from './core/main/components/home/home.component';
 import { LogInComponent } from './core/auth/components/log-in/log-in.component';
 import { SignUpComponent } from './core/auth/components/sign-up/sign-up.component';
+import { UserProfileComponent } from './features/user-profile/components/user-profile/user-profile.component';
 
 export const routes: Routes = [
     {
@@ -30,5 +31,9 @@ export const routes: Routes = [
     {
         path: "movies/:movieId",
         component: MovieComponent
+    },
+    {
+        path: "user-profile",
+        component: UserProfileComponent
     }
 ];

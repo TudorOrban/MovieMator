@@ -50,7 +50,14 @@ DB_PASSWORD=$(aws ssm get-parameter --name "/${PROJECT_NAME}/${ENV}/rds_password
 
 ALLOWED_CORS_ORIGINS=$(aws ssm get-parameter --name "/${PROJECT_NAME}/${ENV}/ALLOWED_CORS_ORIGINS" --query Parameter.Value --output text)
 
-if [ -z "$DB_URL" ] || [ -z "$DB_USERNAME" ] || [ -z "$DB_PASSWORD" ] || [ -z "$ALLOWED_CORS_ORIGINS" ]; then
+COGNITO_ISSUER_URI=$(aws ssm get-parameter --name "/${PROJECT_NAME}/${ENV}/spring/security/oauth2/resourceserver/jwt/issuer-uri" --query "Parameter.Value" --output text)
+COGNITO_JWK_SET_URI=$(aws ssm get-parameter --name "/${PROJECT_NAME}/${ENV}/spring/security/oauth2/resourceserver/jwt/jwk-set-uri" --query "Parameter.Value" --output text)
+COGNITO_PRINCIPAL_CLAIM_NAME=$(aws ssm get-parameter --name "/${PROJECT_NAME}/${ENV}/spring/security/oauth2/resourceserver/jwt/jwt-authentication-converter/principal-claim-name" --query "Parameter.Value" --output text)
+COGNITO_AUTHORITIES_CLAIM_NAME=$(aws ssm get-parameter --name "/${PROJECT_NAME}/${ENV}/spring/security/oauth2/resourceserver/jwt/jwt-authentication-converter/authorities-claim-name" --query "Parameter.Value" --output text)
+COGNITO_AUTHORITIES_PREFIX=$(aws ssm get-parameter --name "/${PROJECT_NAME}/${ENV}/spring/security/oauth2/resourceserver/jwt/jwt-authentication-converter/authorities-prefix" --query "Parameter.Value" --output text)
+
+if [ -z "$DB_URL" ] || [ -z "$DB_USERNAME" ] || [ -z "$DB_PASSWORD" ] || [ -z "$ALLOWED_CORS_ORIGINS" ] ||
+   [ -z "$COGNITO_PRINCIPAL_CLAIM_NAME" ] || [ -z "$COGNITO_AUTHORITIES_CLAIM_NAME" ] || [ -z "$COGNITO_AUTHORITIES_PREFIX" ]; then
     echo "Error: One or more critical environment variables could not be retrieved from SSM Parameter Store."
     exit 1
 fi
@@ -62,6 +69,11 @@ docker run -d --restart=always -p 8080:8080 --name moviemator-spring-boot-app \
     -e SPRING_DATASOURCE_USERNAME="$DB_USERNAME" \
     -e SPRING_DATASOURCE_PASSWORD="$DB_PASSWORD" \
     -e ALLOWED_CORS_ORIGINS="$ALLOWED_CORS_ORIGINS" \
+    -e SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI="${COGNITO_ISSUER_URI}" \
+    -e SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI="${COGNITO_JWK_SET_URI}" \
+    -e SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWT_AUTHENTICATION_CONVERTER_PRINCIPAL_CLAIM_NAME="${COGNITO_PRINCIPAL_CLAIM_NAME}" \
+    -e SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWT_AUTHENTICATION_CONVERTER_AUTHORITIES_CLAIM_NAME="${COGNITO_AUTHORITIES_CLAIM_NAME}" \
+    -e SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWT_AUTHENTICATION_CONVERTER_AUTHORITIES_PREFIX="${COGNITO_AUTHORITIES_PREFIX}" \
     $IMAGE_URI
 
 echo "Docker container started."

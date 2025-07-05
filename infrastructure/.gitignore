@@ -27,3 +27,5 @@ Thumbs.db
 
 environments/dev/terraform.tfvars
 environments/dev/dev.auto.tfvars
+
+.vscode

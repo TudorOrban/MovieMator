@@ -1,5 +1,5 @@
 variable "domain_name" {
-    description = "The domain name for which the certificate will be issued (e.g., your ALB DNS name or custom domain)."
+    description = "The domain name for which the certificate will be issued (e.g., the ALB DNS name or custom domain)."
     type = string
 }
 

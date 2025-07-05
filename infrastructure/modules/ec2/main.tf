@@ -40,6 +40,44 @@ resource "aws_launch_template" "spring_boot_lt" {
   }
 }
 
+resource "aws_security_group" "ec2_sg" {
+  name        = "${var.project_name}-${var.env}-ec2-sg"
+  description = "Security group for ${var.project_name} EC2 instances"
+  vpc_id      = var.vpc_id
+
+  # Ingress rules (allow HTTP/HTTPS from ALB, SSH from anywhere)
+  ingress {
+    from_port       = 8080 # Your application port (adjust if different)
+    to_port         = 8080
+    protocol        = "tcp"
+  security_groups = var.env == "prod" ? [var.bastion_security_group_id] : ["0.0.0.0/0"] # Use your new variable
+  description = "Allow SSH access from Bastion Host (or anywhere in dev)"
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow SSH access"
+  }
+
+  # Egress rules (allow all outbound traffic)
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow all outbound traffic"
+  }
+
+  tags = {
+    Name        = "${var.project_name}-${var.env}-ec2-sg"
+    Environment = var.env
+    Project     = var.project_name
+  }
+}
+
 resource "aws_autoscaling_group" "spring_boot_asg" {
   name                = "${var.env}-spring-boot-asg"
   vpc_zone_identifier = var.private_subnet_ids
@@ -74,7 +112,7 @@ resource "aws_autoscaling_group" "spring_boot_asg" {
 
   target_group_arns = [var.alb_target_group_arn]
 
-  force_delete = true
+  force_delete = var.env == "dev" ? true : false
 }
 
 resource "aws_autoscaling_policy" "scale_out" {

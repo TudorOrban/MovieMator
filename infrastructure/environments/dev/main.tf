@@ -139,6 +139,8 @@ module "ssm_params" {
   db_name                 = var.db_name
   db_username             = var.db_username
   db_password             = var.db_password
+  alb_dns_name            = module.alb.alb_dns_name
+  cloudfront_domain_name  = module.s3_cloudfront_frontend.cloudfront_domain_name
   allowed_cors_origins = join(",", [
     "https://${module.s3_cloudfront_frontend.cloudfront_domain_name}",
     "https://${var.domain_name}",
@@ -180,6 +182,11 @@ module "ec2" {
   asg_max_size_dev           = var.asg_max_size_dev
   asg_desired_capacity_dev   = var.asg_desired_capacity_dev
   asg_target_cpu_utilization = var.asg_target_cpu_utilization
+
+  cognito_jwk_set_uri_ssm_param_name            = module.ssm_params.cognito_jwk_set_uri_ssm_param_name
+  cognito_principal_claim_name_ssm_param_name   = module.ssm_params.cognito_principal_claim_name_ssm_param_name
+  cognito_authorities_claim_name_ssm_param_name = module.ssm_params.cognito_authorities_claim_name_ssm_param_name
+  cognito_authorities_prefix_ssm_param_name     = module.ssm_params.cognito_authorities_prefix_ssm_param_name
 }
 
 # 3. Route 53 Records
@@ -237,6 +244,7 @@ module "codedeploy_components" {
   project_name          = var.project_name
   codedeploy_role_arn   = module.cicd_iam.codedeploy_role_arn
   alb_target_group_name = module.alb.alb_target_group_name
+  asg_name              = module.ec2.asg_name
 }
 
 # CodeStar Connection

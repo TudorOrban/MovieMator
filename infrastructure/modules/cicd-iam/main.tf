@@ -101,7 +101,7 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
 resource "aws_s3_bucket" "codepipeline_artifact_bucket" {
   bucket = "${var.project_name}-${var.env}-codepipeline-artifacts-${random_string.suffix.id}"
 
-  force_destroy = true
+  force_destroy = var.env == "dev" ? true : false
 
   tags = {
     Environment = var.env

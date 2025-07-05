@@ -65,6 +65,12 @@ variable "frontend_cloudfront_domain_name" {
   type        = string
 }
 
+variable "bastion_security_group_id" {
+  description = "The ID of the Bastion Host's security group to allow SSH from."
+  type        = string
+  default     = null
+}
+
 # Cognito
 variable "cognito_jwk_set_uri_ssm_param_name" {
   description = "SSM param name for Cognito JWK Set URI"
@@ -149,10 +155,5 @@ variable "allowed_cors_origins_ssm_param_name" {
 
 variable "cognito_issuer_uri_ssm_param_name" {
   description = "SSM parameter name for Cognito issuer URI."
-  type        = string
-}
-
-variable "ecr_repository_url" {
-  description = "URL of the ECR repository containing the Spring Boot application image."
   type        = string
 }

@@ -19,6 +19,17 @@ module "network" {
   region               = var.region
 }
 
+module "bastion" {
+  source = "../../modules/bastion"
+
+  project_name                    = var.project_name
+  env                             = var.env
+  vpc_id                          = module.network.vpc_id
+  public_subnet_id                = module.network.public_subnet_ids[0]
+  ssh_public_key                  = var.ssh_public_key
+  trusted_ssh_ingress_cidr_blocks = var.env == "prod" ? [var.admin_public_ip_cidr] : ["0.0.0.0/0"]
+}
+
 # Route53
 module "route53_zone" {
   source = "../../modules/route53-zone"
@@ -35,7 +46,7 @@ module "cloudfront_acm" {
     aws = aws.us_east_1
   }
   domain_name     = var.domain_name
-  route53_zone_id = module.route53.zone_id
+  route53_zone_id = module.route53_zone.zone_id
   env             = var.env
   project_name    = var.project_name
 }
@@ -156,7 +167,8 @@ module "ec2" {
   rds_username_ssm_param_name         = module.ssm_params.rds_username_param_name
   rds_password_ssm_param_name         = module.ssm_params.rds_password_param_name
   allowed_cors_origins_ssm_param_name = module.ssm_params.allowed_cors_origins_param_name
-  cognito_issuer_uri_ssm_param_name   = module.ssm_params.cognito_issuer_uri_param_name
+
+  bastion_security_group_id = module.bastion.bastion_security_group_id
 
   asg_min_size_dev           = var.asg_min_size_dev
   asg_max_size_dev           = var.asg_max_size_dev
@@ -166,6 +178,7 @@ module "ec2" {
   asg_desired_capacity_prod  = var.asg_desired_capacity_prod
   asg_target_cpu_utilization = var.asg_target_cpu_utilization
 
+  cognito_issuer_uri_ssm_param_name             = module.ssm_params.cognito_issuer_uri_param_name
   cognito_jwk_set_uri_ssm_param_name            = module.ssm_params.cognito_jwk_set_uri_ssm_param_name
   cognito_principal_claim_name_ssm_param_name   = module.ssm_params.cognito_principal_claim_name_ssm_param_name
   cognito_authorities_claim_name_ssm_param_name = module.ssm_params.cognito_authorities_claim_name_ssm_param_name

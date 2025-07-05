@@ -20,9 +20,8 @@ resource "aws_cognito_user_pool" "main" {
   }
 
   email_configuration {
-    email_sending_account  = "COGNITO_DEFAULT"
-    source_arn             = ""
-    reply_to_email_address = "support@{var.domain_name}"
+    email_sending_account = "COGNITO_DEFAULT"
+    source_arn            = ""
   }
 
   mfa_configuration = "OFF"

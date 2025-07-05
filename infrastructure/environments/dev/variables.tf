@@ -94,7 +94,6 @@ variable "ec2_instance_type" {
 variable "my_public_ip_cidr" {
   description = "The public IP address in CIDR format for SSH access"
   type        = string
-  default     = "94.53.42.151/32"
 }
 
 variable "ssh_public_key" {

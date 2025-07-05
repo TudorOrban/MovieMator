@@ -28,6 +28,8 @@ module "rds" {
   project_name       = var.project_name
   region             = var.region
 
+  my_public_ip_cidr = var.my_public_ip_cidr
+
   db_name                = var.db_name
   db_username            = var.db_username
   db_password            = var.db_password

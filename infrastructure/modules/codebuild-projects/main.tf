@@ -27,14 +27,6 @@ resource "aws_codebuild_project" "backend_build" {
       name  = "CLOUDFRONT_DOMAIN_NAME"
       value = var.cloudfront_domain_name
     }
-    environment_variable {
-      name  = "COGNITO_USER_POOL_ID"
-      value = var.cognito_user_pool_id
-    }
-    environment_variable {
-      name  = "COGNITO_USER_POOL_CLIENT_ID"
-      value = var.cognito_user_pool_client_id
-    }
   }
 
   source {
@@ -83,6 +75,14 @@ resource "aws_codebuild_project" "frontend_build" {
     environment_variable {
       name  = "CLOUDFRONT_DISTRIBUTION_ID"
       value = var.cloudfront_distribution_id
+    }
+    environment_variable {
+      name  = "COGNITO_USER_POOL_ID"
+      value = var.cognito_user_pool_id
+    }
+    environment_variable {
+      name  = "COGNITO_USER_POOL_CLIENT_ID"
+      value = var.cognito_user_pool_client_id
     }
   }
 

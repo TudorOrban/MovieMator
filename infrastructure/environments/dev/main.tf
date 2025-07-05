@@ -196,6 +196,8 @@ module "codebuild_projects" {
   cloudfront_domain_name      = module.s3_cloudfront_frontend.cloudfront_domain_name
   frontend_s3_bucket_name     = module.s3_cloudfront_frontend.s3_bucket_name
   cloudfront_distribution_id  = module.s3_cloudfront_frontend.cloudfront_distribution_id
+  cognito_user_pool_id        = module.cognito.user_pool_id
+  cognito_user_pool_client_id = module.cognito.user_pool_client_id
 }
 
 # CodeDeploy Components

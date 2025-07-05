@@ -20,6 +20,8 @@ phases:
         echo "export const environment = {
           production: true,
           apiUrl: 'https://api.${DOMAIN_NAME}/api/v1',
+          cognitoUserPoolId: '${COGNITO_USER_POOL_ID}',
+          cognitoUserPoolClientId: '${COGNITO_USER_POOL_CLIENT_ID}',
         };" > src/environments/environment.prod.ts
 
       - cat src/environments/environment.prod.ts

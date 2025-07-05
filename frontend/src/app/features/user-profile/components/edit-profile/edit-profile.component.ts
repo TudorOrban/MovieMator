@@ -1,0 +1,84 @@
+import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
+import { AuthService } from '../../../../core/auth/service/auth.service';
+import { ToastManagerService } from '../../../../shared/common/services/toast-manager.service';
+import { Router, RouterModule } from '@angular/router';
+import { UpdateUserDto } from '../../../../core/auth/models/User';
+import { Subscription } from 'rxjs';
+import { UserService } from '../../../../core/auth/service/user.service';
+import { ToastType } from '../../../../shared/models/UI';
+
+@Component({
+    selector: 'app-edit-profile',
+    imports: [CommonModule, FormsModule, RouterModule],
+    templateUrl: './edit-profile.component.html',
+    styleUrl: './edit-profile.component.css'
+})
+export class EditProfileComponent implements OnInit, OnDestroy {
+
+    constructor(
+        private readonly authService: AuthService,
+        private readonly userService: UserService,
+        private readonly toastService: ToastManagerService,
+        private readonly router: Router
+    ) {}
+
+    editProfileData: UpdateUserDto = {
+        id: -1,
+        displayName: ""
+    };
+
+    formSubmitted: boolean = false;
+    loading: boolean = false;
+    errorMessage?: string;
+
+    private subscription: Subscription = new Subscription();
+
+    ngOnInit() {
+        this.subscription = this.authService.currentUser$.subscribe({
+            next: (data) => {
+                if (!data) {
+                    this.router.navigate(["/signup"]);
+                    return;
+                }
+                this.editProfileData.id = data?.id;
+                this.editProfileData.displayName = data?.displayName;
+            },
+            error: (error) => {
+                console.error("Error getting current user: ", error);
+                this.router.navigate(["/signup"]);
+            }
+        })
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
+    }
+
+    async onSubmit(form: NgForm): Promise<void> {
+        this.formSubmitted = true;
+        this.errorMessage = undefined;
+
+        if (form.invalid) {
+            return;
+        }
+
+        this.loading = true;
+        this.userService.updateUser(this.editProfileData).subscribe({
+            next: (data) => {
+                this.toastService.addToast({ title: "Success", details: "Profile edited successfully.", type: ToastType.SUCCESS });
+                this.router.navigate(["/"]);
+            },
+            error: (error) => {
+                this.toastService.addToast({ title: "Error", details: "An error occurred editing the profile. Please try again later.", type: ToastType.ERROR });
+                console.error("Login error:", error);
+                this.errorMessage = error.message || "Invalid display name";
+            }
+        });
+    }
+    
+    hasBeenSubmitted(): boolean {
+        return this.formSubmitted;
+    }
+}

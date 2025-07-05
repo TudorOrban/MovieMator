@@ -1,0 +1,43 @@
+<!-- src/app/log-in/log-in.component.html -->
+<div class="page-std-padding-x page-std-padding-y">
+    <div class="text-2xl font-semibold py-8">
+        Log In to MovieMator
+    </div>
+
+    <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <strong class="font-bold">Error!</strong>
+        <span class="block sm:inline"> {{ errorMessage }}</span>
+    </div>
+
+    <form (ngSubmit)="onSubmit(loginForm)" #loginForm="ngForm">
+        <!-- Display Name -->
+        <div class="space-y-2 mb-4">
+            <label for="displayName" class="form-label">Display Name</label>
+            <input
+                type="displayName"
+                id="displayName"
+                name="displayName"
+                [(ngModel)]="editProfileData.displayName"
+                required
+                displayName
+                class="form-input"
+                #displayNameInput="ngModel"
+            >
+            <div
+                *ngIf="hasBeenSubmitted() && displayNameInput.invalid"
+                class="form-error"
+            >
+                <div *ngIf="displayNameInput.errors?.['required']">DisplayName is required.</div>
+                <div *ngIf="displayNameInput.errors?.['displayName']">Please enter a valid displayName.</div>
+            </div>
+        </div>
+
+        <button
+            type="submit"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            [disabled]="loading"
+        >
+            {{ loading ? "Updating Profile..." : "Save" }}
+        </button>
+    </form>
+</div>

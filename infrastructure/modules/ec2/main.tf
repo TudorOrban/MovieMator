@@ -72,7 +72,7 @@ resource "aws_launch_template" "spring_boot_lt" {
 
 resource "aws_autoscaling_group" "spring_boot_asg" {
   name                = "${var.env}-spring-boot-asg"
-  vpc_zone_identifier = var.public_subnet_ids
+  vpc_zone_identifier = var.private_subnet_ids
 
   min_size         = var.env == "prod" ? var.asg_min_size_prod : var.asg_min_size_dev
   max_size         = var.env == "prod" ? var.asg_max_size_prod : var.asg_max_size_dev
@@ -99,39 +99,39 @@ resource "aws_autoscaling_group" "spring_boot_asg" {
     propagate_at_launch = true
   }
 
-    health_check_type = "ELB"
-    health_check_grace_period = 300
+  health_check_type         = "ELB"
+  health_check_grace_period = 300
 
-    target_group_arns = [var.alb_target_group_arn]
+  target_group_arns = [var.alb_target_group_arn]
 
-    force_delete = true
+  force_delete = true
 }
 
 resource "aws_autoscaling_policy" "scale_out" {
-    name = "${var.env}-spring-boot-scale-out-policy"
-    autoscaling_group_name = aws_autoscaling_group.spring_boot_asg.name
-    policy_type = "TargetTrackingScaling"
-    target_tracking_configuration {
-      predefined_metric_specification {
-        predefined_metric_type = "ASGAverageCPUUtilization"
-      }
-      target_value = var.asg_target_cpu_utilization
+  name                   = "${var.env}-spring-boot-scale-out-policy"
+  autoscaling_group_name = aws_autoscaling_group.spring_boot_asg.name
+  policy_type            = "TargetTrackingScaling"
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
     }
-    enabled = var.env == "prod"
+    target_value = var.asg_target_cpu_utilization
+  }
+  enabled = var.env == "prod"
 }
 
 resource "aws_autoscaling_policy" "scale_in" {
-    name = "${var.env}-spring-boot-scale-in-policy"
-    autoscaling_group_name = aws_autoscaling_group.spring_boot_asg.name
-    policy_type = "TargetTrackingScaling"
-    target_tracking_configuration {
-      predefined_metric_specification {
-        predefined_metric_type = "ASGAverageCPUUtilization"
-      }
-      target_value = var.asg_target_cpu_utilization
-      disable_scale_in = false
+  name                   = "${var.env}-spring-boot-scale-in-policy"
+  autoscaling_group_name = aws_autoscaling_group.spring_boot_asg.name
+  policy_type            = "TargetTrackingScaling"
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
     }
-    enabled = var.env == "prod"
+    target_value     = var.asg_target_cpu_utilization
+    disable_scale_in = false
+  }
+  enabled = var.env == "prod"
 }
 
 resource "aws_iam_role" "ec2_role" {

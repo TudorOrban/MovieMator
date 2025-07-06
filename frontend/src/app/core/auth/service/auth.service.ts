@@ -152,6 +152,7 @@ export class AuthService {
             error: (err) => {
                 console.error("AuthService: Failed to load current app user:", err);
                 this._currentUserSubject.next(null);
+                this.logout();
             }
         });
     }

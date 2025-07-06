@@ -1,0 +1,30 @@
+<nav *ngIf="totalPages > 1" class="flex items-center justify-center space-x-2 py-4">
+    <button
+        (click)="goToPreviousPage()"
+        [disabled]="currentPage === 1"
+        class="px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+    >
+        <fa-icon [icon]="faChevronLeft"></fa-icon>
+    </button>
+
+    <ng-container *ngFor="let page of pages">
+        <button
+            (click)="goToPage(page)"
+            [class.bg-blue-600]="page === currentPage"
+            [class.text-white]="page === currentPage"
+            [class.bg-white]="page !== currentPage"
+            [class.text-gray-700]="page !== currentPage"
+            [class.hover:bg-gray-100]="page !== currentPage" [class.hover:bg-blue-700]="page === currentPage" class="px-3 py-2 rounded-md border border-gray-300 cursor-pointer"
+        >
+            {{ page }}
+        </button>
+    </ng-container>
+
+    <button
+        (click)="goToNextPage()"
+        [disabled]="currentPage === totalPages"
+        class="px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+    >
+        <fa-icon [icon]="faChevronRight"></fa-icon>
+    </button>
+</nav>

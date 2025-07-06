@@ -1,4 +1,4 @@
-<div class="page-std-padding-y w-full">
+<div class="w-full">
     <app-movies-header
         [searchParams]="searchParams"
         [totalCount]="movies?.totalCount"
@@ -15,8 +15,17 @@
         <app-movies-list 
             [movies]="movies" 
             [isDeleteModeOn]="isDeleteModeOn"
+            [isLoading]="isLoading"
             (onNewMovieId)="handleNewMovieId($event)"
             class="w-full"
         ></app-movies-list>
     </div>
+
+    <app-page-selector
+        [currentPage]="searchParams.page"
+        [totalCount]="movies?.totalCount ?? 0"
+        [itemsPerPage]="searchParams.itemsPerPage"
+        (pageChanged)="handlePageChange($event)"
+        class="w-full mt-4"
+    ></app-page-selector>
 </div>

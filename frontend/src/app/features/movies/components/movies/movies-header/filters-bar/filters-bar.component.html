@@ -70,6 +70,50 @@
                             (ngModelChange)="handleWatchedDateChange($event, 'To')"
                         >
                     </div>
+
+                    <!-- New -->
+                    <app-enum-selector
+                        *ngSwitchCase="'status'"
+                        [selectedValue]="movieFilters.status"
+                        [options]="movieStatusOptions"
+                        placeholder="Select Status"
+                        (valueChange)="handleMovieStatusChange($event)"
+                    ></app-enum-selector>
+
+                    <div *ngSwitchCase="'runtimeMinutes'" class="flex flex-col sm:flex-row gap-2 w-full">
+                        <input
+                            type="number"
+                            placeholder="Less Than (minutes)"
+                            class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1"
+                            [(ngModel)]="movieFilters.runtimeMinutesLessThan"
+                            (ngModelChange)="handleRuntimeChange($event, 'lessThan')"
+                        >
+                        <input
+                            type="number"
+                            placeholder="More Than (minutes)"
+                            class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1"
+                            [(ngModel)]="movieFilters.runtimeMinutesMoreThan"
+                            (ngModelChange)="handleRuntimeChange($event, 'moreThan')"
+                        >
+                    </div>
+
+                    <input
+                        *ngSwitchCase="'genresIncluding'"
+                        type="text"
+                        placeholder="Genres (comma-separated)"
+                        class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                        [ngModel]="movieFilters.genresIncluding ? movieFilters.genresIncluding.join(', ') : ''"
+                        (ngModelChange)="handleGenresIncludingChange($event)"
+                    >
+
+                    <input
+                        *ngSwitchCase="'actorsIncluding'"
+                        type="text"
+                        placeholder="Actors (comma-separated)"
+                        class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                        [ngModel]="movieFilters.actorsIncluding ? movieFilters.actorsIncluding.join(', ') : ''"
+                        (ngModelChange)="handleActorsIncludingChange($event)"
+                    >
                 </ng-container>
             </div>
 

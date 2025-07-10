@@ -11,24 +11,37 @@ export const standardSortOptions: UIItem[] = [
 export const standardFilterOptions: FilterOption[] = [
     {
         key: { label: "Release Year", value: "releaseYear" },
-        valueOptions: [],
         filterType: FilterType.NUMBER,
     },
     {
         key: { label: "Director", value: "director" },
-        valueOptions: [],
         filterType: FilterType.TEXT, 
     },
     {
         key: { label: "User Rating", value: "userRating" },
-        valueOptions: [],
         filterType: FilterType.NUMBER,
     },
     {
         key: { label: "Watched Date", value: "watchedDate" },
-        valueOptions: [],
         filterType: FilterType.DATE,
     },
+    // New
+    { 
+        key: { label: 'Status', value: 'status' }, 
+        filterType: FilterType.ENUM 
+    },
+    { 
+        key: { label: 'Runtime (mins)', value: 'runtimeMinutes' }, 
+        filterType: FilterType.NUMBER 
+    },
+    { 
+        key: { label: 'Genres', value: 'genresIncluding' }, 
+        filterType: FilterType.MULTI_TEXT 
+    },
+    { 
+        key: { label: 'Actors', value: 'actorsIncluding' }, 
+        filterType: FilterType.MULTI_TEXT 
+    }, 
 ];
 
 export const pagesSearchConfiguration: PagesSearchConfiguration = {

@@ -1,3 +1,4 @@
+import { MovieStatus } from "../../features/movies/models/Movie";
 import { UIItem } from "./UI";
 
 export interface PaginatedResults<T> {
@@ -30,11 +31,17 @@ export interface MovieFilters {
     userRatingTo?: number;
     watchedDateFrom?: string;
     watchedDateTo?: string;
+    // New
+    status?: MovieStatus;
+    runtimeMinutesLessThan?: number;
+    runtimeMinutesMoreThan?: number;
+    genresIncluding?: string[];
+    actorsIncluding?: string[];
 }
 
 export interface FilterOption {
     key: UIItem;
-    valueOptions: UIItem[];
+    valueOptions?: UIItem[];
     filterType: FilterType;
 }
 
@@ -42,5 +49,6 @@ export enum FilterType {
     NUMBER = "NUMBER",
     ENUM = "ENUM",
     DATE = "DATE",
-    TEXT = "TEXT"
+    TEXT = "TEXT",
+    MULTI_TEXT = "MULTI_TEXT"
 }

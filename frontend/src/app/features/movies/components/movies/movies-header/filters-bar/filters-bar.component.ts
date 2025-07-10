@@ -5,10 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { faCaretDown, faCaretUp, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { debounceTime, Subject, Subscription } from 'rxjs';
+import { MovieStatus } from '../../../../models/Movie';
+import { EnumSelectorComponent } from "../../../../../../shared/common/components/enum-selector/enum-selector.component";
 
 @Component({
     selector: 'app-filters-bar',
-    imports: [CommonModule, FontAwesomeModule, FormsModule],
+    imports: [CommonModule, FontAwesomeModule, FormsModule, EnumSelectorComponent],
     templateUrl: './filters-bar.component.html',
     styleUrl: './filters-bar.component.css'
 })
@@ -21,6 +23,11 @@ export class FiltersBarComponent implements OnInit , OnDestroy{
     private directorChangeSubject = new Subject<string | null>();
     private directorSubscription!: Subscription;
     
+    movieStatusOptions: { label: string, value: MovieStatus }[] = [
+        { label: "Watched", value: MovieStatus.WATCHED },
+        { label: "Watchlist", value: MovieStatus.WATCHLIST }
+    ];
+
     ngOnInit(): void {
         this.directorSubscription = this.directorChangeSubject.pipe(
             debounceTime(500)
@@ -54,6 +61,41 @@ export class FiltersBarComponent implements OnInit , OnDestroy{
         this.emitFiltersChanged();
     }
 
+    // New
+    handleMovieStatusChange(value?: string): void {
+        if (!value) {
+            this.movieFilters.status = undefined;
+            this.emitFiltersChanged();
+            return;
+        }
+
+        this.movieFilters.status = MovieStatus[value as keyof typeof MovieStatus];
+        this.emitFiltersChanged();
+    }
+
+    handleRuntimeChange(value: string | null, type: "lessThan" | "moreThan"): void {
+        if (type === "lessThan") {
+            this.movieFilters.runtimeMinutesLessThan = value ? Number(value) : undefined;
+        } else {
+            this.movieFilters.runtimeMinutesMoreThan = value ? Number(value) : undefined;
+        }
+        this.emitFiltersChanged();
+    }
+
+    handleGenresIncludingChange(value: string | undefined): void {
+        this.movieFilters.genresIncluding = value
+            ? value.split(',').map(genre => genre.trim()).filter(genre => genre.length > 0)
+            : undefined;
+        this.emitFiltersChanged();
+    }
+
+    handleActorsIncludingChange(value: string | undefined): void {
+        this.movieFilters.actorsIncluding = value
+            ? value.split(',').map(actor => actor.trim()).filter(actor => actor.length > 0)
+            : undefined;
+        this.emitFiltersChanged();
+    }
+
     handleWatchedDateChange(value: string | null, type: "From" | "To"): void {
         if (type === "From") {
             this.movieFilters.watchedDateFrom = value || undefined;
@@ -79,6 +121,20 @@ export class FiltersBarComponent implements OnInit , OnDestroy{
             case "watchedDate":
                 this.movieFilters.watchedDateFrom = undefined;
                 this.movieFilters.watchedDateTo = undefined;
+                break;
+            // New
+            case "status":
+                this.movieFilters.status = undefined;
+                break;
+            case "runtimeMinutes":
+                this.movieFilters.runtimeMinutesLessThan = undefined;
+                this.movieFilters.runtimeMinutesMoreThan = undefined;
+                break;
+            case "genresIncluding":
+                this.movieFilters.genresIncluding = undefined;
+                break;
+            case "actorsIncluding":
+                this.movieFilters.actorsIncluding = undefined;
                 break;
         }
         this.emitFiltersChanged();
@@ -106,12 +162,25 @@ export class FiltersBarComponent implements OnInit , OnDestroy{
         case "watchedDate":
             return (this.movieFilters.watchedDateFrom !== undefined && this.movieFilters.watchedDateFrom !== null) ||
                    (this.movieFilters.watchedDateTo !== undefined && this.movieFilters.watchedDateTo !== null);
+        // New
+        case "status":
+                return this.movieFilters.status !== undefined && this.movieFilters.status !== null;
+        case "runtimeMinutes":
+            return (this.movieFilters.runtimeMinutesLessThan !== undefined && this.movieFilters.runtimeMinutesLessThan !== null) ||
+                (this.movieFilters.runtimeMinutesMoreThan !== undefined && this.movieFilters.runtimeMinutesMoreThan !== null);
+        case "genresIncluding":
+            return (this.movieFilters.genresIncluding !== undefined && this.movieFilters.genresIncluding !== null &&
+                    this.movieFilters.genresIncluding.some(g => g.trim().length > 0));
+        case "actorsIncluding":
+            return (this.movieFilters.actorsIncluding !== undefined && this.movieFilters.actorsIncluding !== null &&
+                    this.movieFilters.actorsIncluding.some(a => a.trim().length > 0));
         default:
             return false;
     }
 }
 
     public readonly FilterType = FilterType;
+    public readonly MovieStatus = MovieStatus;
 
     faTimesCircle = faTimesCircle;
     faCaretUp = faCaretUp;

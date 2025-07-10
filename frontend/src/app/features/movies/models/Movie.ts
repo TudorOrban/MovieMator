@@ -39,6 +39,11 @@ export interface MovieDataDto {
     watchedDate?: Date;
     createdAt: Date;
     updatedAt: Date;
+    // New
+    status?: MovieStatus;
+    genres?: string[];
+    runtimeMinutes?: number;
+    actors?: string[];
 }
 
 export interface CreateMovieDto {
@@ -52,6 +57,11 @@ export interface CreateMovieDto {
     userRating?: number;
     userReview?: string;
     watchedDate?: Date;
+    // New
+    status?: MovieStatus;
+    genres?: string[];
+    runtimeMinutes?: number;
+    actors?: string[];
 }
 
 export interface UpdateMovieDto {
@@ -66,4 +76,9 @@ export interface UpdateMovieDto {
     userRating?: number;
     userReview?: string;
     watchedDate?: Date;
+    // New
+    status?: MovieStatus;
+    genres?: string[];
+    runtimeMinutes?: number;
+    actors?: string[];
 }

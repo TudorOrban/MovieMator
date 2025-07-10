@@ -70,6 +70,10 @@ public class Movie {
     @Column(name = "genres")
     private List<String> genres;
 
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "actors")
+    private List<String> actors;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

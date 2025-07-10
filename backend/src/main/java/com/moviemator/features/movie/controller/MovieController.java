@@ -5,6 +5,7 @@ import com.moviemator.features.movie.dto.CreateMovieDto;
 import com.moviemator.features.movie.dto.MovieDataDto;
 import com.moviemator.features.movie.dto.MovieSearchDto;
 import com.moviemator.features.movie.dto.UpdateMovieDto;
+import com.moviemator.features.movie.model.MovieStatus;
 import com.moviemator.features.movie.service.MovieService;
 import com.moviemator.shared.search.models.MovieFilters;
 import com.moviemator.shared.search.models.PaginatedResults;
@@ -50,14 +51,20 @@ public class MovieController {
             @RequestParam(value = "userRatingFrom", required = false) Integer userRatingFrom,
             @RequestParam(value = "userRatingTo", required = false) Integer userRatingTo,
             @RequestParam(value = "watchedDateFrom", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate watchedDateFrom,
-            @RequestParam(value = "watchedDateTo", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate watchedDateTo
+            @RequestParam(value = "watchedDateTo", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate watchedDateTo,
+            // New
+            @RequestParam(value = "status", required = false) MovieStatus status,
+            @RequestParam(value = "runtimeMinutesLessThan", required = false) Integer runtimeMinutesLessThan,
+            @RequestParam(value = "runtimeMinutesMoreThan", required = false) Integer runtimeMinutesMoreThan,
+            @RequestParam(value = "genresIncluding", required = false) List<String> genresIncluding,
+            @RequestParam(value = "actorsIncluding", required = false) List<String> actorsIncluding
     ) {
 
         SearchParams searchParams = new SearchParams(
                 searchText, sortBy, isAscending, page, itemsPerPage
         );
         MovieFilters movieFilters = new MovieFilters(
-                releaseYearFrom, releaseYearTo, director, userRatingFrom, userRatingTo, watchedDateFrom, watchedDateTo
+                releaseYearFrom, releaseYearTo, director, userRatingFrom, userRatingTo, watchedDateFrom, watchedDateTo, status, runtimeMinutesLessThan, runtimeMinutesMoreThan, genresIncluding, actorsIncluding
         );
 
         PaginatedResults<MovieSearchDto> results = movieService.searchMovies(userId, searchParams, movieFilters);

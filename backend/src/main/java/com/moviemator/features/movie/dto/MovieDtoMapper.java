@@ -22,6 +22,11 @@ public interface MovieDtoMapper {
     @Mapping(source = "movie.watchedDate", target = "watchedDate")
     @Mapping(source = "movie.createdAt", target = "createdAt")
     @Mapping(source = "movie.updatedAt", target = "updatedAt")
+    // New
+    @Mapping(source = "movie.status", target = "status")
+    @Mapping(source = "movie.runtimeMinutes", target = "runtimeMinutes")
+    @Mapping(source = "movie.genres", target = "genres")
+    @Mapping(source = "movie.actors", target = "actors")
     MovieSearchDto movieToMovieSearchDto(Movie movie);
 
     @Mapping(source = "movie.id", target = "id")
@@ -37,6 +42,11 @@ public interface MovieDtoMapper {
     @Mapping(source = "movie.watchedDate", target = "watchedDate")
     @Mapping(source = "movie.createdAt", target = "createdAt")
     @Mapping(source = "movie.updatedAt", target = "updatedAt")
+    // New
+    @Mapping(source = "movie.status", target = "status")
+    @Mapping(source = "movie.runtimeMinutes", target = "runtimeMinutes")
+    @Mapping(source = "movie.genres", target = "genres")
+    @Mapping(source = "movie.actors", target = "actors")
     MovieDataDto movieToMovieDataDto(Movie movie);
 
     @Mapping(source = "userId", target = "userId")
@@ -49,5 +59,10 @@ public interface MovieDtoMapper {
     @Mapping(source = "userRating", target = "userRating")
     @Mapping(source = "userReview", target = "userReview")
     @Mapping(source = "watchedDate", target = "watchedDate")
+    // New
+    @Mapping(source = "status", target = "status")
+    @Mapping(source = "runtimeMinutes", target = "runtimeMinutes")
+    @Mapping(source = "genres", target = "genres")
+    @Mapping(source = "actors", target = "actors")
     Movie createMovieDtoToMovie(CreateMovieDto movieDto);
 }

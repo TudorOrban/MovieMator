@@ -12,6 +12,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -57,43 +58,72 @@ public class MovieSearchRepositoryImpl implements MovieSearchRepository {
     }
 
     private Predicate getConditions(CriteriaBuilder builder, Root<Movie> root, Long userId, SearchParams searchParams, MovieFilters filters) {
-        Predicate conditions = builder.conjunction();
+        List<Predicate> predicates = new ArrayList<>();
 
         if (userId != null) {
-            conditions = builder.and(conditions, builder.equal(root.get("userId"), userId));
+            predicates.add(builder.equal(root.get("userId"), userId));
         }
-        if (searchParams.getSearchText() != null) {
-            conditions = builder.and(conditions, builder.like(root.get("title"), "%" + searchParams.getSearchText() + "%"));
+        if (searchParams.getSearchText() != null && !searchParams.getSearchText().isEmpty()) {
+            predicates.add(builder.like(builder.lower(root.get("title")), "%" + searchParams.getSearchText().toLowerCase() + "%"));
         }
+
         if (filters == null) {
-            return conditions;
+            return builder.and(predicates.toArray(new Predicate[0]));
         }
 
         if (filters.getReleaseYearFrom() != null) {
-            conditions = builder.and(conditions, builder.greaterThanOrEqualTo(root.get("releaseYear"), filters.getReleaseYearFrom()));
+            predicates.add(builder.greaterThanOrEqualTo(root.get("releaseYear"), filters.getReleaseYearFrom()));
         }
         if (filters.getReleaseYearTo() != null) {
-            conditions = builder.and(conditions, builder.lessThanOrEqualTo(root.get("releaseYear"), filters.getReleaseYearTo()));
+            predicates.add(builder.lessThanOrEqualTo(root.get("releaseYear"), filters.getReleaseYearTo()));
         }
 
         if (filters.getDirector() != null && !filters.getDirector().isEmpty()) {
-            conditions = builder.and(conditions, builder.like(builder.lower(root.get("director")), "%" + filters.getDirector().toLowerCase() + "%"));
+            predicates.add(builder.like(builder.lower(root.get("director")), "%" + filters.getDirector().toLowerCase() + "%"));
         }
 
         if (filters.getUserRatingFrom() != null) {
-            conditions = builder.and(conditions, builder.greaterThanOrEqualTo(root.get("userRating"), filters.getUserRatingFrom()));
+            predicates.add(builder.greaterThanOrEqualTo(root.get("userRating"), filters.getUserRatingFrom()));
         }
         if (filters.getUserRatingTo() != null) {
-            conditions = builder.and(conditions, builder.lessThanOrEqualTo(root.get("userRating"), filters.getUserRatingTo()));
+            predicates.add(builder.lessThanOrEqualTo(root.get("userRating"), filters.getUserRatingTo()));
         }
 
         if (filters.getWatchedDateFrom() != null) {
-            conditions = builder.and(conditions, builder.greaterThanOrEqualTo(root.get("watchedDate"), filters.getWatchedDateFrom()));
+            predicates.add(builder.greaterThanOrEqualTo(root.get("watchedDate"), filters.getWatchedDateFrom()));
         }
         if (filters.getWatchedDateTo() != null) {
-            conditions = builder.and(conditions, builder.lessThanOrEqualTo(root.get("watchedDate"), filters.getWatchedDateTo()));
+            predicates.add(builder.lessThanOrEqualTo(root.get("watchedDate"), filters.getWatchedDateTo()));
         }
 
-        return conditions;
+        // New
+        if (filters.getStatus() != null) {
+            predicates.add(builder.equal(root.get("status"), filters.getStatus()));
+        }
+
+        if (filters.getRuntimeMinutesLessThan() != null) {
+            predicates.add(builder.lessThanOrEqualTo(root.get("runtimeMinutes"), filters.getRuntimeMinutesLessThan()));
+        }
+        if (filters.getRuntimeMinutesMoreThan() != null) {
+            predicates.add(builder.greaterThanOrEqualTo(root.get("runtimeMinutes"), filters.getRuntimeMinutesMoreThan()));
+        }
+
+        if (filters.getGenresIncluding() != null && !filters.getGenresIncluding().isEmpty()) {
+            for (String genre : filters.getGenresIncluding()) {
+                predicates.add(builder.isTrue(builder.function("?|", Boolean.class,
+                        root.get("genres").as(String.class),
+                        builder.literal(genre))));
+            }
+        }
+
+        if (filters.getActorsIncluding() != null && !filters.getActorsIncluding().isEmpty()) {
+            for (String actor : filters.getActorsIncluding()) {
+                predicates.add(builder.isTrue(builder.function("?|", Boolean.class,
+                        root.get("actors").as(String.class),
+                        builder.literal(actor))));
+            }
+        }
+
+        return builder.and(predicates.toArray(new Predicate[0]));
     }
 }

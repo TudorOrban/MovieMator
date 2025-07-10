@@ -59,9 +59,9 @@ public class MovieServiceImpl implements MovieService {
         if (!userRepository.existsById(sanitizedDto.getUserId())) {
             throw new ResourceNotFoundException(sanitizedDto.getUserId().toString(), ResourceType.USER, ResourceIdentifierType.ID);
         }
-//        if (movieRepository.hasNonUniqueTitle(sanitizedDto.getUserId(), sanitizedDto.getTitle())) {
-//            throw new ResourceAlreadyExistsException(sanitizedDto.getTitle(), ResourceType.MOVIE, ResourceIdentifierType.TITLE);
-//        }
+        if (movieRepository.hasNonUniqueTitle(sanitizedDto.getUserId(), sanitizedDto.getTitle())) {
+            throw new ResourceAlreadyExistsException(sanitizedDto.getTitle(), ResourceType.MOVIE, ResourceIdentifierType.TITLE);
+        }
 
         Movie movie = MovieDtoMapper.INSTANCE.createMovieDtoToMovie(sanitizedDto);
 
@@ -79,11 +79,10 @@ public class MovieServiceImpl implements MovieService {
         if (movieRepository.hasNonUniqueTitle(sanitizedDto.getUserId(), sanitizedDto.getTitle())) {
             throw new ResourceAlreadyExistsException(sanitizedDto.getTitle(), ResourceType.MOVIE, ResourceIdentifierType.TITLE);
         }
-        existingMovie.setTitle(movieDto.getTitle());
 
-        existingMovie.setDirector(movieDto.getDirector());
+        Movie movieToBeUpdated = this.setUpdateMovieDtoToMovie(existingMovie, movieDto);
 
-        Movie updatedMovie = movieRepository.save(existingMovie);
+        Movie updatedMovie = movieRepository.save(movieToBeUpdated);
 
         return MovieDtoMapper.INSTANCE.movieToMovieDataDto(updatedMovie);
     }
@@ -102,5 +101,22 @@ public class MovieServiceImpl implements MovieService {
         }
 
         movieRepository.deleteAllById(ids);
+    }
+
+    private Movie setUpdateMovieDtoToMovie(Movie movie, UpdateMovieDto movieDto) {
+        movie.setTitle(movieDto.getTitle());
+        movie.setDirector(movieDto.getDirector());
+        movie.setPosterUrl(movieDto.getPosterUrl());
+        movie.setPlotSummary(movieDto.getPlotSummary());
+        movie.setUserRating(movieDto.getUserRating());
+        movie.setUserReview(movieDto.getUserReview());
+        movie.setWatchedDate(movieDto.getWatchedDate());
+        // New
+        movie.setStatus(movieDto.getStatus());
+        movie.setRuntimeMinutes(movieDto.getRuntimeMinutes());
+        movie.setGenres(movieDto.getGenres());
+        movie.setActors(movieDto.getActors());
+
+        return movie;
     }
 }

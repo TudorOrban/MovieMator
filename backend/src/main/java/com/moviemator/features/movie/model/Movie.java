@@ -4,9 +4,12 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -41,7 +44,7 @@ public class Movie {
     private String plotSummary;
 
     @Column(name = "user_rating")
-    private Integer userRating; // 1 to 10
+    private Float userRating; // 1 to 10
 
     @Column(name = "user_review")
     private String userReview;
@@ -54,6 +57,18 @@ public class Movie {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    // New
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private MovieStatus status;
+
+    @Column(name = "runtime_minutes")
+    private Integer runtimeMinutes;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "genres")
+    private List<String> genres;
 
     @PrePersist
     protected void onCreate() {

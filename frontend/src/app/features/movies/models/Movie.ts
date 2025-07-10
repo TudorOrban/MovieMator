@@ -1,4 +1,3 @@
-
 export interface MovieSearchDto {
     id: number;
     userId: number;
@@ -13,6 +12,17 @@ export interface MovieSearchDto {
     watchedDate?: Date;
     createdAt: Date;
     updatedAt: Date;
+
+    // New
+    status?: MovieStatus;
+    genres?: string[];
+    runtimeMinutes?: number;
+    actors?: string[];
+}
+
+export enum MovieStatus {
+    WATCHED = "WATCHED",
+    WATCHLIST = "WATCHLIST"
 }
 
 export interface MovieDataDto {

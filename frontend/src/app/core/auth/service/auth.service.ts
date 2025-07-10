@@ -40,7 +40,6 @@ export class AuthService {
                 this.clearAllAuthStates();
             }
         } catch (e: any) {
-            console.log("AuthService: No active Amplify session found on load or session invalid:", e.name);
             this.clearAllAuthStates();
         }
     }

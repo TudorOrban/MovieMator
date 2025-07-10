@@ -1,36 +1,122 @@
-<div class="page-std-padding-y">
-    <!-- Header -->
-    <div class="w-full page-std-padding-x pb-4 border-b border-gray-300 shadow-sm">
-        <div class="text-xl font-semibold">{{ movie?.title }}</div>
-        <div class="text-gray-800">{{ movie?.releaseYear ?? "?" }}</div>
-        <div class="text-gray-800">{{ movie?.director ?? "-" }}</div>
-    </div>
+<div class="container mx-auto p-6 md:p-8 lg:p-10 bg-white shadow-lg rounded-lg my-8">
+    
+    <div *ngIf="!movie" class="text-center py-12 text-gray-600">
+        <p>Loading movie details or movie not found...</p>
+        </div>
 
-    <!-- Content -->
-    <div class="page-std-padding-x py-4 space-y-4">
-        <div class="space-y-2">
-            <div class="text-lg font-semibold">
-                Plot Summary:
+    <div *ngIf="movie">
+        <div class="flex flex-col md:flex-row gap-8">
+            <div class="flex-shrink-0 w-full h-full md:w-1/3 lg:w-1/4">
+                <img 
+                    [src]="movie.posterUrl ?? 'assets/images/PlaceholderMoviePoster.png'" 
+                    alt="{{ movie.title }} Poster" 
+                    class="w-full h-auto rounded-lg shadow-md object-cover"
+                >
             </div>
-            <p class="text-gray-900">
-                {{ movie?.plotSummary }}
-            </p>
-        </div>
-        <div class="flex items-center space-x-4">
-            <div class="text-lg font-semibold">
-                User Rating:
+
+            <div class="flex-grow space-y-6">
+                <div class="border-b pb-4 mb-4 border-gray-200">
+                    <h1 class="text-4xl font-extrabold text-gray-900 mb-2">{{ movie.title }}</h1>
+                    <p class="text-xl text-gray-600">
+                        {{ movie.releaseYear ?? "Unknown Year" }} 
+                        <span *ngIf="movie.director"> • Directed by {{ movie.director }}</span>
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800">
+                    <div>
+                        <p class="font-semibold text-lg mb-1">Status:</p>
+                        <span class="px-3 py-1 rounded-full text-sm font-medium"
+                              [ngClass]="{
+                                'bg-green-100 text-green-800': movie.status === 'WATCHED',
+                                'bg-blue-100 text-blue-800': movie.status === 'WATCHLIST'
+                              }" *ngIf="movie.status; else noStatus">
+                            {{ movie.status | titlecase }}
+                        </span>
+                        <ng-template #noStatus>
+                            <span class="text-gray-500 italic">N/A</span>
+                        </ng-template>
+                    </div>
+
+                    <div>
+                        <p class="font-semibold text-lg mb-1">Runtime:</p>
+                        <p *ngIf="movie.runtimeMinutes; else noRuntime">{{ movie.runtimeMinutes }} minutes</p>
+                        <ng-template #noRuntime>
+                            <p class="text-gray-500 italic">N/A</p>
+                        </ng-template>
+                    </div>
+
+                    <div>
+                        <p class="font-semibold text-lg mb-1">Genres:</p>
+                        <div *ngIf="movie.genres?.length; else noGenres" class="flex flex-wrap gap-2">
+                            <span *ngFor="let genre of movie.genres" 
+                                  class="bg-purple-100 text-purple-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
+                                {{ genre }}
+                            </span>
+                        </div>
+                        <ng-template #noGenres>
+                            <p class="text-gray-500 italic">No genres listed.</p>
+                        </ng-template>
+                    </div>
+
+                    <div>
+                        <p class="font-semibold text-lg mb-1">Actors:</p>
+                        <div *ngIf="movie.actors?.length; else noActors" class="flex flex-wrap gap-2">
+                            <span *ngFor="let actor of movie.actors" 
+                                  class="bg-indigo-100 text-indigo-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
+                                {{ actor }}
+                            </span>
+                        </div>
+                        <ng-template #noActors>
+                            <p class="text-gray-500 italic">No actors listed.</p>
+                        </ng-template>
+                    </div>
+
+                    <div>
+                        <p class="font-semibold text-lg mb-1">Your Rating:</p>
+                        <p class="text-2xl font-bold text-yellow-500" *ngIf="movie.userRating; else noRating">
+                            {{ movie.userRating | number:'1.1-1' }} / 10
+                        </p>
+                        <ng-template #noRating>
+                            <p class="text-gray-500 italic">Not rated.</p>
+                        </ng-template>
+                    </div>
+
+                    <div>
+                        <p class="font-semibold text-lg mb-1">Watched On:</p>
+                        <p *ngIf="movie.watchedDate; else noWatchedDate">{{ movie.watchedDate | date:'mediumDate' }}</p>
+                        <ng-template #noWatchedDate>
+                            <p class="text-gray-500 italic">Not watched yet.</p>
+                        </ng-template>
+                    </div>
+                    
+                    </div>
+
+                <div class="space-y-2 pt-4 border-t border-gray-200">
+                    <h2 class="text-xl font-semibold">Plot Summary:</h2>
+                    <p class="text-gray-700 leading-relaxed" *ngIf="movie.plotSummary; else noPlot">
+                        {{ movie.plotSummary }}
+                    </p>
+                    <ng-template #noPlot>
+                        <p class="text-gray-500 italic">No plot summary available.</p>
+                    </ng-template>
+                </div>
+
+                <div class="space-y-2 pt-4 border-t border-gray-200">
+                    <h2 class="text-xl font-semibold">Your Review:</h2>
+                    <p class="text-gray-700 leading-relaxed" *ngIf="movie.userReview; else noReview">
+                        {{ movie.userReview }}
+                    </p>
+                    <ng-template #noReview>
+                        <p class="text-gray-500 italic">No personal review written.</p>
+                    </ng-template>
+                </div>
+
+                <div class="text-sm text-gray-500 pt-4 border-t border-gray-200 flex justify-between flex-wrap gap-2">
+                    <p *ngIf="movie.createdAt">Added: {{ movie.createdAt | date:'medium' }}</p>
+                    <p *ngIf="movie.updatedAt">Last Updated: {{ movie.updatedAt | date:'medium' }}</p>
+                </div>
             </div>
-            <div class="text-lg text-gray-800">
-                {{ movie?.userRating ?? "-" }}
-            </div>
-        </div>
-        <div class="space-y-2">
-            <div class="text-lg font-semibold">
-                User Review:
-            </div>
-            <p class="text-gray-900">
-                {{ movie?.userReview }}
-            </p>
         </div>
     </div>
 </div>

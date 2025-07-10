@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MovieService } from '../../services/movie.service';
 import { MovieDataDto } from '../../models/Movie';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-movie',
-    imports: [],
+    imports: [CommonModule],
     templateUrl: './movie.component.html',
 })
 export class MovieComponent {

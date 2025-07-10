@@ -7,25 +7,60 @@
     </div>
 
     <div *ngIf="!isLoading && (movies?.results?.length === 0 || !movies?.results)" class="text-center text-gray-500 py-8">
-        <p class="text-lg">No movies found.</p>
+        <p class="text-lg">No movies found that match your criteria.</p>
     </div>
 
-    <div *ngIf="!isLoading && (movies?.results?.length ?? 0) > 0" class="space-y-4">
-        <div *ngFor="let movie of (movies?.results ?? [])" class="flex items-center space-x-4">
-            <div *ngIf="isDeleteModeOn">
+    <div *ngIf="!isLoading && (movies?.results?.length ?? 0) > 0" 
+         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 py-4"> <div *ngFor="let movie of (movies?.results ?? [])" 
+             class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out 
+                    flex flex-col relative"
+             [ngClass]="{'border-2 border-blue-500': isDeleteModeOn}"> <div *ngIf="isDeleteModeOn" 
+                 class="absolute top-3 left-3 z-20">
                 <input 
                     type="checkbox" 
                     (change)="handleCheckboxChange(movie.id)"
-                    class="w-6 h-6 border border-gray-300 rounded-md"
+                    class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                 />
             </div>
-            <div class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 cursor-pointer">
-                <a [routerLink]="'/movies/' + movie.id">
-                    <div class="text-lg font-semibold">{{ movie.title }}</div>
-                    <div class="text-gray-800">{{ movie.releaseYear }}</div>
-                    <div class="text-gray-800">{{ movie.director ?? "-" }}</div>
-                </a>
-            </div>
+
+            <a [routerLink]="'/movies/' + movie.id" class="flex flex-grow overflow-hidden">
+                <div class="flex-shrink-0 w-24 h-full"> <img 
+                        [src]="movie.posterUrl ?? 'assets/images/PlaceholderMoviePoster.png'" 
+                        alt="{{ movie.title }} Poster" 
+                        class="w-full h-full object-cover rounded-l-lg"
+                    >
+                </div>
+                
+                <div class="p-4 flex flex-col flex-grow justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-1 line-clamp-2" title="{{movie.title}}">
+                            {{ movie.title }}
+                        </h3>
+                        <p class="text-sm text-gray-600 mb-2">
+                            {{ movie.releaseYear ?? "N/A" }} 
+                            <span *ngIf="movie.director"> • {{ movie.director }}</span>
+                        </p>
+                        
+                        <span *ngIf="movie.status"
+                              class="inline-block px-2 py-0.5 rounded-full text-xs font-medium"
+                              [ngClass]="{
+                                'bg-green-100 text-green-800': movie.status === 'WATCHED',
+                                'bg-blue-100 text-blue-800': movie.status === 'WATCHLIST'
+                              }">
+                            {{ movie.status | titlecase }}
+                        </span>
+                        
+                        <p *ngIf="movie.runtimeMinutes" class="text-sm text-gray-700 mt-1">
+                            {{ movie.runtimeMinutes }} min
+                        </p>
+                    </div>
+                    
+                    <div *ngIf="movie.userRating" class="mt-2 text-yellow-500 text-base font-bold flex items-center">
+                        <fa-icon [icon]="faStar" class="mr-1"></fa-icon>
+                        {{ movie.userRating | number:'1.1-1' }} / 10
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 </div>

@@ -25,6 +25,7 @@ export class MoviesHeaderComponent {
     @Output() movieFiltersChanged = new EventEmitter<MovieFilters>();
     @Output() deleteModeToggled = new EventEmitter<void>();
     @Output() onDeleteMovies = new EventEmitter<void>();
+    @Output() cancelDeleteMovies = new EventEmitter<void>();
 
     searchConfig: PageSearchConfiguration = pagesSearchConfiguration.pagesConfig["/movies"];
 
@@ -50,6 +51,10 @@ export class MoviesHeaderComponent {
 
     handleToggleDeleteMode(): void {
         this.deleteModeToggled.emit();
+    }
+
+    handleCancelDeleteMovies(): void {
+        this.cancelDeleteMovies.emit();
     }
 
     deleteMovies(): void {

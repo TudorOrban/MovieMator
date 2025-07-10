@@ -62,7 +62,6 @@ export class MoviesComponent implements OnInit, OnDestroy {
 
         this.isLoading = true;
 
-        console.log("DASASA", this.movieFilters);
         this.movieService.searchMovies(this.userId, this.searchParams, this.movieFilters).subscribe({
             next: (data) => {
                 this.movies = data;
@@ -91,12 +90,17 @@ export class MoviesComponent implements OnInit, OnDestroy {
         this.toBeDeletedMovieIds = []; 
     }
 
-    handleNewMovieId(id: number): void {
+    handleNewDeleteMovieId(id: number): void {
         if (this.toBeDeletedMovieIds.includes(id)) {
             this.toBeDeletedMovieIds = this.toBeDeletedMovieIds.filter(movieId => movieId !== id);
         } else {
             this.toBeDeletedMovieIds.push(id);
         }
+    }
+
+    clearDeleteMovieIds(): void {
+        this.toBeDeletedMovieIds = [];
+        this.isDeleteModeOn = false;
     }
 
     deleteMovies(): void {

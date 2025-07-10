@@ -1,4 +1,4 @@
-<div class="w-full page-std-padding-x page-std-padding-y bg-gray-50 border-b border-gray-300">
+<div class="w-full page-std-padding-x page-std-padding-y border-b border-gray-300">
     <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold text-gray-900">Movies ({{ totalCount }})</h2>
         </div>
@@ -40,8 +40,11 @@
                 </button>
             </ng-container>
             <ng-template #confirmDeleteButton>
-                <button class="standard-action-button bg-red-600 hover:bg-red-700 text-white w-12" (click)="deleteMovies()">
+                <button class="standard-action-button text-gray-700 hover:text-red-700 w-12" (click)="deleteMovies()">
                     <fa-icon [icon]="faCheck"/>
+                </button>
+                <button class="standard-action-button" (click)="handleCancelDeleteMovies()">
+                    Cancel
                 </button>
             </ng-template>
 

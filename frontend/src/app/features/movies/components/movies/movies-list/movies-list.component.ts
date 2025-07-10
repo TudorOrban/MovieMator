@@ -3,7 +3,7 @@ import { PaginatedResults } from '../../../../../shared/models/Search';
 import { MovieSearchDto } from '../../../models/Movie';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
@@ -22,4 +22,5 @@ export class MoviesListComponent {
     }
 
     faSpinner = faSpinner;
+    faStar = faStar;
 }

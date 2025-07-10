@@ -110,17 +110,27 @@ public class MovieSearchRepositoryImpl implements MovieSearchRepository {
 
         if (filters.getGenresIncluding() != null && !filters.getGenresIncluding().isEmpty()) {
             for (String genre : filters.getGenresIncluding()) {
-                predicates.add(builder.isTrue(builder.function("?|", Boolean.class,
-                        root.get("genres").as(String.class),
-                        builder.literal(genre))));
+                predicates.add(builder.isTrue(
+                        builder.function(
+                                "jsonb_exists",
+                                Boolean.class,
+                                root.get("genres"),
+                                builder.literal(genre)
+                        )
+                ));
             }
         }
 
         if (filters.getActorsIncluding() != null && !filters.getActorsIncluding().isEmpty()) {
             for (String actor : filters.getActorsIncluding()) {
-                predicates.add(builder.isTrue(builder.function("?|", Boolean.class,
-                        root.get("actors").as(String.class),
-                        builder.literal(actor))));
+                predicates.add(builder.isTrue(
+                        builder.function(
+                                "jsonb_exists",
+                                Boolean.class,
+                                root.get("actors"),
+                                builder.literal(actor)
+                        )
+                ));
             }
         }
 

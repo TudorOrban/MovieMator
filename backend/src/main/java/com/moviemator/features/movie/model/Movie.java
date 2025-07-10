@@ -60,7 +60,7 @@ public class Movie {
 
     // New
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     private MovieStatus status;
 
     @Column(name = "runtime_minutes")

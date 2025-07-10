@@ -162,6 +162,55 @@
             </div>
         </div>
 
+        <div class="space-y-2 mt-4">
+            <label for="status" class="form-label">Movie Status</label>
+            <app-enum-selector
+                [selectedValue]="movie.status"
+                [options]="movieStatusOptions"
+                placeholder="Select Movie Status"
+                (valueChange)="handleMovieStatusChange($event)"
+            ></app-enum-selector>
+            </div>
+
+        <div class="space-y-2 mt-4">
+            <label for="runtimeMinutes" class="form-label">Runtime (minutes)</label>
+            <input
+                type="number"
+                id="runtimeMinutes"
+                name="runtimeMinutes"
+                [(ngModel)]="movie.runtimeMinutes"
+                class="form-input"
+                #runtimeMinutesInput="ngModel"
+                min="1"
+                max="999" >
+            <div
+                *ngIf="hasBeenSubmitted() && runtimeMinutesInput.invalid"
+                class="form-error"
+            >
+                <div *ngIf="runtimeMinutesInput.errors?.['min']">Runtime must be at least 1 minute.</div>
+                <div *ngIf="runtimeMinutesInput.errors?.['max']">Runtime cannot exceed {{ runtimeMinutesInput.errors?.['max']?.max }} minutes.</div>
+            </div>
+        </div>
+
+        <div class="space-y-2 mt-4">
+            <app-tag-input
+                label="Genres"
+                placeholder="e.g., Action, Sci-Fi, Drama"
+                [currentTags]="movie.genres"
+                (tagsChange)="handleGenresChange($event)"
+            ></app-tag-input>
+        </div>
+
+        <div class="space-y-2 mt-4">
+            <app-tag-input
+                label="Actors"
+                placeholder="e.g., Tom Hanks, Emma Stone"
+                [currentTags]="movie.actors"
+                (tagsChange)="handleActorsChange($event)"
+            ></app-tag-input>
+        </div>
+
+
         <div class="flex items-center justify-end w-full mt-4">
             <button type="submit" class="standard-write-button">Create Movie</button>
         </div>

@@ -71,6 +71,7 @@ export class FiltersBarComponent implements OnInit , OnDestroy{
 
         this.movieFilters.status = MovieStatus[value as keyof typeof MovieStatus];
         this.emitFiltersChanged();
+        console.log("SDA", this.movieFilters);
     }
 
     handleRuntimeChange(value: string | null, type: "lessThan" | "moreThan"): void {

@@ -62,6 +62,7 @@ export class MoviesComponent implements OnInit, OnDestroy {
 
         this.isLoading = true;
 
+        console.log("DASASA", this.movieFilters);
         this.movieService.searchMovies(this.userId, this.searchParams, this.movieFilters).subscribe({
             next: (data) => {
                 this.movies = data;

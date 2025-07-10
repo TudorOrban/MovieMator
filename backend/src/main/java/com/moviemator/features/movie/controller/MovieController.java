@@ -24,15 +24,12 @@ import java.util.List;
 public class MovieController {
 
     private final MovieService movieService;
-    private final UserService userService;
 
     @Autowired
     public MovieController(
-            MovieService movieService,
-            UserService userService
+            MovieService movieService
     ) {
         this.movieService = movieService;
-        this.userService = userService;
     }
 
     @GetMapping("/search/user/{userId}")

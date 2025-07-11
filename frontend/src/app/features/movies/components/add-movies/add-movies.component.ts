@@ -159,4 +159,6 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
             }
         }));
     }
+
+    MovieStatus = MovieStatus;
 }

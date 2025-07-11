@@ -6,6 +6,8 @@ export const standardSortOptions: UIItem[] = [
     { label: "Created At", value: "createdAt" },
     { label: "Last Modified", value: "updatedAt" },
     { label: "Title", value: "title" },
+    { label: "Watched Date", value: "watchedDate" },
+    { label: "Rating", value: "userRating" },
 ];
 
 export const standardFilterOptions: FilterOption[] = [

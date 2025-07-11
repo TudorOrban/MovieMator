@@ -14,7 +14,7 @@
                 >
             </div>
             <div class="flex-grow space-y-6">
-                <div class="flex items-center justify-between w-full">
+                <div class="flex items-center justify-between w-full space-x-4">
                     <div class="border-b pb-4 mb-4 border-gray-200">
                         <h1 class="text-4xl font-extrabold text-gray-900 mb-2">{{ movie.title }}</h1>
                         <p class="text-xl text-gray-600">
@@ -23,7 +23,7 @@
                         </p>
                     </div>
 
-                    <a [routerLink]="'/movies/update-movie/' + movie.id" class="standard-write-button space-x-2">
+                    <a [routerLink]="'/movies/update-movie/' + movie.id" class="standard-write-button space-x-2 whitespace-nowrap">
                         <fa-icon [icon]="faEdit" />
                         <span>Edit Movie</span>
                     </a>

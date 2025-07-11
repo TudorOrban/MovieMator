@@ -22,7 +22,7 @@ export class MoviesComponent implements OnInit, OnDestroy {
     userId?: number;
     searchParams: SearchParams = {
         searchText: "",
-        sortBy: "createdAt",
+        sortBy: "watchedDate",
         isAscending: true,
         page: 1,
         itemsPerPage: 20

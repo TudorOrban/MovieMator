@@ -188,4 +188,6 @@ export class UpdateMovieComponent implements OnInit, OnDestroy {
             }
         }));
     }
+
+    MovieStatus = MovieStatus;
 }

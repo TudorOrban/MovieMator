@@ -153,17 +153,6 @@
             </div>
         </div>
 
-        <!-- Status -->
-        <div class="space-y-2 mt-4">
-            <label for="status" class="form-label">Movie Status</label>
-            <app-enum-selector
-                [selectedValue]="movie.status"
-                [options]="movieStatusOptions"
-                placeholder="Select Movie Status"
-                (valueChange)="handleMovieStatusChange($event)"
-            ></app-enum-selector>
-        </div>
-
         <!-- Genres -->
         <div class="space-y-2 mt-4">
             <app-tag-input
@@ -182,6 +171,36 @@
                 [currentTags]="movie.actors"
                 (tagsChange)="handleActorsChange($event)"
             ></app-tag-input>
+        </div>
+
+        <!-- Status -->
+        <div class="space-y-2 mt-4">
+            <label for="status" class="form-label">Movie Status</label>
+            <app-enum-selector
+                [selectedValue]="movie.status"
+                [options]="movieStatusOptions"
+                placeholder="Select Movie Status"
+                (valueChange)="handleMovieStatusChange($event)"
+            ></app-enum-selector>
+        </div>
+
+        <!-- Watched Date -->
+        <div *ngIf="movie.status == MovieStatus.WATCHED" class="space-y-2 mt-4">
+            <label for="watchedDate" class="form-label">Watched Date</label>
+            <input 
+                type="date" 
+                id="watchedDate" 
+                name="watchedDate" 
+                [(ngModel)]="movie.watchedDate"
+                class="form-input"
+                #watchedDateInput="ngModel"
+            >
+            <div 
+                *ngIf="hasBeenSubmitted() && watchedDateInput.invalid" 
+                class="form-error"
+            >
+                <div *ngIf="watchedDateInput.errors?.['required']">Watched Date is required.</div>
+            </div>
         </div>
 
         <!-- User Rating -->

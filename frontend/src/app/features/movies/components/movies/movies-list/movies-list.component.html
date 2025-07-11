@@ -11,11 +11,16 @@
     </div>
 
     <div *ngIf="!isLoading && (movies?.results?.length ?? 0) > 0" 
-         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 py-4"> <div *ngFor="let movie of (movies?.results ?? [])" 
-             class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out 
-                    flex flex-col relative"
-             [ngClass]="{'border-2 border-blue-500': isDeleteModeOn}"> <div *ngIf="isDeleteModeOn" 
-                 class="absolute top-3 left-3 z-20">
+         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 py-4"> 
+         <div 
+            *ngFor="let movie of (movies?.results ?? [])" 
+            class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out flex flex-col relative"
+            [ngClass]="{'border-2 border-blue-500': isDeleteModeOn}"
+        > 
+            <div 
+                *ngIf="isDeleteModeOn" 
+                class="absolute top-3 left-3 z-20"
+            >
                 <input 
                     type="checkbox" 
                     (change)="handleCheckboxChange(movie.id)"
@@ -24,7 +29,8 @@
             </div>
 
             <a [routerLink]="'/movies/' + movie.id" class="flex flex-grow overflow-hidden">
-                <div class="flex-shrink-0 w-24 h-full"> <img 
+                <div class="flex-shrink-0 w-24 h-full"> 
+                    <img 
                         [src]="movie.posterUrl ?? 'assets/images/PlaceholderMoviePoster.png'" 
                         alt="{{ movie.title }} Poster" 
                         class="w-full h-full object-cover rounded-l-lg"

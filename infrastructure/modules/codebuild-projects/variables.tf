@@ -57,3 +57,8 @@ variable "cognito_user_pool_client_id" {
   description = "The ID of the Cognito User Pool App Client."
   type        = string
 }
+
+variable "tmdb_api_key" {
+  description = "The API key for TMDB's service"
+  type        = string
+}

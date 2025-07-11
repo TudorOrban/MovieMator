@@ -132,3 +132,10 @@ data "aws_ssm_parameter" "codestar_connection_arn" {
   name            = "/${var.project_name}/${var.env}/codestar_connection_arn"
   with_decryption = false
 }
+
+resource "aws_ssm_parameter" "tmdb_api_key" {
+  name        = "/${var.project_name}/${var.env}/tmdb_api_key"
+  description = "API key for accessing TMDB's API in the frontend"
+  type        = "String"
+  value       = var.tmdb_api_key
+}

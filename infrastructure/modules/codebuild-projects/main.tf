@@ -73,6 +73,10 @@ resource "aws_codebuild_project" "frontend_build" {
       value = var.frontend_s3_bucket_name
     }
     environment_variable {
+      name = "TMDB_API_KEY"
+      value = var.tmdb_api_key
+    }
+    environment_variable {
       name  = "CLOUDFRONT_DISTRIBUTION_ID"
       value = var.cloudfront_distribution_id
     }

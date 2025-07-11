@@ -144,6 +144,7 @@ module "ssm_params" {
 
   github_oauth_token      = var.github_oauth_token
   codestar_connection_arn = var.codestar_connection_arn
+  tmdb_api_key            = var.tmdb_api_key
   rds_endpoint            = module.rds.rds_endpoint
   rds_port                = var.rds_port
   db_name                 = var.db_name
@@ -267,6 +268,7 @@ module "codebuild_projects" {
   cloudfront_domain_name      = module.s3_cloudfront_frontend.cloudfront_domain_name
   frontend_s3_bucket_name     = module.s3_cloudfront_frontend.s3_bucket_name
   cloudfront_distribution_id  = module.s3_cloudfront_frontend.cloudfront_distribution_id
+  tmdb_api_key                = var.tmdb_api_key
   cognito_user_pool_id        = module.cognito.user_pool_id
   cognito_user_pool_client_id = module.cognito.user_pool_client_id
 }

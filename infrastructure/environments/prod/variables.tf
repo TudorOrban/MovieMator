@@ -170,6 +170,11 @@ variable "codestar_connection_arn" {
   type        = string
 }
 
+variable "tmdb_api_key" {
+  description = "The API key for TMDB's service"
+  type        = string
+}
+
 # CodePipeline
 variable "github_repo_owner" {
   description = "The owner (username or organization) of the GitHub repository"

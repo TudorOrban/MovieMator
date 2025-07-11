@@ -66,3 +66,8 @@ variable "cognito_issuer_uri" {
   description = "The Cognito User Pool Issuer URI for backend configuration."
   type        = string
 }
+
+variable "tmdb_api_key" {
+  description = "The API key for TMDB's service"
+  type        = string
+}

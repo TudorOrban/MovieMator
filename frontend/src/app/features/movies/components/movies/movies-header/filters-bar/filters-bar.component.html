@@ -1,6 +1,6 @@
 <div class="flex items-center space-x-4 mb-2 ml-2">
     <div class="text-xl font-semibold">Filters</div>
-    <button class="standard-action-button" (click)="toggleExpanded()">
+    <button class="standard-action-button shadow-sm" (click)="toggleExpanded()">
         <fa-icon [icon]="isExpanded ? faCaretUp : faCaretDown"/>
     </button>
 </div>
@@ -83,17 +83,17 @@
                     <div *ngSwitchCase="'runtimeMinutes'" class="flex flex-col sm:flex-row gap-2 w-full">
                         <input
                             type="number"
-                            placeholder="Less Than (minutes)"
-                            class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1"
-                            [(ngModel)]="movieFilters.runtimeMinutesLessThan"
-                            (ngModelChange)="handleRuntimeChange($event, 'lessThan')"
-                        >
-                        <input
-                            type="number"
                             placeholder="More Than (minutes)"
                             class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1"
                             [(ngModel)]="movieFilters.runtimeMinutesMoreThan"
                             (ngModelChange)="handleRuntimeChange($event, 'moreThan')"
+                        >
+                        <input
+                            type="number"
+                            placeholder="Less Than (minutes)"
+                            class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1"
+                            [(ngModel)]="movieFilters.runtimeMinutesLessThan"
+                            (ngModelChange)="handleRuntimeChange($event, 'lessThan')"
                         >
                     </div>
 

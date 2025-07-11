@@ -9,6 +9,7 @@ import { UserProfileComponent } from './features/user-profile/components/user-pr
 import { EditProfileComponent } from './features/user-profile/components/edit-profile/edit-profile.component';
 import { SettingsComponent } from './features/user-profile/components/settings/settings.component';
 import { StatisticsComponent } from './features/statistics/components/statistics/statistics.component';
+import { UpdateMovieComponent } from './features/movies/components/update-movie/update-movie.component';
 
 export const routes: Routes = [
     {
@@ -30,6 +31,10 @@ export const routes: Routes = [
     {
         path: "movies/add-movies",
         component: AddMoviesComponent
+    },
+    {
+        path: "movies/update-movie/:movieId",
+        component: UpdateMovieComponent
     },
     {
         path: "movies/:movieId",

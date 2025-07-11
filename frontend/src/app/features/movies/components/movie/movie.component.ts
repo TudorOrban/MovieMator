@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MovieService } from '../../services/movie.service';
 import { MovieDataDto } from '../../models/Movie';
 import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-movie',
-    imports: [CommonModule],
+    imports: [CommonModule, FontAwesomeModule, RouterModule],
     templateUrl: './movie.component.html',
 })
 export class MovieComponent {
@@ -36,6 +38,8 @@ export class MovieComponent {
             error: (error) => {
                 console.error("Error occurred fetching movie: ", error);
             }
-        })
+        });
     }
+    
+    faEdit = faEdit;
 }

@@ -13,14 +13,20 @@
                     class="w-full h-auto rounded-lg shadow-md object-cover"
                 >
             </div>
-
             <div class="flex-grow space-y-6">
-                <div class="border-b pb-4 mb-4 border-gray-200">
-                    <h1 class="text-4xl font-extrabold text-gray-900 mb-2">{{ movie.title }}</h1>
-                    <p class="text-xl text-gray-600">
-                        {{ movie.releaseYear ?? "Unknown Year" }} 
-                        <span *ngIf="movie.director"> • Directed by {{ movie.director }}</span>
-                    </p>
+                <div class="flex items-center justify-between w-full">
+                    <div class="border-b pb-4 mb-4 border-gray-200">
+                        <h1 class="text-4xl font-extrabold text-gray-900 mb-2">{{ movie.title }}</h1>
+                        <p class="text-xl text-gray-600">
+                            {{ movie.releaseYear ?? "Unknown Year" }} 
+                            <span *ngIf="movie.director"> • Directed by {{ movie.director }}</span>
+                        </p>
+                    </div>
+
+                    <a [routerLink]="'/movies/update-movie/' + movie.id" class="standard-write-button space-x-2">
+                        <fa-icon [icon]="faEdit" />
+                        <span>Edit Movie</span>
+                    </a>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800">

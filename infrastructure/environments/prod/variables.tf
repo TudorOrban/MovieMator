@@ -63,7 +63,7 @@ variable "rds_port" {
 variable "db_instance_class" {
   description = "The instance type for the RDS database"
   type        = string
-  default     = "db.t3.small"
+  default     = "db.t3.micro" # Cost savings
 }
 
 variable "db_allocated_storage" {
@@ -81,7 +81,7 @@ variable "db_skip_final_snapshot" {
 variable "db_multi_az" {
   description = "Specifies if the DB instance is a Multi-AZ deployment"
   type        = bool
-  default     = true
+  default     = false # Cost savings
 }
 
 # EC2

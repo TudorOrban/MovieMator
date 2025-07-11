@@ -5,25 +5,42 @@
 
     <form (ngSubmit)="onSubmit()">
         <!-- Title -->
-        <div class="space-y-2">
+        <div class="space-y-2 relative">
             <label for="title" class="form-label">Movie Name</label>
-            <input 
-                type="text" 
-                id="title" 
-                name="name" 
+            <input
+                type="text"
+                id="title"
+                name="name"
                 [(ngModel)]="movie.title"
-                required 
+                required
                 minlength="3"
                 class="form-input"
                 #movieTitleInput="ngModel"
+                (input)="onTitleInput($event)"
+                autocomplete="off"
             >
-            <div 
-                *ngIf="hasBeenSubmitted() && movieTitleInput.invalid" 
+            <div
+                *ngIf="hasBeenSubmitted() && movieTitleInput.invalid"
                 class="form-error"
             >
                 <div *ngIf="movieTitleInput.errors?.['required']">Movie title is required.</div>
                 <div *ngIf="movieTitleInput.errors?.['minlength']">Movie title must be at least 3 characters.</div>
             </div>
+
+            <ul *ngIf="tmdbSearchResults.length > 0 && movieTitleInput.value && movieTitleInput.value.trim()"
+                class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto"
+            >
+                <li *ngFor="let result of tmdbSearchResults"
+                    class="p-2 cursor-pointer hover:bg-gray-100 flex items-center"
+                    (click)="selectMovie(result)"
+                >
+                    <img *ngIf="result.poster_path" [src]="tmdbService.getPosterUrl(result.poster_path)" alt="{{ result.title }} poster" class="w-10 h-15 mr-2 rounded">
+                    <div>
+                        <div class="font-semibold">{{ result.title }}</div>
+                        <div *ngIf="result.release_date" class="text-sm text-gray-500">({{ result.release_date | date:'yyyy' }})</div>
+                    </div>
+                </li>
+            </ul>
         </div>
 
         <!-- Release Year -->

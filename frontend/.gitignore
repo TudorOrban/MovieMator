@@ -44,3 +44,4 @@ Thumbs.db
 
 # Angular
 src/environments/environment.prod.ts
+.env

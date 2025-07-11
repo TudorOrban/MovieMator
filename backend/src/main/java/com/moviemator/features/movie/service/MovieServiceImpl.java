@@ -80,7 +80,7 @@ public class MovieServiceImpl implements MovieService {
 //            throw new ResourceAlreadyExistsException(sanitizedDto.getTitle(), ResourceType.MOVIE, ResourceIdentifierType.TITLE);
 //        }
 
-        Movie movieToBeUpdated = this.setUpdateMovieDtoToMovie(existingMovie, movieDto);
+        Movie movieToBeUpdated = this.setUpdateMovieDtoToMovie(existingMovie, sanitizedDto);
 
         Movie updatedMovie = movieRepository.save(movieToBeUpdated);
 

@@ -126,8 +126,8 @@ export class FiltersBarComponent implements OnInit , OnDestroy{
         this.subscriptions.add(this.genresIncludingChangeSubject.pipe(
             debounceTime(debounceTimeMs),
             distinctUntilChanged((prev, curr) => {
-                const prevStr = prev ? JSON.stringify([...prev].sort()) : '';
-                const currStr = curr ? JSON.stringify([...curr].sort()) : '';
+                const prevStr = prev ? JSON.stringify([...prev].sort()) : "";
+                const currStr = curr ? JSON.stringify([...curr].sort()) : "";
                 return prevStr === currStr;
             })
         ).subscribe(value => {
@@ -138,8 +138,8 @@ export class FiltersBarComponent implements OnInit , OnDestroy{
         this.subscriptions.add(this.actorsIncludingChangeSubject.pipe(
             debounceTime(debounceTimeMs),
             distinctUntilChanged((prev, curr) => {
-                const prevStr = prev ? JSON.stringify([...prev].sort()) : '';
-                const currStr = curr ? JSON.stringify([...curr].sort()) : '';
+                const prevStr = prev ? JSON.stringify([...prev].sort()) : "";
+                const currStr = curr ? JSON.stringify([...curr].sort()) : "";
                 return prevStr === currStr;
             })
         ).subscribe(value => {
@@ -196,12 +196,40 @@ export class FiltersBarComponent implements OnInit , OnDestroy{
         }
     }
 
-    handleGenresChange(genres: string[] | undefined): void {
-        this.genresIncludingChangeSubject.next(genres);
+    handleGenresChange(genres: string | string[] | undefined): void {
+        let processedGenres: string[] | undefined;
+        if (typeof genres === "string") {
+            processedGenres = genres.split(",").map(g => g.trim()).filter(g => g.length > 0);
+            if (processedGenres.length === 0) {
+                processedGenres = undefined; 
+            }
+        } else if (Array.isArray(genres)) {
+            processedGenres = genres.filter(g => g.trim().length > 0);
+            if (processedGenres.length === 0) {
+                processedGenres = undefined;
+            }
+        } else {
+            processedGenres = undefined;
+        }
+        this.genresIncludingChangeSubject.next(processedGenres);
     }
 
-    handleActorsChange(actors: string[] | undefined): void {
-        this.actorsIncludingChangeSubject.next(actors);
+    handleActorsChange(actors: string | string[] | undefined): void {
+        let processedActors: string[] | undefined;
+        if (typeof actors === "string") {
+            processedActors = actors.split(",").map(a => a.trim()).filter(a => a.length > 0);
+            if (processedActors.length === 0) {
+                processedActors = undefined; 
+            }
+        } else if (Array.isArray(actors)) {
+            processedActors = actors.filter(a => a.trim().length > 0);
+            if (processedActors.length === 0) {
+                processedActors = undefined;
+            }
+        } else {
+            processedActors = undefined;
+        }
+        this.actorsIncludingChangeSubject.next(processedActors);
     }
 
     handleWatchedDateChange(value: string | null, type: "From" | "To"): void {

@@ -18,13 +18,13 @@ export class MovieService {
     ) {}
 
     searchMovies(userId: number, searchParams: SearchParams, movieFilters: MovieFilters): Observable<PaginatedResults<MovieSearchDto>> {
-        // Look for data in cache
+        // 1. Try to get data from cache
         const cachedData = this.movieSearchCacheService.get(userId, searchParams, movieFilters);
         if (cachedData) {
             return of(cachedData); 
         }
 
-        // If not found, make HTTP request
+        // 2. If not, make the HTTP request
         const params = {
             ...searchParams,
             ...(movieFilters.releaseYearFrom != null ? { releaseYearFrom: movieFilters.releaseYearFrom } : {}),
@@ -43,8 +43,9 @@ export class MovieService {
 
         return this.http.get<PaginatedResults<MovieSearchDto>>(
             `${this.apiUrl}/search/user/${userId}`,
-            { params: params as any }
+            { params: params }
         ).pipe(
+            // 3. Cache the results before returning them
             tap(data => {
                 this.movieSearchCacheService.set(userId, searchParams, movieFilters, data);
             })

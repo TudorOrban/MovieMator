@@ -1,5 +1,4 @@
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { MovieFilters } from "./Search";
 
 export interface UIItem {
     label: string;

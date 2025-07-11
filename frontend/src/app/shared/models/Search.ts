@@ -52,3 +52,9 @@ export enum FilterType {
     TEXT = "TEXT",
     MULTI_TEXT = "MULTI_TEXT"
 }
+
+export interface CacheEntry<T> {
+    data: T;
+    timestamp: number;
+    expirationTime: number;
+}

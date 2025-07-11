@@ -26,4 +26,3 @@ export interface MovieCrewMember {
     job: string;
     name: string;
 }
-

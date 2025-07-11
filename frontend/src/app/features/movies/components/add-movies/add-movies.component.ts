@@ -27,8 +27,8 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
     hasBeenSubmitted = signal(false);
 
     movieStatusOptions: { label: string, value: MovieStatus }[] = [
-        { label: 'Watched', value: MovieStatus.WATCHED },
-        { label: 'Watchlist', value: MovieStatus.WATCHLIST }
+        { label: "Watched", value: MovieStatus.WATCHED },
+        { label: "Watchlist", value: MovieStatus.WATCHLIST }
     ];
 
     tmdbSearchResults: TmdbMovieResult[] = [];

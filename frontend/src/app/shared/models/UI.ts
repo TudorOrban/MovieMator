@@ -1,4 +1,5 @@
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { MovieFilters } from "./Search";
 
 export interface UIItem {
     label: string;
@@ -19,4 +20,9 @@ export enum ToastType {
     ERROR = "ERROR",
     WARNING = "WARNING",
     INFO = "INFO"
+}
+
+export interface DebouncedChange<T> {
+    key: keyof T;
+    value: any;
 }

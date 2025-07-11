@@ -103,7 +103,7 @@
                         placeholder="Genres (comma-separated)"
                         class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                         [ngModel]="movieFilters.genresIncluding ? movieFilters.genresIncluding.join(', ') : ''"
-                        (ngModelChange)="handleGenresIncludingChange($event)"
+                        (ngModelChange)="handleGenresChange($event)"
                     >
 
                     <input
@@ -112,7 +112,7 @@
                         placeholder="Actors (comma-separated)"
                         class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                         [ngModel]="movieFilters.actorsIncluding ? movieFilters.actorsIncluding.join(', ') : ''"
-                        (ngModelChange)="handleActorsIncludingChange($event)"
+                        (ngModelChange)="handleActorsChange($event)"
                     >
                 </ng-container>
             </div>

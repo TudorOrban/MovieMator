@@ -68,6 +68,27 @@
             </div>
         </div>
 
+        <!-- Runtime Minutes -->
+        <div class="space-y-2 mt-4">
+            <label for="runtimeMinutes" class="form-label">Runtime (minutes)</label>
+            <input
+                type="number"
+                id="runtimeMinutes"
+                name="runtimeMinutes"
+                [(ngModel)]="movie.runtimeMinutes"
+                class="form-input"
+                #runtimeMinutesInput="ngModel"
+                min="1"
+                max="999" >
+            <div
+                *ngIf="hasBeenSubmitted() && runtimeMinutesInput.invalid"
+                class="form-error"
+            >
+                <div *ngIf="runtimeMinutesInput.errors?.['min']">Runtime must be at least 1 minute.</div>
+                <div *ngIf="runtimeMinutesInput.errors?.['max']">Runtime cannot exceed {{ runtimeMinutesInput.errors?.['max']?.max }} minutes.</div>
+            </div>
+        </div>
+
         <!-- Poster URL -->
         <div class="space-y-2 mt-4">
             <label for="posterUrl" class="form-label">Poster URL</label>
@@ -132,6 +153,37 @@
             </div>
         </div>
 
+        <!-- Status -->
+        <div class="space-y-2 mt-4">
+            <label for="status" class="form-label">Movie Status</label>
+            <app-enum-selector
+                [selectedValue]="movie.status"
+                [options]="movieStatusOptions"
+                placeholder="Select Movie Status"
+                (valueChange)="handleMovieStatusChange($event)"
+            ></app-enum-selector>
+        </div>
+
+        <!-- Genres -->
+        <div class="space-y-2 mt-4">
+            <app-tag-input
+                label="Genres"
+                placeholder="e.g., Action, Sci-Fi, Drama"
+                [currentTags]="movie.genres"
+                (tagsChange)="handleGenresChange($event)"
+            ></app-tag-input>
+        </div>
+
+        <!-- Actors -->
+        <div class="space-y-2 mt-4">
+            <app-tag-input
+                label="Actors"
+                placeholder="e.g., Tom Hanks, Emma Stone"
+                [currentTags]="movie.actors"
+                (tagsChange)="handleActorsChange($event)"
+            ></app-tag-input>
+        </div>
+
         <!-- User Rating -->
         <div class="space-y-2 mt-4">
             <label for="userRating" class="form-label">Your Rating (1-10)</label>
@@ -144,7 +196,7 @@
                 #userRatingInput="ngModel"
                 min="1"
                 max="10"
-                pattern="^(10|[1-9])$"
+                step="0.1"
             >
             <div 
                 *ngIf="hasBeenSubmitted() && userRatingInput.invalid" 
@@ -178,55 +230,6 @@
                 <div *ngIf="userReviewInput.errors?.['maxlength']">Review cannot exceed 500 characters.</div>
             </div>
         </div>
-
-        <div class="space-y-2 mt-4">
-            <label for="status" class="form-label">Movie Status</label>
-            <app-enum-selector
-                [selectedValue]="movie.status"
-                [options]="movieStatusOptions"
-                placeholder="Select Movie Status"
-                (valueChange)="handleMovieStatusChange($event)"
-            ></app-enum-selector>
-            </div>
-
-        <div class="space-y-2 mt-4">
-            <label for="runtimeMinutes" class="form-label">Runtime (minutes)</label>
-            <input
-                type="number"
-                id="runtimeMinutes"
-                name="runtimeMinutes"
-                [(ngModel)]="movie.runtimeMinutes"
-                class="form-input"
-                #runtimeMinutesInput="ngModel"
-                min="1"
-                max="999" >
-            <div
-                *ngIf="hasBeenSubmitted() && runtimeMinutesInput.invalid"
-                class="form-error"
-            >
-                <div *ngIf="runtimeMinutesInput.errors?.['min']">Runtime must be at least 1 minute.</div>
-                <div *ngIf="runtimeMinutesInput.errors?.['max']">Runtime cannot exceed {{ runtimeMinutesInput.errors?.['max']?.max }} minutes.</div>
-            </div>
-        </div>
-
-        <div class="space-y-2 mt-4">
-            <app-tag-input
-                label="Genres"
-                placeholder="e.g., Action, Sci-Fi, Drama"
-                [currentTags]="movie.genres"
-                (tagsChange)="handleGenresChange($event)"
-            ></app-tag-input>
-        </div>
-
-        <div class="space-y-2 mt-4">
-            <app-tag-input
-                label="Actors"
-                placeholder="e.g., Tom Hanks, Emma Stone"
-                [currentTags]="movie.actors"
-                (tagsChange)="handleActorsChange($event)"
-            ></app-tag-input>
-        </div>
-
 
         <div class="flex items-center justify-end w-full mt-4">
             <button type="submit" class="standard-write-button">Create Movie</button>

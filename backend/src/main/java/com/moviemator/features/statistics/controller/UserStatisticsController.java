@@ -19,7 +19,7 @@ public class UserStatisticsController {
         this.statisticsService = statisticsService;
     }
 
-    @GetMapping("/user/${userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<UserStatistics> getUserStatistics(
             @PathVariable Long userId,
             @RequestParam(name = "startDate") LocalDate startDate,
@@ -29,5 +29,5 @@ public class UserStatisticsController {
         return ResponseEntity.ok(userStatistics);
     }
 
-    
+
 }

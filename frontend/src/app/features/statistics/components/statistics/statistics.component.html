@@ -1,3 +1,159 @@
-<div>
-    <app-coming-soon [pageName]="'Statistics Page'" />
+<div class="relative container mx-auto p-6 md:p-8 lg:p-10 bg-white shadow-lg rounded-lg my-8">
+    <div *ngIf="isLoading" class="absolute inset top-20 flex items-center justify-center w-full h-screen bg-white bg-opacity-80 z-10">
+        <div class="text-center text-gray-600">
+            <fa-icon [icon]="faSpinner" [animation]="'spin'" size="3x"></fa-icon>
+            <p class="mt-2 text-lg font-semibold">Computing statistics...</p>
+        </div>
+    </div>
+
+    <div *ngIf="!statistics" class="text-center py-12 text-gray-600">
+        <p>Loading user statistics...</p>
+    </div>
+
+    <div *ngIf="statistics">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b pb-4 mb-6 border-gray-200">
+            <div class="mb-4 sm:mb-0">
+                <h1 class="text-4xl font-extrabold text-gray-900 mb-2">Your Movie Statistics</h1>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-end sm:items-center gap-4">
+                <input
+                    type="date"
+                    placeholder="Start Date"
+                    class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1 h-[42px]"
+                    [(ngModel)]="startDate"
+                >
+                <input
+                    type="date"
+                    placeholder="End Date"
+                    class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1 h-[42px]"
+                    [(ngModel)]="endDate"
+                >
+
+                <button
+                    (click)="onComputeStatistics()"
+                    [disabled]="!startDate || !endDate"
+                    class="standard-write-button h-[42px] px-6 py-2 text-lg rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 whitespace-nowrap"
+                >
+                    Compute Statistics
+                </button>
+            </div>
+        </div>
+
+        <div class="space-y-6 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2 mb-4">Overall Summary</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-gray-800">
+                <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                    <p class="font-semibold text-lg mb-1">Total Watched Movies:</p>
+                    <p class="text-3xl font-bold text-blue-600">{{ statistics.totalWatchedMovies }}</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                    <p class="font-semibold text-lg mb-1">Total Watch Time:</p>
+                    <p class="text-3xl font-bold text-purple-600">{{ statistics.totalWatchTimeMinutes | number:'1.0-0' }} minutes</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                    <p class="font-semibold text-lg mb-1">Average User Rating:</p>
+                    <p class="text-3xl font-bold text-yellow-500" *ngIf="statistics.averageUserRating > 0; else noAvgRating">{{ statistics.averageUserRating | number:'1.1-1' }} / 10</p>
+                    <ng-template #noAvgRating><p class="text-gray-500 italic text-xl">N/A</p></ng-template>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-8 border-gray-200">
+
+        <div class="space-y-6 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2 mb-4">Time-Based Insights</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-gray-800">
+                <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                    <p class="font-semibold text-lg mb-1">Unique Watch Days:</p>
+                    <p class="text-3xl font-bold text-green-600">{{ statistics.totalUniqueWatchedDays }}</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                    <p class="font-semibold text-lg mb-1">Avg. Movies per Week:</p>
+                    <p class="text-3xl font-bold text-orange-600">{{ statistics.averageMoviesPerWeek | number:'1.1-1' }}</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                    <p class="font-semibold text-lg mb-1">Avg. Movies per Month:</p>
+                    <p class="text-3xl font-bold text-teal-600">{{ statistics.averageMoviesPerMonth | number:'1.1-1' }}</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-3">Watched by Month</h3>
+                    <div *ngIf="statistics.movieCountByWatchedMonth && (statistics.movieCountByWatchedMonth | keyvalue).length > 0; else noWatchedMonth" class="flex flex-wrap gap-2">
+                        <span *ngFor="let entry of (statistics.movieCountByWatchedMonth | keyvalue | orderBy:'key')"
+                              class="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
+                            {{ entry.key | titlecase }}: {{ entry.value }}
+                        </span>
+                    </div>
+                    <ng-template #noWatchedMonth><p class="text-gray-500 italic">No monthly watch data.</p></ng-template>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-8 border-gray-200">
+
+        <div class="space-y-6 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2 mb-4">Categorical Breakdowns</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-3">Top Directors</h3>
+                    <div *ngIf="statistics.movieCountByDirector && (statistics.movieCountByDirector | keyvalue).length > 0; else noDirectors" class="flex flex-wrap gap-2">
+                        <span *ngFor="let entry of (statistics.movieCountByDirector | keyvalue | orderBy:'value':'desc')"
+                              class="bg-purple-100 text-purple-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
+                            {{ entry.key }}: {{ entry.value }}
+                        </span>
+                    </div>
+                    <ng-template #noDirectors><p class="text-gray-500 italic">No director data.</p></ng-template>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-3">Top Genres</h3>
+                    <div *ngIf="statistics.movieCountByGenre && (statistics.movieCountByGenre | keyvalue).length > 0; else noGenres" class="flex flex-wrap gap-2">
+                        <span *ngFor="let entry of (statistics.movieCountByGenre | keyvalue | orderBy:'value':'desc')"
+                              class="bg-indigo-100 text-indigo-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
+                            {{ entry.key }}: {{ entry.value }}
+                        </span>
+                    </div>
+                    <ng-template #noGenres><p class="text-gray-500 italic">No genre data.</p></ng-template>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-3">Top Actors</h3>
+                    <div *ngIf="statistics.movieCountByActor && (statistics.movieCountByActor | keyvalue).length > 0; else noActors" class="flex flex-wrap gap-2">
+                        <span *ngFor="let entry of (statistics.movieCountByActor | keyvalue | orderBy:'value':'desc')"
+                              class="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
+                            {{ entry.key }}: {{ entry.value }}
+                        </span>
+                    </div>
+                    <ng-template #noActors><p class="text-gray-500 italic">No actor data.</p></ng-template>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold mb-3">Movies by Release Year</h3>
+                    <div *ngIf="statistics.movieCountByReleaseYear && (statistics.movieCountByReleaseYear | keyvalue).length > 0; else noReleaseYear" class="flex flex-wrap gap-2">
+                        <span *ngFor="let entry of (statistics.movieCountByReleaseYear | keyvalue | orderBy:'key')"
+                              class="bg-yellow-100 text-yellow-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
+                            {{ entry.key }}: {{ entry.value }}
+                        </span>
+                    </div>
+                    <ng-template #noReleaseYear><p class="text-gray-500 italic">No release year data.</p></ng-template>
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-8 border-gray-200">
+
+        <div class="space-y-6 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2 mb-4">Your Rating Distribution</h2>
+            <div *ngIf="statistics.userRatingDistribution && (statistics.userRatingDistribution | keyvalue).length > 0; else noRatingDistribution">
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                    <div *ngFor="let entry of (statistics.userRatingDistribution | keyvalue | orderBy:'key')"
+                         class="p-3 bg-gray-50 rounded-lg shadow-sm text-center">
+                        <p class="font-semibold text-lg text-yellow-500">{{ entry.key }} / 10</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ entry.value }} movies</p>
+                    </div>
+                </div>
+            </div>
+            <ng-template #noRatingDistribution><p class="text-gray-500 italic">No rating distribution data.</p></ng-template>
+        </div>
+    </div>
 </div>

@@ -66,6 +66,14 @@ export class MovieService {
         );
     }
 
+    createMovies(movieDtos: CreateMovieDto[]): Observable<MovieDataDto[]> {
+        return this.http.post<MovieDataDto[]>(`${this.apiUrl}/bulk`, movieDtos).pipe(
+            tap(() => {
+                this.movieCacheService.invalidateCache();
+            })
+        );
+    }
+
     updateMovie(movieDto: UpdateMovieDto): Observable<MovieDataDto> {
         return this.http.put<MovieDataDto>(this.apiUrl, movieDto).pipe(
             tap(() => {

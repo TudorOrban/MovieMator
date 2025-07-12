@@ -1,3 +1,6 @@
+import { Subject, Subscription } from "rxjs";
+import { TmdbMovieResult } from "./Tmdb";
+
 export interface MovieSearchDto {
     id: number;
     userId: number;
@@ -81,4 +84,12 @@ export interface UpdateMovieDto {
     genres?: string[];
     runtimeMinutes?: number;
     actors?: string[];
+}
+
+// UI
+export interface CreateMovieDtoUi extends CreateMovieDto {
+    areDetailsExpanded?: boolean;
+    tmdbSearchResults: TmdbMovieResult[];
+    searchTerms: Subject<string>;
+    searchSubscription?: Subscription;
 }

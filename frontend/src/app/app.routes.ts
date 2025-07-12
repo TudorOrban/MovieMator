@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { MoviesComponent } from './features/movies/components/movies/movies.component';
-import { AddMoviesComponent } from './features/movies/components/add-movies/add-movies.component';
+import { AddMovieComponent } from './features/movies/components/add-movie/add-movie.component';
 import { MovieComponent } from './features/movies/components/movie/movie.component';
 import { HomeComponent } from './core/main/components/home/home.component';
 import { LogInComponent } from './core/auth/components/log-in/log-in.component';
@@ -10,6 +10,7 @@ import { EditProfileComponent } from './features/user-profile/components/edit-pr
 import { SettingsComponent } from './features/user-profile/components/settings/settings.component';
 import { StatisticsComponent } from './features/statistics/components/statistics/statistics.component';
 import { UpdateMovieComponent } from './features/movies/components/update-movie/update-movie.component';
+import { AddMoviesComponent } from './features/movies/components/add-movies/add-movies.component';
 
 export const routes: Routes = [
     {
@@ -30,7 +31,7 @@ export const routes: Routes = [
     },
     {
         path: "movies/add-movies",
-        component: AddMoviesComponent
+        component: AddMoviesComponent,
     },
     {
         path: "movies/update-movie/:movieId",

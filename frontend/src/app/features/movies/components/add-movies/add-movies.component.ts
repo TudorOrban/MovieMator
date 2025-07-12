@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
-import { CreateMovieDto, MovieStatus } from '../../models/Movie';
+import { CreateMovieDto, CreateMovieDtoUi, MovieStatus } from '../../models/Movie';
 import { MovieService } from '../../services/movie.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -12,19 +12,19 @@ import { EnumSelectorComponent } from "../../../../shared/common/components/enum
 import { TagInputComponent } from "../../../../shared/common/components/tag-input/tag-input.component";
 import { TmdbMovieCredits, TmdbMovieDetails, TmdbMovieResult } from '../../models/Tmdb';
 import { TmdbService } from '../../services/tmdb.service';
+import { faCaretDown, faCaretUp, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-add-movies',
-    imports: [CommonModule, FormsModule, EnumSelectorComponent, TagInputComponent],
+    standalone: true,
+    imports: [CommonModule, FormsModule, FontAwesomeModule, EnumSelectorComponent, TagInputComponent],
     templateUrl: './add-movies.component.html',
 })
 export class AddMoviesComponent implements OnInit, OnDestroy {
-    movie: CreateMovieDto = {
-        userId: -1,
-        tmdbId: -1,
-        title: "",
-        status: MovieStatus.WATCHED
-    }
+    userId: number = -1;
+    movies: CreateMovieDtoUi[] = []; 
+
     hasBeenSubmitted = signal(false);
 
     movieStatusOptions: { label: string, value: MovieStatus }[] = [
@@ -32,9 +32,7 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
         { label: "Watchlist", value: MovieStatus.WATCHLIST }
     ];
 
-    tmdbSearchResults: TmdbMovieResult[] = [];
-    private searchTerms = new Subject<string>();
-    private subscription: Subscription = new Subscription();
+    private mainSubscription: Subscription = new Subscription();
 
     constructor(
         private readonly movieService: MovieService,
@@ -45,20 +43,44 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
-        this.subscription = this.authService.currentUser$.subscribe({
+        this.addMovie();
+
+        this.mainSubscription.add(this.authService.currentUser$.subscribe({
             next: (data) => {
                 if (!data) {
-                    this.router.navigate(["/signup"]);
                     return;
                 }
-                this.movie.userId = data?.id;
+                this.userId = data.id;
+                this.movies.forEach(movie => movie.userId = this.userId);
             },
             error: (error) => {
                 console.error("Error getting current user: ", error);
                 this.router.navigate(["/signup"]);
             }
+        }));
+    }
+
+    ngOnDestroy(): void {
+        this.mainSubscription.unsubscribe();
+        this.movies.forEach(movie => {
+            if (movie.searchSubscription) {
+                movie.searchSubscription.unsubscribe();
+            }
         });
-        this.subscription.add(this.searchTerms.pipe(
+    }
+
+    private createNewMovieUi(): CreateMovieDtoUi {
+        const newMovie: CreateMovieDtoUi = {
+            userId: this.userId,
+            tmdbId: -1,
+            title: "",
+            status: MovieStatus.WATCHED,
+            areDetailsExpanded: false,
+            tmdbSearchResults: [],
+            searchTerms: new Subject<string>()
+        };
+
+        newMovie.searchSubscription = newMovie.searchTerms.pipe(
             debounceTime(300),
             distinctUntilChanged(),
             switchMap((term: string) => {
@@ -70,89 +92,115 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
             })
         ).subscribe({
             next: (results: TmdbMovieResult[]) => {
-                this.tmdbSearchResults = results;
+                newMovie.tmdbSearchResults = results;
             },
             error: (error) => {
                 console.error("Error searching TMDB:", error);
                 this.toastService.addToast({ title: "Error", details: "Failed to search TMDB.", type: ToastType.ERROR });
             }
-        }));
+        });
+
+        return newMovie;
     }
 
-    ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+    addMovie(): void {
+        this.movies.push(this.createNewMovieUi());
     }
 
-    onSubmit(): void {
+    removeMovie(index: number): void {
+        if (this.movies[index].searchSubscription) {
+            this.movies[index].searchSubscription?.unsubscribe();
+        }
+        this.movies.splice(index, 1);
+    }
+
+    onSubmit(): void { 
         this.hasBeenSubmitted.set(true);
-        
-        if (!this.movie.userId || !this.movie.title) {
-            console.error("Missing userId or title");
-            this.toastService.addToast({ title: "Validation Error", details: "Movie title and user ID are required.", type: ToastType.ERROR });
+
+        let allFormsValid = true;
+        for (const movie of this.movies) {
+            if (!movie.userId || !movie.title || movie.title.length < 3) {
+                allFormsValid = false;
+                this.toastService.addToast({ title: "Validation Error", details: `Please ensure all required fields for movie "${movie.title || 'untitled'}" are filled correctly.`, type: ToastType.ERROR });
+            }
+        }
+
+        if (!allFormsValid) {
             return;
         }
-        
-        this.movieService.createMovie(this.movie).subscribe({
+
+        const moviesToCreate: CreateMovieDto[] = this.movies.map(movieUi => {
+            const { areDetailsExpanded, tmdbSearchResults, searchTerms, searchSubscription, ...rest } = movieUi;
+            return rest;
+        });
+
+        if (moviesToCreate.length === 0) {
+            this.toastService.addToast({ title: "No Movies to Add", details: "Please add at least one movie.", type: ToastType.INFO });
+            return;
+        }
+
+        this.movieService.createMovies(moviesToCreate).subscribe({
             next: (data) => {
-                this.toastService.addToast({ title: "Success", details: "Movie created successfully.", type: ToastType.SUCCESS });
-                this.router.navigate([`/movies/${data?.id}`]);
+                this.toastService.addToast({ title: "Success", details: "Movies added successfully.", type: ToastType.SUCCESS });
+                this.router.navigate(["/movies"]);
             },
             error: (error) => {
-                console.error("Failed to create movie:", error);
-                this.toastService.addToast({ title: "Error", details: "An error occurred creating movie.", type: ToastType.ERROR });
+                console.error("Failed to create movies:", error);
+                this.toastService.addToast({ title: "Error", details: "An error occurred adding movies.", type: ToastType.ERROR });
             }
         });
     }
 
-    handleMovieStatusChange(value?: string): void {
+    handleMovieStatusChange(index: number, value?: string): void {
         if (!value) {
-            this.movie.status = undefined;
+            this.movies[index].status = undefined;
             return;
         }
-        this.movie.status = MovieStatus[value as keyof typeof MovieStatus];
+        this.movies[index].status = MovieStatus[value as keyof typeof MovieStatus];
     }
 
-    handleGenresChange(genres: string[] | undefined): void {
-        this.movie.genres = genres;
+    handleGenresChange(index: number, genres: string[] | undefined): void {
+        this.movies[index].genres = genres;
     }
 
-    handleActorsChange(actors: string[] | undefined): void {
-        this.movie.actors = actors;
+    handleActorsChange(index: number, actors: string[] | undefined): void {
+        this.movies[index].actors = actors;
     }
 
     getCurrentYear(): number {
         return new Date().getFullYear();
     }
 
-    onTitleInput(event: Event): void {
+    onTitleInput(index: number, event: Event): void {
         const inputElement = event.target as HTMLInputElement;
-        this.searchTerms.next(inputElement.value);
-        this.movie.title = inputElement.value;
+        this.movies[index].title = inputElement.value;
+        this.movies[index].searchTerms.next(inputElement.value); 
     }
 
-    selectMovie(selectedMovie: TmdbMovieResult): void {
-        this.movie.tmdbId = selectedMovie.id;
-        this.movie.title = selectedMovie.title;
-        this.tmdbSearchResults = [];
+    selectMovie(index: number, selectedMovie: TmdbMovieResult): void {
+        const movie = this.movies[index];
+        movie.tmdbId = selectedMovie.id;
+        movie.title = selectedMovie.title;
+        movie.tmdbSearchResults = [];
 
-        this.subscription.add(this.tmdbService.getMovieDetails(selectedMovie.id).subscribe({
+        this.mainSubscription.add(this.tmdbService.getMovieDetails(selectedMovie.id).subscribe({
             next: (details: TmdbMovieDetails) => {
-                this.movie.releaseYear = details.release_date ? parseInt(details.release_date.substring(0, 4)) : undefined;
-                this.movie.posterUrl = details.poster_path ? `https://image.tmdb.org/t/p/w500${details.poster_path}` : undefined;
-                this.movie.plotSummary = details.overview || undefined;
-                this.movie.runtimeMinutes = details.runtime || undefined;
-                this.movie.genres = details.genres?.map(genre => genre.name) || undefined;
+                movie.releaseYear = details.release_date ? parseInt(details.release_date.substring(0, 4)) : undefined;
+                movie.posterUrl = details.poster_path ? `https://image.tmdb.org/t/p/w500${details.poster_path}` : undefined;
+                movie.plotSummary = details.overview || undefined;
+                movie.runtimeMinutes = details.runtime || undefined;
+                movie.genres = details.genres?.map(genre => genre.name) || undefined;
             },
             error: (error) => {
                 console.error("Error fetching movie details: ", error);
                 this.toastService.addToast({ title: "Error", details: "Failed to fetch movie details from TMDB.", type: ToastType.ERROR });
             }
         }));
-        this.subscription.add(this.tmdbService.getMovieCredits(selectedMovie.id).subscribe({
+        this.mainSubscription.add(this.tmdbService.getMovieCredits(selectedMovie.id).subscribe({
             next: (credits: TmdbMovieCredits) => {
                 const director = credits.crew.find(person => person.job === 'Director');
-                this.movie.director = director ? director.name : undefined;
-                this.movie.actors = credits.cast.slice(0, 5).map(actor => actor.name); // Get top 5 actors
+                movie.director = director ? director.name : undefined;
+                movie.actors = credits.cast.slice(0, 5).map(actor => actor.name);
             },
             error: (error) => {
                 console.error("Error fetching movie credits:", error);
@@ -161,5 +209,13 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
         }));
     }
 
+    toggleIsMovieDetailsExpanded(index: number): void {
+        this.movies[index].areDetailsExpanded = !this.movies[index].areDetailsExpanded;
+    }
+
     MovieStatus = MovieStatus;
+    faCaretUp = faCaretUp;
+    faCaretDown = faCaretDown;
+    faPlus = faPlus;
+    faTrash = faTrash;
 }

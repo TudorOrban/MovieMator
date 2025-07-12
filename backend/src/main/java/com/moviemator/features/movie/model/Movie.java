@@ -40,13 +40,13 @@ public class Movie {
     @Column(name = "director")
     private String director;
 
-    @Column(name = "plot_summary")
+    @Column(name = "plot_summary", columnDefinition = "TEXT")
     private String plotSummary;
 
     @Column(name = "user_rating")
     private Float userRating; // 1 to 10
 
-    @Column(name = "user_review")
+    @Column(name = "user_review", columnDefinition = "TEXT")
     private String userReview;
 
     @Column(name = "watched_date")

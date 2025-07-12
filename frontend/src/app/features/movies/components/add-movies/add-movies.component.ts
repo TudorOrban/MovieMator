@@ -22,7 +22,8 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
     movie: CreateMovieDto = {
         userId: -1,
         tmdbId: -1,
-        title: ""
+        title: "",
+        status: MovieStatus.WATCHED
     }
     hasBeenSubmitted = signal(false);
 

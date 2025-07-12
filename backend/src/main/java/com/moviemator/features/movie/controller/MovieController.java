@@ -75,6 +75,13 @@ public class MovieController {
         return ResponseEntity.ok(movie);
     }
 
+    @GetMapping("/watched-dates/user/{userId}")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isFetchingOwnWatchedDates(#userId, authentication)")
+    public ResponseEntity<List<LocalDate>> getWatchedMovieDates(@PathVariable Long userId) {
+        List<LocalDate> watchedDates = movieService.getWatchedMovieDatesForUser(userId);
+        return ResponseEntity.ok(watchedDates);
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('ADMIN') or @userSecurity.isMovieOwnerForCreate(#movieDto, authentication)")
     public ResponseEntity<MovieDataDto> createMovie(@RequestBody CreateMovieDto movieDto) {

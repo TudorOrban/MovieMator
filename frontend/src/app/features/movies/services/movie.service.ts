@@ -24,22 +24,8 @@ export class MovieService {
             return of(cachedData); 
         }
 
-        // 2. If not, make the HTTP request
-        const params = {
-            ...searchParams,
-            ...(movieFilters.releaseYearFrom != null ? { releaseYearFrom: movieFilters.releaseYearFrom } : {}),
-            ...(movieFilters.releaseYearTo != null ? { releaseYearTo: movieFilters.releaseYearTo } : {}),
-            ...(movieFilters.director != null ? { director: movieFilters.director } : {}),
-            ...(movieFilters.userRatingFrom != null ? { userRatingFrom: movieFilters.userRatingFrom } : {}),
-            ...(movieFilters.userRatingTo != null ? { userRatingTo: movieFilters.userRatingTo } : {}),
-            ...(movieFilters.watchedDateFrom != null ? { watchedDateFrom: movieFilters.watchedDateFrom } : {}),
-            ...(movieFilters.watchedDateTo != null ? { watchedDateTo: movieFilters.watchedDateTo } : {}),
-            ...(movieFilters.status != null ? { status: movieFilters.status } : {}),
-            ...(movieFilters.runtimeMinutesLessThan != null ? { runtimeMinutesLessThan: movieFilters.runtimeMinutesLessThan } : {}),
-            ...(movieFilters.runtimeMinutesMoreThan != null ? { runtimeMinutesMoreThan: movieFilters.runtimeMinutesMoreThan } : {}),
-            ...(movieFilters.genresIncluding?.length ? { genresIncluding: movieFilters.genresIncluding } : {}),
-            ...(movieFilters.actorsIncluding?.length ? { actorsIncluding: movieFilters.actorsIncluding } : {}),
-        };
+        // 2. If not in cache, make the HTTP request
+        const params = this.getSearchParams(searchParams, movieFilters);
 
         return this.http.get<PaginatedResults<MovieSearchDto>>(
             `${this.apiUrl}/search/user/${userId}`,
@@ -54,6 +40,22 @@ export class MovieService {
 
     getMovieById(id: number): Observable<MovieDataDto> {
         return this.http.get<MovieDataDto>(`${this.apiUrl}/${id}`);
+    }
+
+    getWatchedDatesByUserId(userId: number): Observable<Date[]> {
+        // 1. Try to get data from cache
+        const cachedData = this.movieSearchCacheService.getWatchedDates(userId);
+        if (cachedData) {
+            return of(cachedData);
+        }
+
+        // 2. If not in cache, make the HTTP request
+        return this.http.get<Date[]>(`${this.apiUrl}/watched-dates/user/${userId}`).pipe(
+            // 3. Cache the results before returning them
+            tap(data => {
+                this.movieSearchCacheService.setWatchedDates(userId, data);
+            })
+        );
     }
 
     createMovie(movieDto: CreateMovieDto): Observable<MovieDataDto> {
@@ -82,5 +84,23 @@ export class MovieService {
                 this.movieSearchCacheService.invalidateCache();
             })
         );
+    }
+
+    private getSearchParams(searchParams: SearchParams, movieFilters: MovieFilters) {
+        return {
+            ...searchParams,
+            ...(movieFilters.releaseYearFrom != null ? { releaseYearFrom: movieFilters.releaseYearFrom } : {}),
+            ...(movieFilters.releaseYearTo != null ? { releaseYearTo: movieFilters.releaseYearTo } : {}),
+            ...(movieFilters.director != null ? { director: movieFilters.director } : {}),
+            ...(movieFilters.userRatingFrom != null ? { userRatingFrom: movieFilters.userRatingFrom } : {}),
+            ...(movieFilters.userRatingTo != null ? { userRatingTo: movieFilters.userRatingTo } : {}),
+            ...(movieFilters.watchedDateFrom != null ? { watchedDateFrom: movieFilters.watchedDateFrom } : {}),
+            ...(movieFilters.watchedDateTo != null ? { watchedDateTo: movieFilters.watchedDateTo } : {}),
+            ...(movieFilters.status != null ? { status: movieFilters.status } : {}),
+            ...(movieFilters.runtimeMinutesLessThan != null ? { runtimeMinutesLessThan: movieFilters.runtimeMinutesLessThan } : {}),
+            ...(movieFilters.runtimeMinutesMoreThan != null ? { runtimeMinutesMoreThan: movieFilters.runtimeMinutesMoreThan } : {}),
+            ...(movieFilters.genresIncluding?.length ? { genresIncluding: movieFilters.genresIncluding } : {}),
+            ...(movieFilters.actorsIncluding?.length ? { actorsIncluding: movieFilters.actorsIncluding } : {}),
+        };
     }
 }

@@ -30,7 +30,7 @@
             </div>
         </div>
 
-        <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-2">
             <ng-container *ngIf="!isDeleteModeOn; else confirmDeleteButton">
                 <button class="standard-action-button shadow-sm w-12" (click)="handleToggleDeleteMode()">
                     <fa-icon
@@ -40,8 +40,8 @@
                 </button>
             </ng-container>
             <ng-template #confirmDeleteButton>
-                <button class="standard-action-button shadow-sm text-gray-700 hover:text-red-700 w-12" (click)="deleteMovies()">
-                    <fa-icon [icon]="faCheck"/>
+                <button class="standard-action-button shadow-sm hover:text-red-700" (click)="deleteMovies()">
+                    Confirm
                 </button>
                 <button class="standard-action-button shadow-sm" (click)="handleCancelDeleteMovies()">
                     Cancel

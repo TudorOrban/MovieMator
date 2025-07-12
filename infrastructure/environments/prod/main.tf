@@ -122,6 +122,8 @@ module "rds" {
   db_allocated_storage   = var.db_allocated_storage
   db_skip_final_snapshot = var.db_skip_final_snapshot
   db_multi_az            = var.db_multi_az
+
+  bastion_security_group_id = module.bastion.bastion_security_group_id
 }
 
 # Cognito

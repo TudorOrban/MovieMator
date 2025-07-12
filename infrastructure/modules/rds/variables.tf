@@ -82,3 +82,8 @@ variable "region" {
   description = "AWS region for the deployment"
   type        = string
 }
+
+variable "bastion_security_group_id" {
+  description = "The ID of the Bastion's security group"
+  type        = string
+}

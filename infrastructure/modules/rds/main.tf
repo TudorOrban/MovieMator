@@ -37,6 +37,17 @@ resource "aws_security_group" "rds_sg" {
     }
   }
 
+  dynamic "ingress" {
+    for_each = var.bastion_security_group_id != null ? [1] : []
+    content {
+      description     = "Allow PostgreSQL access from Bastion Host"
+      from_port       = var.rds_port
+      to_port         = var.rds_port
+      protocol        = "tcp"
+      security_groups = [var.bastion_security_group_id]
+    }
+  }
+
   egress {
     from_port   = 0
     to_port     = 0

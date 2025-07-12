@@ -8,12 +8,14 @@ import com.moviemator.shared.search.models.MovieFilters;
 import com.moviemator.shared.search.models.PaginatedResults;
 import com.moviemator.shared.search.models.SearchParams;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface MovieService {
 
     PaginatedResults<MovieSearchDto> searchMovies(Long userId, SearchParams searchParams, MovieFilters movieFilters);
     MovieDataDto getMovieById(Long id);
+    List<LocalDate> getWatchedMovieDatesForUser(Long userId);
     MovieDataDto createMovie(CreateMovieDto movieDto);
     MovieDataDto updateMovie(UpdateMovieDto movieDto);
     void deleteMovie(Long id);

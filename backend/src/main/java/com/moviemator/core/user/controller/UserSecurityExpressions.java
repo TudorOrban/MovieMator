@@ -135,4 +135,16 @@ public class UserSecurityExpressions {
             return false;
         }
     }
+
+    public boolean isFetchingOwnWatchedDates(Long targetUserId, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || targetUserId == null) {
+            return false;
+        }
+        try {
+            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
+            return authenticatedUser != null && authenticatedUser.getId().equals(targetUserId);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

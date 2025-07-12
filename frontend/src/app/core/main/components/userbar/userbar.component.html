@@ -2,7 +2,7 @@
     <button class="w-10 h-10 bg-purple-600 rounded-full border border-gray-600 cursor-pointer" (click)="toggleExpanded()">
         <fa-icon [icon]="faUser"/>
     </button>
-    <div *ngIf="isExpanded" class="absolute top-0 right-0 mt-12 w-48 p-4 space-y-4 bg-white border border-gray-300 rounded-b-md shadow-md text-black">
+    <div *ngIf="isExpanded" class="absolute top-0 right-0 mt-12 w-48 p-4 space-y-4 bg-white border border-gray-300 rounded-b-md shadow-md text-black z-50">
         <div class="flex items-center space-x-2 text-gray-800 hover:text-blue-800">
             <button class="w-10 h-10 bg-purple-600 text-white rounded-full border border-gray-600 cursor-pointer">
                 <fa-icon [icon]="faUser"/>

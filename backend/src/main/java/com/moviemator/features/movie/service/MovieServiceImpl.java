@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -73,6 +74,28 @@ public class MovieServiceImpl implements MovieService {
         Movie savedMovie = movieRepository.save(movie);
 
         return MovieDtoMapper.INSTANCE.movieToMovieDataDto(savedMovie);
+    }
+
+    public List<MovieDataDto> createMoviesBulk(List<CreateMovieDto> movieDtos) {
+        List<Movie> sanitizedMovies = new ArrayList<>();
+
+        for (CreateMovieDto movieDto : movieDtos) {
+            CreateMovieDto sanitizedDto = sanitizerService.sanitizeCreateMovieDto(movieDto);
+
+            if (!userRepository.existsById(sanitizedDto.getUserId())) {
+                throw new ResourceNotFoundException(sanitizedDto.getUserId().toString(), ResourceType.USER, ResourceIdentifierType.ID);
+            }
+            if (movieRepository.hasNonUniqueTitle(sanitizedDto.getUserId(), sanitizedDto.getTitle())) {
+                throw new ResourceAlreadyExistsException(sanitizedDto.getTitle(), ResourceType.MOVIE, ResourceIdentifierType.TITLE);
+            }
+
+            Movie movie = MovieDtoMapper.INSTANCE.createMovieDtoToMovie(sanitizedDto);
+            sanitizedMovies.add(movie);
+        }
+
+        List<Movie> savedMovies = movieRepository.saveAll(sanitizedMovies);
+
+        return savedMovies.stream().map(MovieDtoMapper.INSTANCE::movieToMovieDataDto).toList();
     }
 
     public MovieDataDto updateMovie(UpdateMovieDto movieDto) {

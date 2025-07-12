@@ -73,6 +73,26 @@ public class UserSecurityExpressions {
         }
     }
 
+    public boolean isMovieOwnerForCreateBulk(List<CreateMovieDto> movieDtos, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || movieDtos == null) {
+            return false;
+        }
+        try {
+            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
+            if (authenticatedUser == null) return false;
+            Long authUserId = authenticatedUser.getId();
+
+            for (CreateMovieDto movieDto : movieDtos) {
+                if (!authUserId.equals(movieDto.getUserId())) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public boolean isMovieOwnerForUpdate(UpdateMovieDto movieDto, Authentication authentication) {
         if (authentication == null || authentication.getName() == null || movieDto == null || movieDto.getUserId() == null) {
             return false;

@@ -17,6 +17,7 @@ public interface MovieService {
     MovieDataDto getMovieById(Long id);
     List<LocalDate> getWatchedMovieDatesForUser(Long userId);
     MovieDataDto createMovie(CreateMovieDto movieDto);
+    List<MovieDataDto> createMoviesBulk(List<CreateMovieDto> movieDtos);
     MovieDataDto updateMovie(UpdateMovieDto movieDto);
     void deleteMovie(Long id);
     void deleteMovies(List<Long> ids);

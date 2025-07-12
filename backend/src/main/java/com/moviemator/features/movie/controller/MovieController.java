@@ -89,6 +89,13 @@ public class MovieController {
         return ResponseEntity.ok(createdMovie);
     }
 
+    @PostMapping("/bulk")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isMovieOwnerForCreateBulk(#movieDtos, authentication)")
+    public ResponseEntity<List<MovieDataDto>> createMovies(@RequestBody List<CreateMovieDto> movieDtos) {
+        List<MovieDataDto> createdMovies = movieService.createMoviesBulk(movieDtos);
+        return ResponseEntity.ok(createdMovies);
+    }
+
     @PutMapping
     @PreAuthorize("hasRole('ADMIN') or @userSecurity.isMovieOwnerForUpdate(#movieDto, authentication)")
     public ResponseEntity<MovieDataDto> updateMovie(@RequestBody UpdateMovieDto movieDto) {

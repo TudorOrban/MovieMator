@@ -12,6 +12,9 @@ public interface MovieRepository extends JpaRepository<Movie, Long>, MovieSearch
 
     List<Movie> findByUserId(Long userId);
 
+    @Query("SELECT m FROM Movie m WHERE m.userId = :userId AND m.watchedDate IS NOT NULL and m.watchedDate BETWEEN :startDate AND :endDate")
+    List<Movie> findByUserIdAndTimePeriod(Long userId, LocalDate startDate, LocalDate endDate);
+
     @Query("SELECT CASE WHEN COUNT(m) > 0 THEN TRUE ELSE FALSE END FROM Movie m WHERE m.userId = :userId AND m.title =:title")
     boolean hasNonUniqueTitle(@Param("userId") Long userId, @Param("title") String title);
 

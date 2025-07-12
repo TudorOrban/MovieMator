@@ -4,7 +4,7 @@ import { HttpClient } from "@angular/common/http";
 import { MovieFilters, PaginatedResults, SearchParams } from "../../../shared/models/Search";
 import { Observable, of, tap } from "rxjs";
 import { CreateMovieDto, MovieDataDto, MovieSearchDto, UpdateMovieDto } from "../models/Movie";
-import { MovieSearchCacheService } from "./movie-search-cache.service";
+import { MovieCacheService } from "./movie-search-cache.service";
 
 @Injectable({
     providedIn: "root"
@@ -14,12 +14,12 @@ export class MovieService {
 
     constructor(
         private readonly http: HttpClient,
-        private readonly movieSearchCacheService: MovieSearchCacheService
+        private readonly movieCacheService: MovieCacheService
     ) {}
 
     searchMovies(userId: number, searchParams: SearchParams, movieFilters: MovieFilters): Observable<PaginatedResults<MovieSearchDto>> {
         // 1. Try to get data from cache
-        const cachedData = this.movieSearchCacheService.get(userId, searchParams, movieFilters);
+        const cachedData = this.movieCacheService.get(userId, searchParams, movieFilters);
         if (cachedData) {
             return of(cachedData); 
         }
@@ -33,7 +33,7 @@ export class MovieService {
         ).pipe(
             // 3. Cache the results before returning them
             tap(data => {
-                this.movieSearchCacheService.set(userId, searchParams, movieFilters, data);
+                this.movieCacheService.set(userId, searchParams, movieFilters, data);
             })
         );
     }
@@ -44,7 +44,7 @@ export class MovieService {
 
     getWatchedDatesByUserId(userId: number): Observable<Date[]> {
         // 1. Try to get data from cache
-        const cachedData = this.movieSearchCacheService.getWatchedDates(userId);
+        const cachedData = this.movieCacheService.getWatchedDates(userId);
         if (cachedData) {
             return of(cachedData);
         }
@@ -53,7 +53,7 @@ export class MovieService {
         return this.http.get<Date[]>(`${this.apiUrl}/watched-dates/user/${userId}`).pipe(
             // 3. Cache the results before returning them
             tap(data => {
-                this.movieSearchCacheService.setWatchedDates(userId, data);
+                this.movieCacheService.setWatchedDates(userId, data);
             })
         );
     }
@@ -61,7 +61,7 @@ export class MovieService {
     createMovie(movieDto: CreateMovieDto): Observable<MovieDataDto> {
         return this.http.post<MovieDataDto>(this.apiUrl, movieDto).pipe(
             tap(() => {
-                this.movieSearchCacheService.invalidateCache();
+                this.movieCacheService.invalidateCache();
             })
         );
     }
@@ -69,7 +69,7 @@ export class MovieService {
     updateMovie(movieDto: UpdateMovieDto): Observable<MovieDataDto> {
         return this.http.put<MovieDataDto>(this.apiUrl, movieDto).pipe(
             tap(() => {
-                this.movieSearchCacheService.invalidateCache();
+                this.movieCacheService.invalidateCache();
             })
         );
     }
@@ -81,7 +81,7 @@ export class MovieService {
     deleteMovies(ids: number[]): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/bulk`, { body: ids }).pipe(
             tap(() => {
-                this.movieSearchCacheService.invalidateCache();
+                this.movieCacheService.invalidateCache();
             })
         );
     }

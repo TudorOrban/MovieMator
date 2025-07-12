@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Map;
 
 @Data
@@ -19,16 +20,32 @@ public class UserStatistics {
     private Long totalWatchTimeMinutes;
     private Double averageUserRating;
 
-    private Map<String, Integer> movieCountByDirector;
-    private Map<String, Integer> movieCountByGenre;
-    private Map<String, Integer> movieCountByActor;
+    private Map<String, Long> movieCountByDirector;
+    private Map<String, Long> movieCountByGenre;
+    private Map<String, Long> movieCountByActor;
     private Map<Integer, Long> movieCountByReleaseYear;
 
     private Map<Integer, Long> userRatingDistribution;
-    private Map<MovieStatus, Long> movieCountByStatus;
 
     private Long totalUniqueWatchedDays;
     private Map<String, Long> movieCountByWatchedMonth;
     private Double averageMoviesPerWeek;
     private Double averageMoviesPerMonth;
+
+    public UserStatistics(LocalDate startDate, LocalDate endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.totalWatchedMovies = 0L;
+        this.totalWatchTimeMinutes = 0L;
+        this.averageUserRating = 0.0;
+        this.movieCountByDirector = new HashMap<>();
+        this.movieCountByGenre = new HashMap<>();
+        this.movieCountByActor = new HashMap<>();
+        this.movieCountByReleaseYear = new HashMap<>();
+        this.userRatingDistribution = new HashMap<>();
+        this.totalUniqueWatchedDays = 0L;
+        this.movieCountByWatchedMonth = new HashMap<>();
+        this.averageMoviesPerWeek = 0.0;
+        this.averageMoviesPerMonth = 0.0;
+    }
 }

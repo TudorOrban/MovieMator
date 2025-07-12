@@ -12,6 +12,8 @@ import { UIItem } from '../../../models/UI';
     styleUrls: ['./enum-selector.component.css']
 })
 export class EnumSelectorComponent {
+    @Input() id!: string;
+    @Input() name!: string;
     @Input() selectedValue: string | undefined;
     @Input() options: UIItem[] = []; 
     @Input() placeholder: string = "Select an option";

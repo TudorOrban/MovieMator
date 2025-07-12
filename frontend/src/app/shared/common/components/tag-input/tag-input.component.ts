@@ -14,6 +14,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 export class TagInputComponent {
     @Input() label: string = "";
     @Input() id: string = "";
+    @Input() name: string = "";
     @Input() placeholder: string = "";
     @Input() currentTags: string[] | undefined;
     @Output() tagsChange = new EventEmitter<string[] | undefined>();

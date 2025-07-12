@@ -21,11 +21,11 @@
 
             <!-- Title Search -->
             <div class="space-y-2 relative">
-                <label for="title" class="form-label">Movie Name</label>
+                <label for="title-{{i}}" class="form-label">Movie Name</label>
                 <input
                     type="text"
-                    id="title"
-                    name="name"
+                    id="title-{{i}}"
+                    name="name-{{i}}"
                     [(ngModel)]="movie.title"
                     required
                     minlength="3"
@@ -182,6 +182,7 @@
                     <app-tag-input
                         label="Genres"
                         id="genres-{{i}}"
+                        name="genres_{{i}}"
                         placeholder="e.g., Action, Sci-Fi, Drama"
                         [currentTags]="movie.genres"
                         (tagsChange)="handleGenresChange(i, $event)"
@@ -193,6 +194,7 @@
                     <app-tag-input
                         label="Actors"
                         id="actors-{{i}}"
+                        name="actors_{{i}}"
                         placeholder="e.g., Tom Hanks, Emma Stone"
                         [currentTags]="movie.actors"
                         (tagsChange)="handleActorsChange(i, $event)"
@@ -204,6 +206,8 @@
             <div class="space-y-2 mt-4">
                 <label for="status-{{i}}" class="form-label">Movie Status</label>
                 <app-enum-selector
+                    id="status-{{i}}"
+                    name="status_{{i}}"
                     [selectedValue]="movie.status"
                     [options]="movieStatusOptions"
                     placeholder="Select Movie Status"

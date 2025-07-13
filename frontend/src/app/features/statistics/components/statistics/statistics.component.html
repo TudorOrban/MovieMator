@@ -115,11 +115,18 @@
                 </div>
                 <div>
                     <h3 class="text-xl font-semibold mb-3">Top Actors</h3>
-                    <div *ngIf="statistics.movieCountByActor && (statistics.movieCountByActor | keyvalue).length > 0; else noActors" class="flex flex-wrap gap-2">
-                        <span *ngFor="let entry of (statistics.movieCountByActor | keyvalue | orderBy:'value':'desc')"
-                              class="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
-                            {{ entry.key }}: {{ entry.value }}
-                        </span>
+                    <div *ngIf="statistics.movieCountByActor && (statistics.movieCountByActor | keyvalue).length > 0; else noActors">
+                        <div class="flex flex-wrap gap-2">
+                            <span *ngFor="let entry of (statistics.movieCountByActor | keyvalue | orderBy:'value':'desc' | slice:0:(showAllActors ? undefined : actorDisplayLimit))"
+                                  class="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
+                                {{ entry.key }}: {{ entry.value }}
+                            </span>
+                        </div>
+                        <button *ngIf="statistics.movieCountByActor && (statistics.movieCountByActor | keyvalue).length > actorDisplayLimit"
+                                (click)="toggleShowAllActors()"
+                                class="mt-3 text-blue-600 hover:underline text-sm focus:outline-none">
+                            {{ showAllActors ? 'Show Less' : 'See More' }}
+                        </button>
                     </div>
                     <ng-template #noActors><p class="text-gray-500 italic">No actor data.</p></ng-template>
                 </div>

@@ -1,15 +1,34 @@
-<div class="header">
-    <div class="logo-container">
+<div class="header flex flex-col md:flex-row md:items-center md:justify-between p-4">
+
+    <div class="flex items-center justify-between w-full mb-4 md:hidden">
+        <div class="logo-container flex-shrink-0">
+            <img src="/assets/images/Logo.png" class="w-23 h-15"/>
+        </div>
+
+        <div *ngIf="!isLoggedIn" class="auth-buttons flex items-center space-x-2">
+            <a [routerLink]="'/signup'" class="standard-auth-button">
+                Sign Up
+            </a>
+            <a [routerLink]="'/login'" class="standard-auth-button">
+                Login
+            </a>
+        </div>
+        <div *ngIf="isLoggedIn" class="user-bar-container flex items-center">
+            <app-userbar></app-userbar>
+        </div>
+    </div>
+
+    <div class="logo-container flex-shrink-0 hidden md:block">
         <img src="/assets/images/Logo.png" class="w-23 h-15"/>
     </div>
 
-    <div class="nav-links space-x-4 md:space-x-12 xl:space-x-20">
+    <div class="nav-links flex justify-center space-x-4 md:space-x-12 xl:space-x-20 md:mx-auto mb-4 md:mb-0">
         <a [routerLink]="''" class="text-xl font-semibold">Home</a>
         <a [routerLink]="'/movies'" class="text-xl font-semibold">Movies</a>
         <a [routerLink]="'/statistics'" class="text-xl font-semibold">Stats</a>
     </div>
 
-    <div *ngIf="!isLoggedIn" class="auth-buttons">
+    <div *ngIf="!isLoggedIn" class="auth-buttons hidden md:flex items-center space-x-2">
         <a [routerLink]="'/signup'" class="standard-auth-button">
             Sign Up
         </a>
@@ -17,8 +36,8 @@
             Login
         </a>
     </div>
-
-    <div *ngIf="isLoggedIn" class="user-bar-container">
+    <div *ngIf="isLoggedIn" class="user-bar-container hidden md:flex items-center">
         <app-userbar></app-userbar>
     </div>
+
 </div>

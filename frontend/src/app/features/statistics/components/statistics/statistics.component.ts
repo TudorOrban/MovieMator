@@ -24,6 +24,9 @@ export class StatisticsComponent implements OnInit, OnDestroy {
 
     isLoading: boolean = false;
 
+    actorDisplayLimit: number = 20;
+    showAllActors: boolean = false;
+
     subscription = new Subscription();
 
     constructor(
@@ -53,6 +56,10 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     onComputeStatistics(): void {
         this.loadStatistics();
     }
+
+    toggleShowAllActors(): void {
+        this.showAllActors = !this.showAllActors;
+  }
 
     private loadStatistics(): void {
         if (!this.userId) return;

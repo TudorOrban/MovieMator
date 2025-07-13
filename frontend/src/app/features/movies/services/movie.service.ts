@@ -58,6 +58,10 @@ export class MovieService {
         );
     }
 
+    isMovieTitleUnique(userId: number, title: string): Observable<boolean> {
+        return this.http.get<boolean>(`${this.apiUrl}/movie-title/${title}/user/${userId}`);
+    }
+
     createMovie(movieDto: CreateMovieDto): Observable<MovieDataDto> {
         return this.http.post<MovieDataDto>(this.apiUrl, movieDto).pipe(
             tap(() => {

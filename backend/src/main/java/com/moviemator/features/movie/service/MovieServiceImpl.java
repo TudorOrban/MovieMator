@@ -59,6 +59,10 @@ public class MovieServiceImpl implements MovieService {
         return movieRepository.findWatchedDatesByUserId(userId);
     }
 
+    public boolean isMovieTitleUnique(Long userId, String title) {
+        return !movieRepository.hasNonUniqueTitle(userId, title);
+    }
+
     public MovieDataDto createMovie(CreateMovieDto movieDto) {
         CreateMovieDto sanitizedDto = sanitizerService.sanitizeCreateMovieDto(movieDto);
 

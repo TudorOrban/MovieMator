@@ -16,6 +16,7 @@ public interface MovieService {
     PaginatedResults<MovieSearchDto> searchMovies(Long userId, SearchParams searchParams, MovieFilters movieFilters);
     MovieDataDto getMovieById(Long id);
     List<LocalDate> getWatchedMovieDatesForUser(Long userId);
+    boolean isMovieTitleUnique(Long userId, String title);
     MovieDataDto createMovie(CreateMovieDto movieDto);
     List<MovieDataDto> createMoviesBulk(List<CreateMovieDto> movieDtos);
     MovieDataDto updateMovie(UpdateMovieDto movieDto);

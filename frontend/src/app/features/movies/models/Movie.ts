@@ -92,4 +92,5 @@ export interface CreateMovieDtoUi extends CreateMovieDto {
     tmdbSearchResults: TmdbMovieResult[];
     searchTerms: Subject<string>;
     searchSubscription?: Subscription;
+    isTitleUnique?: boolean;
 }

@@ -29,6 +29,81 @@ public class UserSecurityExpressions {
         this.movieService = movieService;
     }
 
+    public boolean isMovieOwnerById(Long movieId, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || movieId == null) {
+            return false;
+        }
+        try {
+            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
+            if (authenticatedUser == null) {
+                return false;
+            }
+            MovieDataDto movie = movieService.getMovieById(movieId);
+            return movie != null && movie.getUserId().equals(authenticatedUser.getId());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean areAllMoviesOwnedByAuthenticatedUser(List<Long> movieIds, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || movieIds == null || movieIds.isEmpty()) {
+            return false;
+        }
+        try {
+            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
+            if (authenticatedUser == null) {
+                return false;
+            }
+            Long authenticatedUserId = authenticatedUser.getId();
+
+            for (Long movieId : movieIds) {
+                MovieDataDto movie = movieService.getMovieById(movieId);
+                if (movie == null || !movie.getUserId().equals(authenticatedUserId)) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isSearchingOwnMovies(Long targetUserId, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || targetUserId == null) {
+            return false;
+        }
+        try {
+            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
+            return authenticatedUser != null && authenticatedUser.getId().equals(targetUserId);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isCheckingOwnMovieTitles(Long targetUserId, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || targetUserId == null) {
+            return false;
+        }
+        try {
+            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
+            return authenticatedUser != null && authenticatedUser.getId().equals(targetUserId);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isFetchingOwnWatchedDates(Long targetUserId, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || targetUserId == null) {
+            return false;
+        }
+        try {
+            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
+            return authenticatedUser != null && authenticatedUser.getId().equals(targetUserId);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public boolean canCreateUserWithCognitoId(CreateUserDto userDto, Authentication authentication) {
         if (authentication == null || authentication.getName() == null || userDto == null || userDto.getCognitoUserId() == null) {
             return false;
@@ -100,69 +175,6 @@ public class UserSecurityExpressions {
         try {
             UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
             return authenticatedUser != null && authenticatedUser.getId().equals(movieDto.getUserId());
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean isMovieOwnerById(Long movieId, Authentication authentication) {
-        if (authentication == null || authentication.getName() == null || movieId == null) {
-            return false;
-        }
-        try {
-            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
-            if (authenticatedUser == null) {
-                return false;
-            }
-            MovieDataDto movie = movieService.getMovieById(movieId);
-            return movie != null && movie.getUserId().equals(authenticatedUser.getId());
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean areAllMoviesOwnedByAuthenticatedUser(List<Long> movieIds, Authentication authentication) {
-        if (authentication == null || authentication.getName() == null || movieIds == null || movieIds.isEmpty()) {
-            return false;
-        }
-        try {
-            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
-            if (authenticatedUser == null) {
-                return false;
-            }
-            Long authenticatedUserId = authenticatedUser.getId();
-
-            for (Long movieId : movieIds) {
-                MovieDataDto movie = movieService.getMovieById(movieId);
-                if (movie == null || !movie.getUserId().equals(authenticatedUserId)) {
-                    return false;
-                }
-            }
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean isSearchingOwnMovies(Long targetUserId, Authentication authentication) {
-        if (authentication == null || authentication.getName() == null || targetUserId == null) {
-            return false;
-        }
-        try {
-            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
-            return authenticatedUser != null && authenticatedUser.getId().equals(targetUserId);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean isFetchingOwnWatchedDates(Long targetUserId, Authentication authentication) {
-        if (authentication == null || authentication.getName() == null || targetUserId == null) {
-            return false;
-        }
-        try {
-            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
-            return authenticatedUser != null && authenticatedUser.getId().equals(targetUserId);
         } catch (Exception e) {
             return false;
         }

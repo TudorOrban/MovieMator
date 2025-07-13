@@ -5,6 +5,8 @@
 
     <form (ngSubmit)="onSubmit()">
         <div *ngFor="let movie of movies; let i = index">
+            <div *ngIf="i > 0" class="border-t border-gray-300 my-8"></div>
+
             <div class="flex items-center justify-between py-4">
                 <div class="text-xl font-semibold">
                     • Movie #{{ i + 1 }}
@@ -21,14 +23,14 @@
 
             <!-- Title Search -->
             <div class="space-y-2 relative">
-                <label for="title-{{i}}" class="form-label">Movie Name</label>
+                <label for="title-{{i}}" class="form-label">Movie Title *</label>
                 <input
                     type="text"
                     id="title-{{i}}"
                     name="name-{{i}}"
                     [(ngModel)]="movie.title"
                     required
-                    minlength="3"
+                    minlength="1"
                     class="form-input"
                     #movieTitleInput="ngModel"
                     (input)="onTitleInput(i, $event)"
@@ -40,6 +42,12 @@
                 >
                     <div *ngIf="movieTitleInput.errors?.['required']">Movie title is required.</div>
                     <div *ngIf="movieTitleInput.errors?.['minlength']">Movie title must be at least 3 characters.</div>
+                </div>
+                <div
+                    *ngIf="hasBeenSubmitted() && movie.isTitleUnique === false"
+                    class="form-error"
+                >
+                    Movie title is not unique.
                 </div>
 
                 <ul *ngIf="movie.tmdbSearchResults.length > 0 && movieTitleInput.value && movieTitleInput.value.trim()"

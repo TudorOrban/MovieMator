@@ -74,6 +74,10 @@ export class MoviesComponent implements OnInit, OnDestroy {
         });
     }
 
+    handleSortOptionsChange(): void {
+        this.searchParams.page = 1;
+    }
+
     handleMovieFiltersChange(newFilters: MovieFilters): void {
         this.movieFilters = newFilters;
         this.searchParams.page = 1;

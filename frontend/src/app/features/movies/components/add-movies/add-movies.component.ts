@@ -77,7 +77,8 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
             status: MovieStatus.WATCHED,
             areDetailsExpanded: false,
             tmdbSearchResults: [],
-            searchTerms: new Subject<string>()
+            searchTerms: new Subject<string>(),
+            isTitleUnique: true
         };
 
         newMovie.searchSubscription = newMovie.searchTerms.pipe(
@@ -119,7 +120,7 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
 
         let allFormsValid = true;
         for (const movie of this.movies) {
-            if (!movie.userId || !movie.title || movie.title.length < 3) {
+            if (!movie.userId || !movie.title || movie.title.length < 3 || !movie.isTitleUnique) {
                 allFormsValid = false;
                 this.toastService.addToast({ title: "Validation Error", details: `Please ensure all required fields for movie "${movie.title || 'untitled'}" are filled correctly.`, type: ToastType.ERROR });
             }
@@ -182,6 +183,13 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
         movie.tmdbId = selectedMovie.id;
         movie.title = selectedMovie.title;
         movie.tmdbSearchResults = [];
+
+        this.mainSubscription.add(this.movieService.isMovieTitleUnique(this.userId, movie.title).subscribe({
+            next: (isMovieTitleUnique: boolean) => {
+                console.log("T", isMovieTitleUnique);
+                movie.isTitleUnique = isMovieTitleUnique;
+            }
+        }))
 
         this.mainSubscription.add(this.tmdbService.getMovieDetails(selectedMovie.id).subscribe({
             next: (details: TmdbMovieDetails) => {

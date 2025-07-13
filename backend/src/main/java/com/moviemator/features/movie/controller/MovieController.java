@@ -1,6 +1,5 @@
 package com.moviemator.features.movie.controller;
 
-import com.moviemator.core.user.service.UserService;
 import com.moviemator.features.movie.dto.CreateMovieDto;
 import com.moviemator.features.movie.dto.MovieDataDto;
 import com.moviemator.features.movie.dto.MovieSearchDto;
@@ -80,6 +79,13 @@ public class MovieController {
     public ResponseEntity<List<LocalDate>> getWatchedMovieDates(@PathVariable Long userId) {
         List<LocalDate> watchedDates = movieService.getWatchedMovieDatesForUser(userId);
         return ResponseEntity.ok(watchedDates);
+    }
+
+    @GetMapping("/movie-title/{movieTitle}/user/{userId}")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isCheckingOwnMovieTitles(#userId, authentication)")
+    public ResponseEntity<Boolean> isMovieTitleUnique(@PathVariable Long userId, @PathVariable String movieTitle) {
+        Boolean isMovieTitleUnique = movieService.isMovieTitleUnique(userId, movieTitle);
+        return ResponseEntity.ok(isMovieTitleUnique);
     }
 
     @PostMapping

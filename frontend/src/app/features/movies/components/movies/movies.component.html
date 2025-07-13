@@ -5,6 +5,7 @@
         [movieFilters]="movieFilters"
         [isDeleteModeOn]="isDeleteModeOn"
         (searchParamsChanged)="searchMovies()"
+        (sortOptionsChanged)="handleSortOptionsChange()"
         (movieFiltersChanged)="handleMovieFiltersChange($event)"
         (deleteModeToggled)="toggleDeleteMode()"
         (onDeleteMovies)="deleteMovies()"

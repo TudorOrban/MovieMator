@@ -25,7 +25,7 @@ public class UserStatistics {
     private Map<String, Long> movieCountByActor;
     private Map<Integer, Long> movieCountByReleaseYear;
 
-    private Map<Integer, Long> userRatingDistribution;
+    private Map<String, Long> userRatingDistribution;
 
     private Long totalUniqueWatchedDays;
     private Map<String, Long> movieCountByWatchedMonth;

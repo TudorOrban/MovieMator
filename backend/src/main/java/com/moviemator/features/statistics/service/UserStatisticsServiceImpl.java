@@ -6,6 +6,8 @@ import com.moviemator.features.statistics.model.UserStatistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
@@ -44,8 +46,9 @@ public class UserStatisticsServiceImpl implements UserStatisticsService {
                 sumUserRatings += movie.getUserRating();
                 ratedMoviesCount++;
 
-                int userRatingFloor = Math.max(1, Math.min(10, (int) Math.floor(movie.getUserRating())));
-                statistics.getUserRatingDistribution().put(userRatingFloor, statistics.getUserRatingDistribution().getOrDefault(userRatingFloor, 0L) + 1);
+                String granularRatingKey = this.getGranularRatingKey(movie);
+
+                statistics.getUserRatingDistribution().put(granularRatingKey, statistics.getUserRatingDistribution().getOrDefault(granularRatingKey, 0L) + 1);
             }
             if (movie.getDirector() != null && !movie.getDirector().trim().isEmpty()) {
                 String director = movie.getDirector().trim();
@@ -91,5 +94,22 @@ public class UserStatisticsServiceImpl implements UserStatisticsService {
         statistics.setAverageMoviesPerMonth(monthsInPeriod > 0 ? statistics.getTotalWatchedMovies() / monthsInPeriod : 0.0);
 
         return statistics;
+    }
+
+    private String getGranularRatingKey(Movie movie) {
+        BigDecimal userRatingBd = new BigDecimal(String.valueOf(movie.getUserRating()));
+
+        BigDecimal granularRatingBd = userRatingBd.setScale(1, RoundingMode.FLOOR);
+
+        BigDecimal minAllowed = BigDecimal.ZERO;
+        BigDecimal maxAllowed = new BigDecimal("10.0");
+
+        if (granularRatingBd.compareTo(minAllowed) < 0) {
+            granularRatingBd = minAllowed;
+        } else if (granularRatingBd.compareTo(maxAllowed) > 0) {
+            granularRatingBd = maxAllowed;
+        }
+
+        return granularRatingBd.toPlainString();
     }
 }

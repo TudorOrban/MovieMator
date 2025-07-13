@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
@@ -18,6 +19,8 @@ import java.util.Set;
 public class UserStatisticsServiceImpl implements UserStatisticsService {
 
     private final MovieRepository movieRepository;
+
+    private static final DateTimeFormatter MONTH_YEAR_FORMATTER = DateTimeFormatter.ofPattern("MMM yyyy");
 
     @Autowired
     public UserStatisticsServiceImpl(MovieRepository movieRepository) {
@@ -76,8 +79,8 @@ public class UserStatisticsServiceImpl implements UserStatisticsService {
             }
 
             uniqueWatchedDates.add(movie.getWatchedDate());
-            String month = movie.getWatchedDate().getMonth().name().substring(0, 3);
-            statistics.getMovieCountByWatchedMonth().put(month, statistics.getMovieCountByWatchedMonth().getOrDefault(month, 0L) + 1);
+            String monthYear = movie.getWatchedDate().format(MONTH_YEAR_FORMATTER);
+            statistics.getMovieCountByWatchedMonthAndYear().put(monthYear, statistics.getMovieCountByWatchedMonthAndYear().getOrDefault(monthYear, 0L) + 1);
         }
 
         statistics.setTotalWatchedMovies((long) movies.size());

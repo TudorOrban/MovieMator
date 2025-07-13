@@ -31,6 +31,56 @@ export class StatisticsComponent implements OnInit, OnDestroy {
 
     subscription = new Subscription();
 
+    public watchedMonthYearBarChartOptions: ChartOptions<"bar"> = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    label: (context) => {
+                        let label = context.dataset.label || "";
+                        if (label) { label += ": "; }
+                        if (context.parsed.y !== null) { label += context.parsed.y + " movies"; }
+                        return label;
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                title: { display: true, text: "Month" },
+                type: "category",
+                ticks: {
+                    autoSkip: true,
+                    maxRotation: 45,
+                    minRotation: 0
+                }
+            },
+            y: {
+                beginAtZero: true,
+                title: { display: true, text: "Number of Movies" },
+                ticks: {
+                    stepSize: 1
+                }
+            }
+        }
+    };
+    public watchedMonthYearBarChartLabels: string[] = [];
+    public watchedMonthYearBarChartType: "bar" = "bar";
+    public watchedMonthYearBarChartData: ChartConfiguration<"bar">["data"] = {
+        labels: this.watchedMonthYearBarChartLabels,
+        datasets: [
+            {
+                data: [],
+                backgroundColor: "rgba(54, 162, 235, 0.7)",
+                borderColor: "rgba(54, 162, 235, 1)",
+                borderWidth: 1,
+                hoverBackgroundColor: "rgba(54, 162, 235, 0.9)",
+                hoverBorderColor: "rgba(54, 162, 235, 1)"
+            }
+        ]
+    };
     public releaseYearBarChartOptions: ChartOptions<"bar"> = {
         responsive: true,
         maintainAspectRatio: false, 
@@ -195,6 +245,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
             next: (data) => {
                 this.statistics = data;
                 this.isLoading = false;
+                this.processWatchedMonthYearDataForChart();
                 this.processReleaseYearDataForChart();
                 this.processUserRatingDataForChart();
             },
@@ -206,6 +257,57 @@ export class StatisticsComponent implements OnInit, OnDestroy {
         }));
     }
     
+    private processWatchedMonthYearDataForChart(): void {
+        if (!this.statistics?.movieCountByWatchedMonthAndYear || Object.keys(this.statistics.movieCountByWatchedMonthAndYear).length === 0) {
+            this.watchedMonthYearBarChartLabels = [];
+            this.watchedMonthYearBarChartData = { labels: [], datasets: [{ ...this.watchedMonthYearBarChartData.datasets[0] }] };
+            return;
+        }
+
+        // Find the minimum and maximum range from the data
+        const statStartDate = new Date(this.statistics.startDate + 'T00:00:00');
+        const statEndDate = new Date(this.statistics.endDate + 'T00:00:00');
+
+        const monthYearCountsMap = new Map<string, number>();
+        Object.entries(this.statistics.movieCountByWatchedMonthAndYear).forEach(([monthYear, count]) => {
+            monthYearCountsMap.set(monthYear, count as number);
+        });
+
+        const fullRangeLabels: string[] = [];
+        const fullRangeData: number[] = [];
+
+        let currentDate = new Date(statStartDate.getFullYear(), statStartDate.getMonth(), 1); 
+        
+        while (currentDate.getTime() <= statEndDate.getTime() || 
+               (currentDate.getFullYear() === statEndDate.getFullYear() && currentDate.getMonth() <= statEndDate.getMonth())) {
+            
+            const monthName = currentDate.toLocaleString('en-US', { month: 'short' }); 
+            const year = currentDate.getFullYear();
+            const formattedMonthYear = `${monthName} ${year}`;
+
+            fullRangeLabels.push(formattedMonthYear);
+            fullRangeData.push(monthYearCountsMap.get(formattedMonthYear) || 0);
+
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            currentDate.setDate(1); 
+        }
+                                    
+        this.watchedMonthYearBarChartLabels = fullRangeLabels;
+        this.watchedMonthYearBarChartData = {
+            labels: this.watchedMonthYearBarChartLabels,
+            datasets: [
+                {
+                    data: fullRangeData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    hoverBackgroundColor: 'rgba(54, 162, 235, 0.9)',
+                    hoverBorderColor: 'rgba(54, 162, 235, 1)'
+                }
+            ]
+        };
+    }
+
     private processReleaseYearDataForChart(): void {
         if (!this.statistics?.movieCountByReleaseYear) {
             this.releaseYearBarChartLabels = [];
@@ -222,7 +324,6 @@ export class StatisticsComponent implements OnInit, OnDestroy {
             return;
         }
 
-        // Find the minimum and maximum years from your data
         const minYear = Math.min(...rawMovieCounts.map(entry => entry.key));
         const maxYear = Math.max(...rawMovieCounts.map(entry => entry.key));
 
@@ -260,11 +361,9 @@ export class StatisticsComponent implements OnInit, OnDestroy {
             this.userRatingBarChartData = { labels: [], datasets: [{ ...this.userRatingBarChartData.datasets[0] }] };
             return;
         }
-        console.log("Distr", this.statistics.userRatingDistribution);
+
         const rawRatingCounts = Object.entries(this.statistics.userRatingDistribution)
                                         .map(([rating, count]) => ({ key: parseFloat(rating), value: count as number }));
-            
-        console.log("Raw", rawRatingCounts);
         if (rawRatingCounts.length === 0) {
             this.userRatingBarChartLabels = [];
             this.userRatingBarChartData = { labels: [], datasets: [{ ...this.userRatingBarChartData.datasets[0] }] };

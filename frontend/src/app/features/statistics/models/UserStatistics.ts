@@ -10,7 +10,7 @@ export interface UserStatistics {
     movieCountByReleaseYear: Record<number, number>;
     userRatingDistribution: Record<number, number>;
     totalUniqueWatchedDays: number;
-    movieCountByWatchedMonth: Record<string, number>;
+    movieCountByWatchedMonthAndYear: Record<string, number>;
     averageMoviesPerWeek: number;
     averageMoviesPerMonth: number;
 }

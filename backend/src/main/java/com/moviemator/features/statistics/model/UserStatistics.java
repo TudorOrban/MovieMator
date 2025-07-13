@@ -28,7 +28,7 @@ public class UserStatistics {
     private Map<String, Long> userRatingDistribution;
 
     private Long totalUniqueWatchedDays;
-    private Map<String, Long> movieCountByWatchedMonth;
+    private Map<String, Long> movieCountByWatchedMonthAndYear;
     private Double averageMoviesPerWeek;
     private Double averageMoviesPerMonth;
 
@@ -44,7 +44,7 @@ public class UserStatistics {
         this.movieCountByReleaseYear = new HashMap<>();
         this.userRatingDistribution = new HashMap<>();
         this.totalUniqueWatchedDays = 0L;
-        this.movieCountByWatchedMonth = new HashMap<>();
+        this.movieCountByWatchedMonthAndYear = new HashMap<>();
         this.averageMoviesPerWeek = 0.0;
         this.averageMoviesPerMonth = 0.0;
     }

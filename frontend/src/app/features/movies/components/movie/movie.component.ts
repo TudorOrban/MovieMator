@@ -4,7 +4,7 @@ import { MovieService } from '../../services/movie.service';
 import { MovieDataDto } from '../../models/Movie';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-movie',
@@ -14,6 +14,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 export class MovieComponent {
     movieId?: number;
     movie?: MovieDataDto;
+    isLoading: boolean = false;
 
     constructor(
         private readonly movieService: MovieService,
@@ -31,15 +32,20 @@ export class MovieComponent {
     private loadMovie(): void {
         if (!this.movieId) return;
 
+        this.isLoading = true;
+
         this.movieService.getMovieById(this.movieId).subscribe({
             next: (data) => {
                 this.movie = data;
+                this.isLoading = false;
             },
             error: (error) => {
                 console.error("Error occurred fetching movie: ", error);
+                this.isLoading = false;
             }
         });
     }
     
     faEdit = faEdit;
+    faSpinner = faSpinner;
 }

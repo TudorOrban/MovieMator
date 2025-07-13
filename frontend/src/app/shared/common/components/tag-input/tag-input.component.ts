@@ -7,7 +7,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 @Component({
     selector: 'app-tag-input',
     standalone: true,
-    imports: [CommonModule, FormsModule, FontAwesomeModule],
+    imports: [CommonModule, FontAwesomeModule, FormsModule],
     templateUrl: './tag-input.component.html',
     styleUrls: ['./tag-input.component.css']
 })

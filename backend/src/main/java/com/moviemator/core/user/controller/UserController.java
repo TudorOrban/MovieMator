@@ -23,15 +23,15 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or (#id == @userService.getUserByCognitoUserId(#authentication.name).id)")
-    public ResponseEntity<UserDataDto> getUserById(@PathVariable Long id) {
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isUserOrAdmin(#id, authentication)")
+    public ResponseEntity<UserDataDto> getUserById(@PathVariable Long id, Authentication authentication) {
         UserDataDto user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
     @GetMapping("/cognito-id/{cognitoUserId}")
-    @PreAuthorize("hasRole('ADMIN') or (#cognitoUserId == authentication.name)")
-    public ResponseEntity<UserDataDto> getUserByCognitoUserId(@PathVariable String cognitoUserId) {
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isCognitoUserOrAdmin(#cognitoUserId, authentication)")
+    public ResponseEntity<UserDataDto> getUserByCognitoUserId(@PathVariable String cognitoUserId, Authentication authentication) {
         UserDataDto user = userService.getUserByCognitoUserId(cognitoUserId);
         return ResponseEntity.ok(user);
     }
@@ -45,7 +45,7 @@ public class UserController {
 
     @PutMapping
     @PreAuthorize("hasRole('ADMIN') or @userSecurity.canUpdateUser(#userDto, authentication)")
-    public ResponseEntity<UserDataDto> updateUser(@RequestBody UpdateUserDto userDto) {
+    public ResponseEntity<UserDataDto> updateUser(@RequestBody UpdateUserDto userDto, Authentication authentication) {
         UserDataDto updatedUser = userService.updateUser(userDto);
         return ResponseEntity.ok(updatedUser);
     }

@@ -29,6 +29,45 @@ public class UserSecurityExpressions {
         this.movieService = movieService;
     }
 
+    public boolean canCreateUserWithCognitoId(CreateUserDto userDto, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || userDto == null || userDto.getCognitoUserId() == null) {
+            return false;
+        }
+        return userDto.getCognitoUserId().equals(authentication.getName());
+    }
+
+    public boolean isUserOrAdmin(Long userId, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null) {
+            return false;
+        }
+
+        try {
+            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
+            return authenticatedUser != null && authenticatedUser.getId().equals(userId);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isCognitoUserOrAdmin(String cognitoUserId, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || cognitoUserId == null) {
+            return false;
+        }
+        return cognitoUserId.equals(authentication.getName());
+    }
+
+    public boolean canUpdateUser(UpdateUserDto userDto, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || userDto == null || userDto.getId() == null) {
+            return false;
+        }
+        try {
+            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
+            return authenticatedUser != null && authenticatedUser.getId().equals(userDto.getId());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public boolean isMovieOwnerById(Long movieId, Authentication authentication) {
         if (authentication == null || authentication.getName() == null || movieId == null) {
             return false;
@@ -99,38 +138,6 @@ public class UserSecurityExpressions {
         try {
             UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
             return authenticatedUser != null && authenticatedUser.getId().equals(targetUserId);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean canCreateUserWithCognitoId(CreateUserDto userDto, Authentication authentication) {
-        if (authentication == null || authentication.getName() == null || userDto == null || userDto.getCognitoUserId() == null) {
-            return false;
-        }
-        return userDto.getCognitoUserId().equals(authentication.getName());
-    }
-
-    public boolean isUserOrAdmin(Long userId, Authentication authentication) {
-        if (authentication == null || authentication.getName() == null) {
-            return false;
-        }
-
-        try {
-            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
-            return authenticatedUser != null && authenticatedUser.getId().equals(userId);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean canUpdateUser(UpdateUserDto userDto, Authentication authentication) {
-        if (authentication == null || authentication.getName() == null || userDto == null || userDto.getId() == null) {
-            return false;
-        }
-        try {
-            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
-            return authenticatedUser != null && authenticatedUser.getId().equals(userDto.getId());
         } catch (Exception e) {
             return false;
         }

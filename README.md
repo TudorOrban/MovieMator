@@ -6,6 +6,9 @@
 
 MovieMator is your personal companion for tracking your cinematic journey. Easily record the films you've watched, rate them, and discover fascinating statistics about your movie watching habits and trends.
 
+![Search-Movies](https://raw.githubusercontent.com/TudorOrban/MovieMator/main/screenshots/SearchMovies.png)
+![Statistics](https://raw.githubusercontent.com/TudorOrban/MovieMator/main/screenshots/Statistics.png)
+
 ---
 
 ## ✨ Features
@@ -14,8 +17,8 @@ MovieMator helps you get the most out of your cinematic journey with these power
 
 * **Effortless Tracking**: Easily log movies you've seen, complete with key details like **director**, **actors**, **genre**, and **runtime**.
 * **Personalized Insights**: Assign your own **ratings** to each film and rediscover your favorites.
-* **Smart Search & Discovery**: Find exactly what you're looking for with advanced **filters** for director, specific actors, runtime, and more.
-* **Visual Statistics**: Uncover fascinating **trends** in your movie-watching habits through intuitive **graphs and heatmaps**, revealing your top genres, favorite directors, and rating distributions.
+* **Smart Search & Discovery**: Find exactly what you're looking for with advanced **filters** for director, actors, genres, and more.
+* **Visual Statistics**: Uncover fascinating **trends** in your movie-watching habits with our **Statistics** page, including distribution graphs, heatmap and more.
 
 ---
 
@@ -87,14 +90,7 @@ MovieMator should now be fully operational in your local environment.
 
 ## 🤝 Contributing
 
-We welcome contributions to MovieMator! If you have ideas for new features, bug fixes, or improvements, please feel free to:
-
-1.  Fork the repository.
-2.  Create a new branch (`git checkout -b feature/your-feature-name`).
-3.  Make your changes.
-4.  Commit your changes (`git commit -m 'Add new feature'`).
-5.  Push to the branch (`git push origin feature/your-feature-name`).
-6.  Open a Pull Request.
+We warmly welcome any contributions. Check out [CONTRIBUTING](https://github.com/TudorOrban/MovieMator/blob/main/CONTRIBUTING.md) for more information.
 
 ---
 

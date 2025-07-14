@@ -32,7 +32,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-# App Properties
-src/main/resources/application.properties
-src/main/resources/application-docker-dev.properties

@@ -2,7 +2,7 @@
 resource "aws_codebuild_project" "backend_build" {
   name          = "${var.env}-${var.project_name}-backend-build"
   service_role  = var.codebuild_backend_role_arn
-  build_timeout = "15"
+  build_timeout = "20"
 
   artifacts {
     type = "CODEPIPELINE"

@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Testcontainers
-public class MovieSearchRepositoryImplTest {
+public class MovieSearchRepositoryIntegrationTest {
 
     @TestConfiguration
     static class MovieSearchRepositoryImplTestConfiguration {

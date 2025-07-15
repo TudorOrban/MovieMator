@@ -19,17 +19,34 @@ phases:
 
   build:
     commands:
-      - echo Build started on `date`
-      - echo Building the Docker image for backend...
+      - echo "Build started on `date`"
       - cd backend
-      - mvn clean package -DskipTests
+
+      # 1. Compile code
+      - echo "Compiling application..."
+      - mvn clean compile
+
+      # 2. Run Unit Tests
+      - echo "Running unit tests..."
+      - mvn test
+
+      # 3. Package app
+      - echo "Packaging application..."
+      - mvn package -DskipTests
+      
+      # 4. Run Integration Tests
+      - echo "Running integration tests (with Testcontainers)..."
+      - mvn verify
+
+      # 5. Build Docker image
+      - echo "Building the Docker image for backend..."
       - docker build -t $ECR_REPO_URI:$IMAGE_TAG .
       - docker tag $ECR_REPO_URI:$IMAGE_TAG $ECR_REPO_URI:latest
 
   post_build:
     commands:
-      - echo Build completed on `date`
-      - echo Pushing the Docker image to ECR...
+      - echo "Build completed on `date`"
+      - echo "Pushing the Docker image to ECR..."
       - docker push $ECR_REPO_URI:$IMAGE_TAG
       - docker push $ECR_REPO_URI:latest
 

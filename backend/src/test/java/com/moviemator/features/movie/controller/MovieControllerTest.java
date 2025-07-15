@@ -39,7 +39,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -275,8 +274,7 @@ public class MovieControllerTest {
         mockMvc.perform(get("/api/v1/movies/search/user/{userId}", testOtherUserDataDto.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user(testUserDataDto.getCognitoUserId()).roles("USER")))
-                .andExpect(status().isForbidden())
-                .andDo(print());
+                .andExpect(status().isForbidden());
 
         verify(movieService, never()).searchMovies(anyLong(), any(), any());
         verify(userSecurity, times(1)).isSearchingOwnMovies(eq(testOtherUserDataDto.getId()), any(Authentication.class));
@@ -290,8 +288,7 @@ public class MovieControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user(testUserDataDto.getCognitoUserId()).roles("USER")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testMovieDataDto.getId()))
-                .andDo(print());
+                .andExpect(jsonPath("$.id").value(testMovieDataDto.getId()));
 
         verify(movieService, times(1)).getMovieById(testMovieDataDto.getId());
         verify(userSecurity, times(1)).isMovieOwnerById(eq(testMovieDataDto.getId()), any(Authentication.class));
@@ -302,8 +299,7 @@ public class MovieControllerTest {
         mockMvc.perform(get("/api/v1/movies/{id}", testOtherMovieDataDto.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user(testUserDataDto.getCognitoUserId()).roles("USER")))
-                .andExpect(status().isForbidden())
-                .andDo(print());
+                .andExpect(status().isForbidden());
 
         verify(movieService, never()).getMovieById(anyLong());
         verify(userSecurity, times(1)).isMovieOwnerById(eq(testOtherMovieDataDto.getId()), any(Authentication.class));
@@ -316,8 +312,7 @@ public class MovieControllerTest {
         mockMvc.perform(get("/api/v1/movies/watched-dates/user/{userId}", testOtherUserDataDto.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user(testUserDataDto.getCognitoUserId()).roles("USER")))
-                .andExpect(status().isForbidden())
-                .andDo(print());
+                .andExpect(status().isForbidden());
 
         verify(movieService, never()).getWatchedMovieDatesForUser(anyLong());
         verify(userSecurity, times(1)).isFetchingOwnWatchedDates(eq(testOtherUserDataDto.getId()), any(Authentication.class));
@@ -329,8 +324,7 @@ public class MovieControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user("adminUser").roles("ADMIN")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0]").value("2022-05-01"))
-                .andDo(print());
+                .andExpect(jsonPath("$[0]").value("2022-05-01"));
 
         verify(movieService, times(1)).getWatchedMovieDatesForUser(testOtherUserDataDto.getId());
         verify(userSecurity, never()).isFetchingOwnWatchedDates(anyLong(), any(Authentication.class));
@@ -344,8 +338,7 @@ public class MovieControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user(testUserDataDto.getCognitoUserId()).roles("USER")))
                 .andExpect(status().isOk())
-                .andExpect(content().string("true"))
-                .andDo(print());
+                .andExpect(content().string("true"));
 
         verify(movieService, times(1)).isMovieTitleUnique(eq(testUserDataDto.getId()), eq("New Movie Title"));
         verify(userSecurity, times(1)).isCheckingOwnMovieTitles(eq(testUserDataDto.getId()), any(Authentication.class));
@@ -356,8 +349,7 @@ public class MovieControllerTest {
         mockMvc.perform(get("/api/v1/movies/movie-title/{movieTitle}/user/{userId}", "Some Title", testOtherUserDataDto.getId()) // Check for user 2
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user(testUserDataDto.getCognitoUserId()).roles("USER")))
-                .andExpect(status().isForbidden())
-                .andDo(print());
+                .andExpect(status().isForbidden());
 
         verify(movieService, never()).isMovieTitleUnique(anyLong(), anyString());
         verify(userSecurity, times(1)).isCheckingOwnMovieTitles(eq(testOtherUserDataDto.getId()), any(Authentication.class));
@@ -369,8 +361,7 @@ public class MovieControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user("adminUser").roles("ADMIN")))
                 .andExpect(status().isOk())
-                .andExpect(content().string("true"))
-                .andDo(print());
+                .andExpect(content().string("true"));
 
         verify(movieService, times(1)).isMovieTitleUnique(eq(testOtherUserDataDto.getId()), eq("Existing Movie Title"));
         verify(userSecurity, never()).isCheckingOwnMovieTitles(anyLong(), any(Authentication.class));
@@ -385,8 +376,7 @@ public class MovieControllerTest {
                         .content(objectMapper.writeValueAsString(testCreateMovieDto))
                         .with(user(testUserDataDto.getCognitoUserId()).roles("USER")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testMovieDataDto.getId()))
-                .andDo(print());
+                .andExpect(jsonPath("$.id").value(testMovieDataDto.getId()));
 
         verify(movieService, times(1)).createMovie(any(CreateMovieDto.class));
         verify(userSecurity, times(1)).isMovieOwnerForCreate(any(CreateMovieDto.class), any(Authentication.class));
@@ -415,8 +405,7 @@ public class MovieControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dtoForOtherUser))
                         .with(user(testUserDataDto.getCognitoUserId()).roles("USER")))
-                .andExpect(status().isForbidden())
-                .andDo(print());
+                .andExpect(status().isForbidden());
 
         verify(movieService, never()).createMovie(any(CreateMovieDto.class));
         verify(userSecurity, times(1)).isMovieOwnerForCreate(any(CreateMovieDto.class), any(Authentication.class));
@@ -429,8 +418,7 @@ public class MovieControllerTest {
                         .content(objectMapper.writeValueAsString(testCreateMovieDto))
                         .with(user("adminUser").roles("ADMIN")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testMovieDataDto.getId()))
-                .andDo(print());
+                .andExpect(jsonPath("$.id").value(testMovieDataDto.getId()));
 
         verify(movieService, times(1)).createMovie(any(CreateMovieDto.class));
         verify(userSecurity, never()).isMovieOwnerForCreate(any(CreateMovieDto.class), any(Authentication.class));
@@ -446,8 +434,7 @@ public class MovieControllerTest {
                         .content(objectMapper.writeValueAsString(movieDtos))
                         .with(user(testUserDataDto.getCognitoUserId()).roles("USER")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(testMovieDataDto.getId()))
-                .andDo(print());
+                .andExpect(jsonPath("$[0].id").value(testMovieDataDto.getId()));
 
         verify(movieService, times(1)).createMoviesBulk(anyList());
         verify(userSecurity, times(1)).isMovieOwnerForCreateBulk(anyList(), any(Authentication.class));
@@ -462,8 +449,7 @@ public class MovieControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(movieDtos))
                         .with(user(testUserDataDto.getCognitoUserId()).roles("USER")))
-                .andExpect(status().isForbidden())
-                .andDo(print());
+                .andExpect(status().isForbidden());
 
         verify(movieService, never()).createMoviesBulk(anyList());
         verify(userSecurity, times(1)).isMovieOwnerForCreateBulk(anyList(), any(Authentication.class));
@@ -477,8 +463,7 @@ public class MovieControllerTest {
                         .content(objectMapper.writeValueAsString(movieDtos))
                         .with(user("adminUser").roles("ADMIN")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(testMovieDataDto.getId()))
-                .andDo(print());
+                .andExpect(jsonPath("$[0].id").value(testMovieDataDto.getId()));
 
         verify(movieService, times(1)).createMoviesBulk(anyList());
         verify(userSecurity, never()).isMovieOwnerForCreateBulk(anyList(), any(Authentication.class));
@@ -493,8 +478,7 @@ public class MovieControllerTest {
                         .content(objectMapper.writeValueAsString(testUpdateMovieDto))
                         .with(user(testUserDataDto.getCognitoUserId()).roles("USER")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value(testUpdateMovieDto.getTitle()))
-                .andDo(print());
+                .andExpect(jsonPath("$.title").value(testUpdateMovieDto.getTitle()));
 
         verify(movieService, times(1)).updateMovie(any(UpdateMovieDto.class));
         verify(userSecurity, times(1)).isMovieOwnerForUpdate(any(UpdateMovieDto.class), any(Authentication.class));
@@ -524,8 +508,7 @@ public class MovieControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dtoForOtherUser))
                         .with(user(testUserDataDto.getCognitoUserId()).roles("USER")))
-                .andExpect(status().isForbidden())
-                .andDo(print());
+                .andExpect(status().isForbidden());
 
         verify(movieService, never()).updateMovie(any(UpdateMovieDto.class));
         verify(userSecurity, times(1)).isMovieOwnerForUpdate(any(UpdateMovieDto.class), any(Authentication.class));
@@ -578,8 +561,7 @@ public class MovieControllerTest {
                         .content(objectMapper.writeValueAsString(dtoToUpdateOtherUserMovie))
                         .with(user("adminUser").roles("ADMIN")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value(returnedMovieDataDto.getTitle()))
-                .andDo(print());
+                .andExpect(jsonPath("$.title").value(returnedMovieDataDto.getTitle()));
 
         verify(movieService, times(1)).updateMovie(any(UpdateMovieDto.class));
         verify(userSecurity, never()).isMovieOwnerForUpdate(any(UpdateMovieDto.class), any(Authentication.class));
@@ -591,8 +573,7 @@ public class MovieControllerTest {
     void deleteMovie_UserCanDeleteOwnMovie_Success() throws Exception {
         mockMvc.perform(delete("/api/v1/movies/{id}", testMovieDataDto.getId())
                         .with(user(testUserDataDto.getCognitoUserId()).roles("USER")))
-                .andExpect(status().isOk())
-                .andDo(print());
+                .andExpect(status().isOk());
 
         verify(movieService, times(1)).deleteMovie(testMovieDataDto.getId());
         verify(userSecurity, times(1)).isMovieOwnerById(eq(testMovieDataDto.getId()), any(Authentication.class));
@@ -602,8 +583,7 @@ public class MovieControllerTest {
     void deleteMovie_UserCannotDeleteOtherUsersMovie_AccessDenied() throws Exception {
         mockMvc.perform(delete("/api/v1/movies/{id}", testOtherMovieDataDto.getId())
                         .with(user(testUserDataDto.getCognitoUserId()).roles("USER")))
-                .andExpect(status().isForbidden())
-                .andDo(print());
+                .andExpect(status().isForbidden());
 
         verify(movieService, never()).deleteMovie(anyLong());
         verify(userSecurity, times(1)).isMovieOwnerById(eq(testOtherMovieDataDto.getId()), any(Authentication.class));
@@ -613,8 +593,7 @@ public class MovieControllerTest {
     void deleteMovie_AdminRole_Success() throws Exception {
         mockMvc.perform(delete("/api/v1/movies/{id}", testOtherMovieDataDto.getId())
                         .with(user("adminUser").roles("ADMIN")))
-                .andExpect(status().isOk())
-                .andDo(print());
+                .andExpect(status().isOk());
 
         verify(movieService, times(1)).deleteMovie(testOtherMovieDataDto.getId());
         verify(userSecurity, never()).isMovieOwnerById(anyLong(), any(Authentication.class));
@@ -629,8 +608,7 @@ public class MovieControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(movieIdsToDelete))
                         .with(user(testUserDataDto.getCognitoUserId()).roles("USER")))
-                .andExpect(status().isOk())
-                .andDo(print());
+                .andExpect(status().isOk());
 
         verify(movieService, times(1)).deleteMovies(movieIdsToDelete);
         verify(userSecurity, times(1)).areAllMoviesOwnedByAuthenticatedUser(eq(movieIdsToDelete), any(Authentication.class));
@@ -643,8 +621,7 @@ public class MovieControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(movieIdsToDelete))
                         .with(user(testUserDataDto.getCognitoUserId()).roles("USER")))
-                .andExpect(status().isForbidden())
-                .andDo(print());
+                .andExpect(status().isForbidden());
 
         verify(movieService, never()).deleteMovies(anyList());
         verify(userSecurity, times(1)).areAllMoviesOwnedByAuthenticatedUser(eq(movieIdsToDelete), any(Authentication.class));
@@ -657,8 +634,7 @@ public class MovieControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(movieIdsToDelete))
                         .with(user("adminUser").roles("ADMIN")))
-                .andExpect(status().isOk())
-                .andDo(print());
+                .andExpect(status().isOk());
 
         verify(movieService, times(1)).deleteMovies(movieIdsToDelete);
         verify(userSecurity, never()).areAllMoviesOwnedByAuthenticatedUser(anyList(), any(Authentication.class));

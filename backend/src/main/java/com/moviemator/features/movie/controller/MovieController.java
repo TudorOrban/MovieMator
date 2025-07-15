@@ -44,8 +44,8 @@ public class MovieController {
             @RequestParam(value = "releaseYearFrom", required = false) Integer releaseYearFrom,
             @RequestParam(value = "releaseYearTo", required = false) Integer releaseYearTo,
             @RequestParam(value = "director", required = false) String director,
-            @RequestParam(value = "userRatingFrom", required = false) Integer userRatingFrom,
-            @RequestParam(value = "userRatingTo", required = false) Integer userRatingTo,
+            @RequestParam(value = "userRatingFrom", required = false) Float userRatingFrom,
+            @RequestParam(value = "userRatingTo", required = false) Float userRatingTo,
             @RequestParam(value = "watchedDateFrom", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate watchedDateFrom,
             @RequestParam(value = "watchedDateTo", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate watchedDateTo,
             // New

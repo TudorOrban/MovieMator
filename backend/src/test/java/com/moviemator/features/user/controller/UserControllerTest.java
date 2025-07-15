@@ -25,7 +25,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -105,8 +104,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user("cognito-123").roles("USER")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testUserDataDto.getId()))
-                .andDo(print());
+                .andExpect(jsonPath("$.id").value(testUserDataDto.getId()));
 
         verify(userService, times(1)).getUserById(1L);
         verify(userService, times(1)).getUserByCognitoUserId("cognito-123");
@@ -117,8 +115,7 @@ public class UserControllerTest {
         mockMvc.perform(get("/api/v1/users/{id}", 2L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user("cognito-123").roles("USER")))
-                .andExpect(status().isForbidden())
-                .andDo(print());
+                .andExpect(status().isForbidden());
 
         verify(userService, times(1)).getUserByCognitoUserId("cognito-123");
         verify(userService, never()).getUserById(anyLong());
@@ -130,8 +127,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user("adminUser").roles("ADMIN")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testUserDataDto.getId()))
-                .andDo(print());
+                .andExpect(jsonPath("$.id").value(testUserDataDto.getId()));
 
         verify(userService, times(1)).getUserById(1L);
         verify(userService, never()).getUserByCognitoUserId(anyString());
@@ -145,8 +141,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user("cognito-123").roles("USER")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testUserDataDto.getId()))
-                .andDo(print());
+                .andExpect(jsonPath("$.id").value(testUserDataDto.getId()));
 
         verify(userService, times(1)).getUserByCognitoUserId("cognito-123");
     }
@@ -156,8 +151,7 @@ public class UserControllerTest {
         mockMvc.perform(get("/api/v1/users/cognito-id/{cognitoUserId}", "cognito-123")
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user("other-user-1").roles("USER")))
-                .andExpect(status().isForbidden())
-                .andDo(print());
+                .andExpect(status().isForbidden());
 
         verify(userService, never()).getUserByCognitoUserId(anyString());
     }
@@ -168,8 +162,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(user("adminUser").roles("ADMIN")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testUserDataDto.getId()))
-                .andDo(print());
+                .andExpect(jsonPath("$.id").value(testUserDataDto.getId()));
 
         verify(userService, times(1)).getUserByCognitoUserId("cognito-123");
     }
@@ -183,8 +176,7 @@ public class UserControllerTest {
                         .content(objectMapper.writeValueAsString(testCreateUserDto))
                         .with(user("new-cognito-id").roles("USER")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testUserDataDto.getId()))
-                .andDo(print());
+                .andExpect(jsonPath("$.id").value(testUserDataDto.getId()));
 
         verify(userService, times(1)).createUser(any(CreateUserDto.class));
     }
@@ -195,8 +187,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testCreateUserDto))
                         .with(user("other-user").roles("USER")))
-                .andExpect(status().isForbidden())
-                .andDo(print());
+                .andExpect(status().isForbidden());
 
         verify(userService, never()).createUser(any(CreateUserDto.class));
     }
@@ -208,8 +199,7 @@ public class UserControllerTest {
                         .content(objectMapper.writeValueAsString(testCreateUserDto))
                         .with(user("adminUser").roles("ADMIN")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testUserDataDto.getId()))
-                .andDo(print());
+                .andExpect(jsonPath("$.id").value(testUserDataDto.getId()));
 
         verify(userService, times(1)).createUser(any(CreateUserDto.class));
     }
@@ -223,8 +213,7 @@ public class UserControllerTest {
                         .content(objectMapper.writeValueAsString(testUpdateUserDto))
                         .with(user("cognito-123").roles("USER")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testUserDataDto.getId()))
-                .andDo(print());
+                .andExpect(jsonPath("$.id").value(testUserDataDto.getId()));
 
         verify(userService, times(1)).updateUser(any(UpdateUserDto.class));
         verify(userService, times(1)).getUserByCognitoUserId("cognito-123");
@@ -236,8 +225,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testUpdateUserDto))
                         .with(user("other-user").roles("USER")))
-                .andExpect(status().isForbidden())
-                .andDo(print());
+                .andExpect(status().isForbidden());
 
         verify(userService, times(1)).getUserByCognitoUserId("other-user");
         verify(userService, never()).updateUser(any(UpdateUserDto.class));
@@ -250,8 +238,7 @@ public class UserControllerTest {
                         .content(objectMapper.writeValueAsString(testUpdateUserDto))
                         .with(user("adminUser").roles("ADMIN")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testUserDataDto.getId()))
-                .andDo(print());
+                .andExpect(jsonPath("$.id").value(testUserDataDto.getId()));
 
         verify(userService, times(1)).updateUser(any(UpdateUserDto.class));
         verify(userService, never()).getUserByCognitoUserId(anyString());
@@ -265,8 +252,7 @@ public class UserControllerTest {
 
         mockMvc.perform(delete("/api/v1/users/{id}", 1L)
                         .with(user("adminUser").roles("ADMIN")))
-                .andExpect(status().isOk())
-                .andDo(print());
+                .andExpect(status().isOk());
 
         verify(userService, times(1)).deleteUser(1L);
     }
@@ -275,8 +261,7 @@ public class UserControllerTest {
     void deleteUser_UserRole_AccessDenied() throws Exception {
         mockMvc.perform(delete("/api/v1/users/{id}", 1L)
                         .with(user("user").roles("USER")))
-                .andExpect(status().isForbidden())
-                .andDo(print());
+                .andExpect(status().isForbidden());
 
         verify(userService, never()).deleteUser(anyLong());
     }

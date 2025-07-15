@@ -15,8 +15,8 @@ public class MovieFilters {
     private Integer releaseYearFrom;
     private Integer releaseYearTo;
     private String director;
-    private Integer userRatingFrom;
-    private Integer userRatingTo;
+    private Float userRatingFrom;
+    private Float userRatingTo;
     private LocalDate watchedDateFrom;
     private LocalDate watchedDateTo;
     private MovieStatus status;

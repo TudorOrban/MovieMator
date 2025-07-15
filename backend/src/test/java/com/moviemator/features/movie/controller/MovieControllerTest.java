@@ -652,7 +652,7 @@ public class MovieControllerTest {
 
     @Test
     void deleteMoviesBulk_AdminRole_Success() throws Exception {
-        List<Long> movieIdsToDelete = Arrays.asList(testMovieDataDto.getId(), testOtherMovieDataDto.getId()); 
+        List<Long> movieIdsToDelete = Arrays.asList(testMovieDataDto.getId(), testOtherMovieDataDto.getId());
         mockMvc.perform(delete("/api/v1/movies/bulk")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(movieIdsToDelete))

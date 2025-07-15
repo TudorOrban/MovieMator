@@ -37,8 +37,6 @@ public class UserServiceImplTest {
     @InjectMocks
     private UserServiceImpl userService;
 
-    private final UserDtoMapper userDtoMapper = UserDtoMapper.INSTANCE;
-
     private User testUser;
     private UserDataDto testUserDataDto;
     private CreateUserDto testCreateUserDto;

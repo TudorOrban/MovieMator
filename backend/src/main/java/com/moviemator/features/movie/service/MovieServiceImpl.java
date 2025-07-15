@@ -63,6 +63,7 @@ public class MovieServiceImpl implements MovieService {
         return !movieRepository.hasNonUniqueTitle(userId, title);
     }
 
+    @Transactional
     public MovieDataDto createMovie(CreateMovieDto movieDto) {
         CreateMovieDto sanitizedDto = sanitizerService.sanitizeCreateMovieDto(movieDto);
 
@@ -80,6 +81,7 @@ public class MovieServiceImpl implements MovieService {
         return MovieDtoMapper.INSTANCE.movieToMovieDataDto(savedMovie);
     }
 
+    @Transactional
     public List<MovieDataDto> createMoviesBulk(List<CreateMovieDto> movieDtos) {
         List<Movie> sanitizedMovies = new ArrayList<>();
 
@@ -102,15 +104,12 @@ public class MovieServiceImpl implements MovieService {
         return savedMovies.stream().map(MovieDtoMapper.INSTANCE::movieToMovieDataDto).toList();
     }
 
+    @Transactional
     public MovieDataDto updateMovie(UpdateMovieDto movieDto) {
         UpdateMovieDto sanitizedDto = sanitizerService.sanitizeUpdateMovieDto(movieDto);
 
         Movie existingMovie = movieRepository.findById(movieDto.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(movieDto.getId().toString(), ResourceType.MOVIE, ResourceIdentifierType.ID));
-
-//        if (movieRepository.hasNonUniqueTitle(sanitizedDto.getUserId(), sanitizedDto.getTitle())) {
-//            throw new ResourceAlreadyExistsException(sanitizedDto.getTitle(), ResourceType.MOVIE, ResourceIdentifierType.TITLE);
-//        }
 
         Movie movieToBeUpdated = this.setUpdateMovieDtoToMovie(existingMovie, sanitizedDto);
 

@@ -12,10 +12,12 @@ import { EnumSelectorComponent } from "../../../../shared/common/components/enum
 import { TagInputComponent } from "../../../../shared/common/components/tag-input/tag-input.component";
 import { TmdbMovieCredits, TmdbMovieDetails, TmdbMovieResult } from '../../models/Tmdb';
 import { TmdbService } from '../../services/tmdb.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-update-movie',
-    imports: [CommonModule, FormsModule, EnumSelectorComponent, TagInputComponent],
+    imports: [CommonModule, FormsModule, FontAwesomeModule, EnumSelectorComponent, TagInputComponent],
     templateUrl: './update-movie.component.html',
 })
 export class UpdateMovieComponent implements OnInit, OnDestroy {
@@ -140,6 +142,22 @@ export class UpdateMovieComponent implements OnInit, OnDestroy {
         this.movie.status = MovieStatus[value as keyof typeof MovieStatus];
     }
 
+    addWatchedDate(): void {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = (today.getMonth() + 1).toString().padStart(2, "0");
+        const day = today.getDate().toString().padStart(2, "0");
+        this.movie.watchedDates!.push(new Date(`${year}-${month}-${day}`));
+    }
+
+    removeWatchedDate(dateIndex: number): void {
+        this.movie.watchedDates!.splice(dateIndex, 1);
+    }
+
+    onWatchedDateChange(dateIndex: number, newValue: string): void {
+        this.movie.watchedDates![dateIndex] = new Date(newValue);
+    }
+
     handleGenresChange(genres: string[] | undefined): void {
         this.movie.genres = genres;
     }
@@ -180,7 +198,7 @@ export class UpdateMovieComponent implements OnInit, OnDestroy {
             next: (credits: TmdbMovieCredits) => {
                 const director = credits.crew.find(person => person.job === 'Director');
                 this.movie.director = director ? director.name : undefined;
-                this.movie.actors = credits.cast.slice(0, 5).map(actor => actor.name); // Get top 5 actors
+                this.movie.actors = credits.cast.slice(0, 5).map(actor => actor.name);
             },
             error: (error) => {
                 console.error("Error fetching movie credits:", error);
@@ -190,4 +208,6 @@ export class UpdateMovieComponent implements OnInit, OnDestroy {
     }
 
     MovieStatus = MovieStatus;
+    faTrash = faTrash;
+    faPlus = faPlus;
 }

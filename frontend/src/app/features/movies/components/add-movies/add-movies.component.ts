@@ -78,9 +78,17 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
             areDetailsExpanded: false,
             tmdbSearchResults: [],
             searchTerms: new Subject<string>(),
-            isTitleUnique: true
+            isTitleUnique: true,
+            watchedDates: [] 
         };
 
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = (today.getMonth() + 1).toString().padStart(2, "0");
+        const day = today.getDate().toString().padStart(2, "0");
+        newMovie.watchedDates!.push(new Date(`${year}-${month}-${day}`));
+
+        // Search movies on TMDB
         newMovie.searchSubscription = newMovie.searchTerms.pipe(
             debounceTime(300),
             distinctUntilChanged(),
@@ -160,6 +168,22 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
         this.movies[index].status = MovieStatus[value as keyof typeof MovieStatus];
     }
 
+    addWatchedDate(movieIndex: number): void {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = (today.getMonth() + 1).toString().padStart(2, "0");
+        const day = today.getDate().toString().padStart(2, "0");
+        this.movies[movieIndex].watchedDates!.push(new Date(`${year}-${month}-${day}`));
+    }
+
+    removeWatchedDate(movieIndex: number, dateIndex: number): void {
+        this.movies[movieIndex].watchedDates!.splice(dateIndex, 1);
+    }
+
+    onWatchedDateChange(movieIndex: number, dateIndex: number, newValue: string): void {
+        this.movies[movieIndex].watchedDates![dateIndex] = new Date(newValue);
+    }
+
     handleGenresChange(index: number, genres: string[] | undefined): void {
         this.movies[index].genres = genres;
     }
@@ -206,7 +230,7 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
         }));
         this.mainSubscription.add(this.tmdbService.getMovieCredits(selectedMovie.id).subscribe({
             next: (credits: TmdbMovieCredits) => {
-                const director = credits.crew.find(person => person.job === 'Director');
+                const director = credits.crew.find(person => person.job === "Director");
                 movie.director = director ? director.name : undefined;
                 movie.actors = credits.cast.slice(0, 5).map(actor => actor.name);
             },

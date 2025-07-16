@@ -6,21 +6,24 @@ export interface MovieSearchDto {
     userId: number;
     tmdbId: number;
     title: string;
-    releaseYear?: number;
-    posterUrl?: string;
-    director?: string;
-    plotSummary?: string;
+
+    status?: MovieStatus;
     userRating?: number;
     userReview?: string;
     watchedDate?: Date;
     createdAt: Date;
     updatedAt: Date;
 
-    // New
-    status?: MovieStatus;
+    releaseYear?: number;
+    posterUrl?: string;
+    director?: string;
+    plotSummary?: string;
     genres?: string[];
     runtimeMinutes?: number;
     actors?: string[];
+
+    // New
+    watchedDates?: Date[];
 }
 
 export enum MovieStatus {
@@ -33,38 +36,46 @@ export interface MovieDataDto {
     userId: number;
     tmdbId: number;
     title: string;
+
+    status?: MovieStatus;
+    watchedDate?: Date;
+    userRating?: number;
+    userReview?: string;
+    createdAt: Date;
+    updatedAt: Date;
+
     releaseYear?: number;
     posterUrl?: string;
     director?: string;
     plotSummary?: string;
-    userRating?: number;
-    userReview?: string;
-    watchedDate?: Date;
-    createdAt: Date;
-    updatedAt: Date;
-    // New
-    status?: MovieStatus;
     genres?: string[];
     runtimeMinutes?: number;
     actors?: string[];
+
+    // New
+    watchedDates?: Date[];
 }
 
 export interface CreateMovieDto {
     userId: number;
     tmdbId: number;
     title: string;
+
+    status?: MovieStatus;
+    watchedDate?: Date;
+    userRating?: number;
+    userReview?: string;
+
     releaseYear?: number;
     posterUrl?: string;
     director?: string;
     plotSummary?: string;
-    userRating?: number;
-    userReview?: string;
-    watchedDate?: Date;
-    // New
-    status?: MovieStatus;
     genres?: string[];
     runtimeMinutes?: number;
     actors?: string[];
+
+    // New
+    watchedDates?: Date[];
 }
 
 export interface UpdateMovieDto {
@@ -72,18 +83,22 @@ export interface UpdateMovieDto {
     userId: number;
     tmdbId: number;
     title: string;
+
+    status?: MovieStatus;
+    watchedDate?: Date;
+    userRating?: number;
+    userReview?: string;
+    
     releaseYear?: number;
     posterUrl?: string;
     director?: string;
     plotSummary?: string;
-    userRating?: number;
-    userReview?: string;
-    watchedDate?: Date;
-    // New
-    status?: MovieStatus;
     genres?: string[];
     runtimeMinutes?: number;
     actors?: string[];
+
+    // New
+    watchedDates?: Date[];
 }
 
 // UI

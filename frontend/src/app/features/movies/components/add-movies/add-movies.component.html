@@ -224,7 +224,7 @@
             </div>
 
             <!-- Watched Date -->
-            <div *ngIf="movie.status == MovieStatus.WATCHED" class="space-y-2 mt-4">
+            <!-- <div *ngIf="movie.status == MovieStatus.WATCHED" class="space-y-2 mt-4">
                 <label for="watchedDate-{{i}}" class="form-label">Watched Date</label>
                 <input 
                     type="date" 
@@ -240,6 +240,41 @@
                 >
                     <div *ngIf="watchedDateInput.errors?.['required']">Watched Date is required.</div>
                 </div>
+            </div> -->
+
+            <!-- Watched Dates -->
+            <div *ngIf="movie.status == MovieStatus.WATCHED" class="space-y-2 mt-4">
+                <label class="form-label">Watched Dates</label>
+                <div *ngIf="!movie.watchedDates || movie.watchedDates.length === 0" class="text-sm text-gray-500">
+                    No watched dates added yet. Click '+' to add one.
+                </div>
+
+                <div *ngFor="let date of movie.watchedDates; let j = index" class="flex items-center space-x-2 mb-2">
+                    <input
+                        type="date"
+                        id="watchedDate-{{i}}-{{j}}"
+                        name="watchedDate-{{i}}-{{j}}"
+                        [ngModel]="date | date:'yyyy-MM-dd'" (ngModelChange)="onWatchedDateChange(i, j, $event)"
+                        class="form-input flex-grow"
+                    >
+                    <button
+                        type="button"
+                        class="standard-action-button text-red-600 hover:text-red-700"
+                        (click)="removeWatchedDate(i, j)"
+                        aria-label="Remove watched date"
+                    >
+                        <fa-icon [icon]="faTrash" />
+                    </button>
+                </div>
+                <button
+                    type="button"
+                    class="standard-action-button bg-gray-50 space-x-2"
+                    (click)="addWatchedDate(i)"
+                    aria-label="Add new watched date"
+                >
+                    <fa-icon [icon]="faPlus" /> 
+                    <div>Add Watched Date</div>
+                </button>
             </div>
 
             <!-- User Rating -->

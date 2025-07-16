@@ -32,6 +32,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -122,19 +123,20 @@ public class MovieControllerIntegrationTest {
                 testUserDataDto.getId(), // Owned by testUserDataDto
                 12345L,
                 "Test Movie",
+                MovieStatus.WATCHED,
+                LocalDate.of(2023, 1, 15),
+                8.5f,
+                "Great movie!",
+                LocalDateTime.now(),
+                LocalDateTime.now(),
                 2020,
                 "poster1.jpg",
                 "Director A",
                 "Plot summary A",
-                8.5f,
-                "Great movie!",
-                LocalDate.of(2023, 1, 15),
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                MovieStatus.WATCHED,
                 120,
                 Arrays.asList("Action", "Sci-Fi"),
-                Arrays.asList("Actor X", "Actor Y")
+                Arrays.asList("Actor X", "Actor Y"),
+                null
         );
 
         testOtherMovieDataDto = new MovieDataDto(
@@ -142,36 +144,38 @@ public class MovieControllerIntegrationTest {
                 testOtherUserDataDto.getId(), // Owned by testOtherUserDataDto
                 54321L,
                 "Other User's Movie",
+                MovieStatus.WATCHLIST,
+                LocalDate.of(2024, 2, 20),
+                7.0f,
+                "Decent",
+                LocalDateTime.now(),
+                LocalDateTime.now(),
                 2021,
                 "poster2.jpg",
                 "Director B",
                 "Plot summary B",
-                7.0f,
-                "Decent",
-                LocalDate.of(2024, 2, 20),
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                MovieStatus.WATCHLIST,
                 90,
                 Collections.singletonList("Drama"),
-                Collections.singletonList("Actor Z")
+                Collections.singletonList("Actor Z"),
+                null
         );
 
         testCreateMovieDto = new CreateMovieDto(
                 testUserDataDto.getId(),
                 12346L,
                 "New Movie",
+                MovieStatus.WATCHED,
+                LocalDate.of(2024, 7, 1),
+                9.0f,
+                "Excellent!",
                 2023,
                 "new_poster.jpg",
                 "New Director",
                 "New plot",
-                9.0f,
-                "Excellent!",
-                LocalDate.of(2024, 7, 1),
-                MovieStatus.WATCHED,
                 100,
                 List.of("Comedy"),
-                List.of("New Actor")
+                List.of("New Actor"),
+                null
         );
 
         testUpdateMovieDto = new UpdateMovieDto(
@@ -179,17 +183,18 @@ public class MovieControllerIntegrationTest {
                 testMovieDataDto.getUserId(),
                 testMovieDataDto.getTmdbId(),
                 "Updated Movie Title",
+                testMovieDataDto.getStatus(),
+                testMovieDataDto.getWatchedDate(),
+                9.0f,
+                "Still great!",
                 testMovieDataDto.getReleaseYear(),
                 testMovieDataDto.getPosterUrl(),
                 testMovieDataDto.getDirector(),
                 testMovieDataDto.getPlotSummary(),
-                9.0f,
-                "Still great!",
-                testMovieDataDto.getWatchedDate(),
-                testMovieDataDto.getStatus(),
                 testMovieDataDto.getRuntimeMinutes(),
                 testMovieDataDto.getGenres(),
-                testMovieDataDto.getActors()
+                testMovieDataDto.getActors(),
+                null
         );
 
         MovieSearchDto movieSearchDto = new MovieSearchDto(
@@ -197,19 +202,20 @@ public class MovieControllerIntegrationTest {
                 testMovieDataDto.getUserId(),
                 testMovieDataDto.getTmdbId(),
                 testMovieDataDto.getTitle(),
+                testMovieDataDto.getStatus(),
+                testMovieDataDto.getWatchedDate(),
+                testMovieDataDto.getUserRating(),
+                testMovieDataDto.getUserReview(),
+                testMovieDataDto.getCreatedAt(),
+                testMovieDataDto.getUpdatedAt(),
                 testMovieDataDto.getReleaseYear(),
                 testMovieDataDto.getPosterUrl(),
                 testMovieDataDto.getDirector(),
                 testMovieDataDto.getPlotSummary(),
-                testMovieDataDto.getUserRating(),
-                testMovieDataDto.getUserReview(),
-                testMovieDataDto.getWatchedDate(),
-                testMovieDataDto.getCreatedAt(),
-                testMovieDataDto.getUpdatedAt(),
-                testMovieDataDto.getStatus(),
                 testMovieDataDto.getRuntimeMinutes(),
                 testMovieDataDto.getGenres(),
-                testMovieDataDto.getActors()
+                testMovieDataDto.getActors(),
+                null
         );
         testPaginatedResults = new PaginatedResults<>(Collections.singletonList(movieSearchDto), 1L);
 
@@ -218,19 +224,20 @@ public class MovieControllerIntegrationTest {
                 testUpdateMovieDto.getUserId(),
                 testUpdateMovieDto.getTmdbId(),
                 testUpdateMovieDto.getTitle(),
+                testUpdateMovieDto.getStatus(),
+                testUpdateMovieDto.getWatchedDate(),
+                testUpdateMovieDto.getUserRating(),
+                testUpdateMovieDto.getUserReview(),
+                LocalDateTime.now(),
+                LocalDateTime.now(),
                 testUpdateMovieDto.getReleaseYear(),
                 testUpdateMovieDto.getPosterUrl(),
                 testUpdateMovieDto.getDirector(),
                 testUpdateMovieDto.getPlotSummary(),
-                testUpdateMovieDto.getUserRating(),
-                testUpdateMovieDto.getUserReview(),
-                testUpdateMovieDto.getWatchedDate(),
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                testUpdateMovieDto.getStatus(),
                 testUpdateMovieDto.getRuntimeMinutes(),
                 testUpdateMovieDto.getGenres(),
-                testUpdateMovieDto.getActors()
+                testUpdateMovieDto.getActors(),
+                null
         );
 
         reset(movieService, userService, userSecurity);
@@ -413,17 +420,18 @@ public class MovieControllerIntegrationTest {
                 testOtherUserDataDto.getId(),
                 testCreateMovieDto.getTmdbId(),
                 testCreateMovieDto.getTitle(),
+                testCreateMovieDto.getStatus(),
+                testCreateMovieDto.getWatchedDate(),
+                testCreateMovieDto.getUserRating(),
+                testCreateMovieDto.getUserReview(),
                 testCreateMovieDto.getReleaseYear(),
                 testCreateMovieDto.getPosterUrl(),
                 testCreateMovieDto.getDirector(),
                 testCreateMovieDto.getPlotSummary(),
-                testCreateMovieDto.getUserRating(),
-                testCreateMovieDto.getUserReview(),
-                testCreateMovieDto.getWatchedDate(),
-                testCreateMovieDto.getStatus(),
                 testCreateMovieDto.getRuntimeMinutes(),
                 testCreateMovieDto.getGenres(),
-                testCreateMovieDto.getActors()
+                testCreateMovieDto.getActors(),
+                null
         );
 
         mockMvc.perform(post("/api/v1/movies")
@@ -467,7 +475,7 @@ public class MovieControllerIntegrationTest {
 
     @Test
     void createMoviesBulk_UserCannotCreateForOtherUserBulk_AccessDenied() throws Exception {
-        CreateMovieDto dtoForOtherUser = new CreateMovieDto(testOtherUserDataDto.getId(), 123L, "Other User's Movie", 2020, null, null, null, null, null, null, MovieStatus.WATCHED, 0, null, null);
+        CreateMovieDto dtoForOtherUser = new CreateMovieDto(testOtherUserDataDto.getId(), 123L, "Other User's Movie", MovieStatus.WATCHED, null, null, null, 2020, null, null, null, 0, null, null, null);
         List<CreateMovieDto> movieDtos = Arrays.asList(testCreateMovieDto, dtoForOtherUser);
 
         mockMvc.perform(post("/api/v1/movies/bulk")
@@ -516,17 +524,18 @@ public class MovieControllerIntegrationTest {
                 testOtherUserDataDto.getId(),
                 testOtherMovieDataDto.getTmdbId(),
                 "Malicious Update",
+                testOtherMovieDataDto.getStatus(),
+                testOtherMovieDataDto.getWatchedDate(),
+                testOtherMovieDataDto.getUserRating(),
+                testOtherMovieDataDto.getUserReview(),
                 testOtherMovieDataDto.getReleaseYear(),
                 testOtherMovieDataDto.getPosterUrl(),
                 testOtherMovieDataDto.getDirector(),
                 testOtherMovieDataDto.getPlotSummary(),
-                testOtherMovieDataDto.getUserRating(),
-                testOtherMovieDataDto.getUserReview(),
-                testOtherMovieDataDto.getWatchedDate(),
-                testOtherMovieDataDto.getStatus(),
                 testOtherMovieDataDto.getRuntimeMinutes(),
                 testOtherMovieDataDto.getGenres(),
-                testOtherMovieDataDto.getActors()
+                testOtherMovieDataDto.getActors(),
+                null
         );
 
         mockMvc.perform(put("/api/v1/movies")
@@ -546,17 +555,18 @@ public class MovieControllerIntegrationTest {
                 testOtherUserDataDto.getId(),
                 testOtherMovieDataDto.getTmdbId(),
                 "Admin Updated Title",
+                testOtherMovieDataDto.getStatus(),
+                testOtherMovieDataDto.getWatchedDate(),
+                testOtherMovieDataDto.getUserRating(),
+                testOtherMovieDataDto.getUserReview(),
                 testOtherMovieDataDto.getReleaseYear(),
                 testOtherMovieDataDto.getPosterUrl(),
                 testOtherMovieDataDto.getDirector(),
                 testOtherMovieDataDto.getPlotSummary(),
-                testOtherMovieDataDto.getUserRating(),
-                testOtherMovieDataDto.getUserReview(),
-                testOtherMovieDataDto.getWatchedDate(),
-                testOtherMovieDataDto.getStatus(),
                 testOtherMovieDataDto.getRuntimeMinutes(),
                 testOtherMovieDataDto.getGenres(),
-                testOtherMovieDataDto.getActors()
+                testOtherMovieDataDto.getActors(),
+                null
         );
 
         MovieDataDto returnedMovieDataDto = new MovieDataDto(
@@ -564,19 +574,20 @@ public class MovieControllerIntegrationTest {
                 dtoToUpdateOtherUserMovie.getUserId(),
                 dtoToUpdateOtherUserMovie.getTmdbId(),
                 dtoToUpdateOtherUserMovie.getTitle(),
+                dtoToUpdateOtherUserMovie.getStatus(),
+                dtoToUpdateOtherUserMovie.getWatchedDate(),
+                dtoToUpdateOtherUserMovie.getUserRating(),
+                dtoToUpdateOtherUserMovie.getUserReview(),
+                LocalDateTime.now(),
+                LocalDateTime.now(),
                 dtoToUpdateOtherUserMovie.getReleaseYear(),
                 dtoToUpdateOtherUserMovie.getPosterUrl(),
                 dtoToUpdateOtherUserMovie.getDirector(),
                 dtoToUpdateOtherUserMovie.getPlotSummary(),
-                dtoToUpdateOtherUserMovie.getUserRating(),
-                dtoToUpdateOtherUserMovie.getUserReview(),
-                dtoToUpdateOtherUserMovie.getWatchedDate(),
-                LocalDateTime.now(),
-                LocalDateTime.now(),
-                dtoToUpdateOtherUserMovie.getStatus(),
                 dtoToUpdateOtherUserMovie.getRuntimeMinutes(),
                 dtoToUpdateOtherUserMovie.getGenres(),
-                dtoToUpdateOtherUserMovie.getActors()
+                dtoToUpdateOtherUserMovie.getActors(),
+                null
         );
 
         when(movieService.updateMovie(any(UpdateMovieDto.class))).thenReturn(returnedMovieDataDto);

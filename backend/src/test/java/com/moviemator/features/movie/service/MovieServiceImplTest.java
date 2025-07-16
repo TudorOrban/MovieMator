@@ -122,17 +122,18 @@ public class MovieServiceImplTest {
                 testUser.getId(),
                 98765L,
                 "New Movie Title",
+                MovieStatus.WATCHED,
+                LocalDate.of(2024, 7, 1),
+                9.0f,
+                "Excellent!",
                 2023,
                 "new_poster.jpg",
                 "New Director",
                 "New plot",
-                9.0f,
-                "Excellent!",
-                LocalDate.of(2024, 7, 1),
-                MovieStatus.WATCHED,
                 100,
                 List.of("Comedy"),
-                List.of("New Actor")
+                List.of("New Actor"),
+                null
         );
 
         testUpdateMovieDto = new UpdateMovieDto(
@@ -140,17 +141,18 @@ public class MovieServiceImplTest {
                 testMovie.getUserId(),
                 testMovie.getTmdbId(),
                 "Updated Movie Title",
+                MovieStatus.WATCHED,
+                LocalDate.of(2023, 2, 1),
+                9.5f,
+                "Updated review.",
                 testMovie.getReleaseYear(),
                 testMovie.getPosterUrl(),
                 testMovie.getDirector(),
                 testMovie.getPlotSummary(),
-                9.5f,
-                "Updated review.",
-                LocalDate.of(2023, 2, 1),
-                MovieStatus.WATCHED,
                 125,
                 Arrays.asList("Action", "Thriller"),
-                Arrays.asList("Actor X", "Actor Z")
+                Arrays.asList("Actor X", "Actor Z"),
+                null
         );
     }
 
@@ -342,8 +344,8 @@ public class MovieServiceImplTest {
         // Arrange
         CreateMovieDto bulkCreateMovieDto1 = testCreateMovieDto;
         CreateMovieDto bulkCreateMovieDto2 = new CreateMovieDto(
-                testUser.getId(), 98766L, "Another New Movie", 2024, "poster.jpg", "Dir C", "Plot C",
-                8.0f, "Good", LocalDate.of(2024, 8, 1), MovieStatus.WATCHED, 110, Collections.singletonList("Fantasy"), Collections.singletonList("Actor A")
+                testUser.getId(), 98766L, "Another New Movie", MovieStatus.WATCHED, LocalDate.of(2024, 8, 1), 8.0f, "Good", 2024, "poster.jpg", "Dir C", "Plot C",
+                110, Collections.singletonList("Fantasy"), Collections.singletonList("Actor A"), null
         );
         List<CreateMovieDto> movieDtos = Arrays.asList(bulkCreateMovieDto1, bulkCreateMovieDto2);
 
@@ -389,8 +391,8 @@ public class MovieServiceImplTest {
         // Arrange
         CreateMovieDto bulkCreateMovieDto1 = testCreateMovieDto;
         CreateMovieDto bulkCreateMovieDtoOtherUser = new CreateMovieDto(
-                otherUser.getId(), 98767L, "Movie For Other User", 2025, "poster.jpg", "Dir D", "Plot D",
-                7.5f, "OK", LocalDate.of(2025, 1, 1), MovieStatus.WATCHED, 105, Collections.singletonList("Action"), Collections.singletonList("Actor B")
+                otherUser.getId(), 98767L, "Movie For Other User", MovieStatus.WATCHED, LocalDate.of(2025, 1, 1), 7.5f, "OK", 2025, "poster.jpg", "Dir D", "Plot D",
+                105, Collections.singletonList("Action"), Collections.singletonList("Actor B"), null
         );
         List<CreateMovieDto> movieDtos = Arrays.asList(bulkCreateMovieDto1, bulkCreateMovieDtoOtherUser);
 
@@ -423,22 +425,23 @@ public class MovieServiceImplTest {
                 testUser.getId(),
                 98765L,
                 "Unique First Movie Title",
+                MovieStatus.WATCHED,
+                LocalDate.of(2024, 7, 1),
+                9.0f,
+                "Excellent!",
                 2023,
                 "new_poster.jpg",
                 "New Director",
                 "New plot",
-                9.0f,
-                "Excellent!",
-                LocalDate.of(2024, 7, 1),
-                MovieStatus.WATCHED,
                 100,
                 List.of("Comedy"),
-                List.of("New Actor")
+                List.of("New Actor"),
+                null
         );
 
         CreateMovieDto bulkCreateMovieDtoDuplicateTitle = new CreateMovieDto(
-                testUser.getId(), 98768L, "Duplicated Movie Title", 2026, "poster.jpg", "Dir E", "Plot E",
-                6.0f, "Bad", LocalDate.of(2026, 1, 1), MovieStatus.WATCHED, 95, Collections.singletonList("Horror"), Collections.singletonList("Actor C")
+                testUser.getId(), 98768L, "Duplicated Movie Title", MovieStatus.WATCHED, LocalDate.of(2026, 1, 1), 6.0f, "Bad", 2026, "poster.jpg", "Dir E", "Plot E",
+                95, Collections.singletonList("Horror"), Collections.singletonList("Actor C"), null
         );
         List<CreateMovieDto> movieDtos = Arrays.asList(bulkCreateMovieDto1, bulkCreateMovieDtoDuplicateTitle);
 

@@ -16,6 +16,7 @@ public class UserStatistics {
     private LocalDate endDate;
 
     private Long totalWatchedMovies;
+    private Long totalUniqueMovies;
     private Long totalWatchTimeMinutes;
     private Double averageUserRating;
 

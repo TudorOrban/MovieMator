@@ -2,6 +2,7 @@ export interface UserStatistics {
     startDate: Date;
     endDate: Date;
     totalWatchedMovies: number;
+    totalUniqueMovies: number;
     totalWatchTimeMinutes: number;
     averageUserRating: number;
     movieCountByDirector: Record<string, number>;

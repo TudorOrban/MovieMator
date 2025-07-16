@@ -14,6 +14,21 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList; // Used for temporary list of all watched dates
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserStatisticsServiceImpl implements UserStatisticsService {
@@ -30,7 +45,8 @@ public class UserStatisticsServiceImpl implements UserStatisticsService {
     public UserStatistics getUserStatistics(Long userId, LocalDate startDate, LocalDate endDate) {
         UserStatistics statistics = new UserStatistics(startDate, endDate);
 
-        List<Movie> movies = movieRepository.findByUserIdAndTimePeriod(userId, startDate, endDate);
+        List<Movie> movies = movieRepository.findByUserIdAndAnyWatchedDateInPeriod(userId, startDate, endDate);
+
         if (movies.isEmpty()) {
             return statistics;
         }
@@ -38,19 +54,14 @@ public class UserStatisticsServiceImpl implements UserStatisticsService {
         double sumUserRatings = 0.0;
         long ratedMoviesCount = 0;
 
-        Set<LocalDate> uniqueWatchedDates = new HashSet<>();
+        Set<LocalDate> uniqueWatchedDaysOverall = new HashSet<>();
+        List<LocalDate> allWatchedEvents = new ArrayList<>();
 
         for (Movie movie : movies) {
-            statistics.setTotalWatchTimeMinutes(
-                    statistics.getTotalWatchTimeMinutes() + (movie.getRuntimeMinutes() != null ? movie.getRuntimeMinutes() : 0L)
-            );
-
             if (movie.getUserRating() != null) {
                 sumUserRatings += movie.getUserRating();
                 ratedMoviesCount++;
-
                 String granularRatingKey = this.getGranularRatingKey(movie);
-
                 statistics.getUserRatingDistribution().put(granularRatingKey, statistics.getUserRatingDistribution().getOrDefault(granularRatingKey, 0L) + 1);
             }
             if (movie.getDirector() != null && !movie.getDirector().trim().isEmpty()) {
@@ -78,16 +89,30 @@ public class UserStatisticsServiceImpl implements UserStatisticsService {
                 statistics.getMovieCountByReleaseYear().put(releaseYear, statistics.getMovieCountByReleaseYear().getOrDefault(releaseYear, 0L) + 1);
             }
 
-            uniqueWatchedDates.add(movie.getWatchedDate());
-            String monthYear = movie.getWatchedDate().format(MONTH_YEAR_FORMATTER);
-            statistics.getMovieCountByWatchedMonthAndYear().put(monthYear, statistics.getMovieCountByWatchedMonthAndYear().getOrDefault(monthYear, 0L) + 1);
+            if (movie.getWatchedDates() != null && !movie.getWatchedDates().isEmpty()) {
+                for (LocalDate watchedDate : movie.getWatchedDates()) {
+                    if (watchedDate != null && !watchedDate.isBefore(startDate) && !watchedDate.isAfter(endDate)) {
+                        statistics.setTotalWatchTimeMinutes(
+                                statistics.getTotalWatchTimeMinutes() + (movie.getRuntimeMinutes() != null ? movie.getRuntimeMinutes() : 0L)
+                        );
+
+                        uniqueWatchedDaysOverall.add(watchedDate);
+
+                        String monthYear = watchedDate.format(MONTH_YEAR_FORMATTER);
+                        statistics.getMovieCountByWatchedMonthAndYear().put(monthYear, statistics.getMovieCountByWatchedMonthAndYear().getOrDefault(monthYear, 0L) + 1);
+
+                        allWatchedEvents.add(watchedDate);
+                    }
+                }
+            }
         }
 
-        statistics.setTotalWatchedMovies((long) movies.size());
+        statistics.setTotalWatchedMovies((long) allWatchedEvents.size());
+        statistics.setTotalUniqueMovies((long) movies.size());
 
         statistics.setAverageUserRating(ratedMoviesCount > 0 ? sumUserRatings / ratedMoviesCount : 0.0);
 
-        statistics.setTotalUniqueWatchedDays((long) uniqueWatchedDates.size());
+        statistics.setTotalUniqueWatchedDays((long) uniqueWatchedDaysOverall.size());
 
         long daysInPeriod = ChronoUnit.DAYS.between(startDate, endDate) + 1;
         double weeksInPeriod = daysInPeriod / 7.0;
@@ -101,7 +126,6 @@ public class UserStatisticsServiceImpl implements UserStatisticsService {
 
     private String getGranularRatingKey(Movie movie) {
         BigDecimal userRatingBd = new BigDecimal(String.valueOf(movie.getUserRating()));
-
         BigDecimal granularRatingBd = userRatingBd.setScale(1, RoundingMode.FLOOR);
 
         BigDecimal minAllowed = BigDecimal.ZERO;

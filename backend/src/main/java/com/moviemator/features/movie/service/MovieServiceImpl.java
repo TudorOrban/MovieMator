@@ -56,7 +56,11 @@ public class MovieServiceImpl implements MovieService {
     }
 
     public List<LocalDate> getWatchedMovieDatesForUser(Long userId) {
-        return movieRepository.findWatchedDatesByUserId(userId);
+        List<java.sql.Date> sqlDates = movieRepository.findAllWatchedDatesByUserId(userId);
+
+        return sqlDates.stream()
+                .map(java.sql.Date::toLocalDate)
+                .toList();
     }
 
     public boolean isMovieTitleUnique(Long userId, String title) {

@@ -20,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -89,6 +90,7 @@ public class MovieServiceImplTest {
         testMovie.setUserRating(8.5f);
         testMovie.setUserReview("Great movie!");
         testMovie.setWatchedDate(LocalDate.of(2023, 1, 15));
+        testMovie.setWatchedDates(Arrays.asList(LocalDate.of(2023, 1, 15), LocalDate.of(2024, 5, 20)));
         testMovie.setCreatedAt(LocalDateTime.now());
         testMovie.setUpdatedAt(LocalDateTime.now());
         testMovie.setStatus(MovieStatus.WATCHED);
@@ -108,6 +110,7 @@ public class MovieServiceImplTest {
         otherUserMovie.setUserRating(7.0f);
         otherUserMovie.setUserReview("Decent");
         otherUserMovie.setWatchedDate(LocalDate.of(2024, 2, 20));
+        otherUserMovie.setWatchedDates(Collections.singletonList(LocalDate.of(2024, 2, 20)));
         otherUserMovie.setCreatedAt(LocalDateTime.now());
         otherUserMovie.setUpdatedAt(LocalDateTime.now());
         otherUserMovie.setStatus(MovieStatus.WATCHLIST);
@@ -133,7 +136,7 @@ public class MovieServiceImplTest {
                 100,
                 List.of("Comedy"),
                 List.of("New Actor"),
-                null
+                Arrays.asList(LocalDate.of(2024, 7, 1), LocalDate.of(2025, 1, 10))
         );
 
         testUpdateMovieDto = new UpdateMovieDto(
@@ -152,7 +155,7 @@ public class MovieServiceImplTest {
                 125,
                 Arrays.asList("Action", "Thriller"),
                 Arrays.asList("Actor X", "Actor Z"),
-                null
+                Arrays.asList(LocalDate.of(2023, 2, 1), LocalDate.of(2024, 6, 15))
         );
     }
 
@@ -216,8 +219,17 @@ public class MovieServiceImplTest {
     @Test
     void getWatchedMovieDatesForUser_ReturnsListOfDates() {
         // Arrange
-        List<LocalDate> expectedDates = Arrays.asList(LocalDate.of(2023, 1, 1), LocalDate.of(2023, 1, 15));
-        when(movieRepository.findWatchedDatesByUserId(testUser.getId())).thenReturn(expectedDates);
+        List<LocalDate> expectedServiceDates = Arrays.asList(
+                LocalDate.of(2023, 1, 1),
+                LocalDate.of(2023, 1, 15),
+                LocalDate.of(2023, 3, 10),
+                LocalDate.of(2024, 5, 20)
+        );
+        List<Date> mockRepoReturnDates = expectedServiceDates.stream()
+                .map(Date::valueOf)
+                .collect(java.util.stream.Collectors.toList());
+
+        when(movieRepository.findAllWatchedDatesByUserId(testUser.getId())).thenReturn(mockRepoReturnDates);
 
         // Act
         List<LocalDate> result = movieService.getWatchedMovieDatesForUser(testUser.getId());
@@ -225,16 +237,17 @@ public class MovieServiceImplTest {
         // Assert
         assertNotNull(result);
         assertFalse(result.isEmpty());
-        assertEquals(expectedDates.size(), result.size());
-        assertEquals(expectedDates.getFirst(), result.getFirst());
+        assertEquals(expectedServiceDates.size(), result.size());
+        assertTrue(result.containsAll(expectedServiceDates));
+        assertEquals(expectedServiceDates.size(), result.size());
 
-        verify(movieRepository, times(1)).findWatchedDatesByUserId(testUser.getId());
+        verify(movieRepository, times(1)).findAllWatchedDatesByUserId(testUser.getId());
     }
 
     @Test
     void getWatchedMovieDatesForUser_NoDatesFound() {
         // Arrange
-        when(movieRepository.findWatchedDatesByUserId(testUser.getId())).thenReturn(Collections.emptyList());
+        when(movieRepository.findAllWatchedDatesByUserId(testUser.getId())).thenReturn(Collections.emptyList());
 
         // Act
         List<LocalDate> result = movieService.getWatchedMovieDatesForUser(testUser.getId());
@@ -243,7 +256,7 @@ public class MovieServiceImplTest {
         assertNotNull(result);
         assertTrue(result.isEmpty());
 
-        verify(movieRepository, times(1)).findWatchedDatesByUserId(testUser.getId());
+        verify(movieRepository, times(1)).findAllWatchedDatesByUserId(testUser.getId());
     }
 
     // --- isMovieTitleUnique ---

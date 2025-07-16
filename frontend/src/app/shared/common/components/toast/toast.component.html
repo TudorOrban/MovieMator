@@ -1,19 +1,19 @@
-<div class="flex justify-between w-80 px-4 py-3 bg-white border border-gray-300 rounded-md shadow-sm z-40">
+<div class="flex justify-between w-80 px-4 py-3 std-element rounded-md shadow-sm z-40">
     <div class="flex items-center space-x-5">
-        <div class="flex items-center justify-center w-6 h-6 flex-shrink-0 text-white text-sm rounded-full" [ngClass]="getColorByToastType()"> 
+        <div class="flex items-center justify-center w-6 h-6 flex-shrink-0 text-sm rounded-full" [ngClass]="getColorByToastType()"> 
             <fa-icon [icon]="getIconByToastType()"></fa-icon>
         </div>
         <div class="space-y-0.5">
             <div class="font-semibold" style="font-size: 17px;">
                 {{ item.title }}
             </div>
-            <div class="text-gray-800 text-sm">
+            <div class="std-shaded-text text-sm">
                 {{ item.details }}
             </div>
         </div>
     </div>
 
-    <button (click)="onClose()" class="text-gray-700 hover:text-red-700 cursor-pointer">
+    <button (click)="onClose()" class="hover:text-red-700 cursor-pointer">
         <fa-icon [icon]="faXmark"></fa-icon>
     </button>
 </div>

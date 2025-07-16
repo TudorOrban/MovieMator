@@ -85,3 +85,17 @@
     color: var(--tertiary-color-hover);
 }
 
+.dark-theme-button {
+    background-color: var(--background-color);
+    color: var(--shaded-text-color);
+    border: 1px solid var(--border-color);
+    height: 2.5rem;
+}
+
+.dark-theme-button.active {
+    background-color: var(--secondary-color);
+}
+
+.dark-theme-button:hover {
+    background-color: var(--secondary-color); 
+}

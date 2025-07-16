@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faMoon, faUser } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../../auth/service/auth.service';
 import { UserDataDto } from '../../../auth/models/User';
 import { Subscription } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
+import { ThemeService } from '../../../../shared/common/services/theme.service';
 
 @Component({
     selector: 'app-userbar',
@@ -20,6 +21,7 @@ export class UserbarComponent implements OnInit, OnDestroy {
     
     constructor(
         readonly authService: AuthService,
+        readonly themeService: ThemeService,
         private readonly router: Router
     ) {}
 
@@ -42,6 +44,10 @@ export class UserbarComponent implements OnInit, OnDestroy {
         this.isExpanded = !this.isExpanded;
     }
 
+    toggleTheme(): void {
+        this.themeService.toggleTheme();
+    }
+
     navigateTo(path: string): void {
         this.isExpanded = false;
         this.router.navigate([path]);
@@ -52,4 +58,5 @@ export class UserbarComponent implements OnInit, OnDestroy {
     }
 
     faUser = faUser;
+    faMoon = faMoon;
 }

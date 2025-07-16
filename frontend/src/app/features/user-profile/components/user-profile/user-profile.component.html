@@ -1,5 +1,5 @@
-<div class="page-std-padding-x page-std-padding-y space-y-8 bg-gray-50 min-h-screen">
-    <h1 class="text-3xl font-bold text-gray-900 mb-6 text-center">User Profile</h1>
+<div class="page-std-padding-x page-std-padding-y space-y-8 std-shaded-bg min-h-screen">
+    <h1 class="text-3xl font-bold movie-title mb-6 text-center">User Profile</h1>
 
     <div class="flex flex-col items-center mb-8">
         <div class="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center text-blue-800 text-5xl font-bold border-2 border-blue-400">
@@ -12,43 +12,43 @@
                 </svg>
             </ng-template>
         </div>
-        <h2 class="mt-4 text-2xl font-semibold text-gray-900">
+        <h2 class="mt-4 text-2xl font-semibold">
             {{ currentUser?.displayName ?? 'New User' }}
         </h2>
         <p class="text-sm text-gray-500">
             {{ currentUser?.email }} </p>
     </div>
 
-    <div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md space-y-4">
-        <h3 class="text-xl font-semibold text-gray-800 border-b pb-3 mb-4">Personal Information</h3>
+    <div class="max-w-xl mx-auto std-bg p-6 rounded-lg shadow-md space-y-4">
+        <h3 class="text-xl font-semibold border-b pb-3 mb-4">Personal Information</h3>
 
         <div class="flex items-center space-x-2 text-lg">
-            <div class="font-semibold w-36 flex-shrink-0 text-gray-700">
+            <div class="font-semibold w-36 flex-shrink-0">
                 Display Name:
             </div>
-            <div class="text-gray-800 flex-grow">
+            <div class="flex-grow">
                 {{ currentUser?.displayName ?? '-' }}
             </div>
         </div>
 
         <div class="flex items-center space-x-2 text-lg">
-            <div class="font-semibold w-36 flex-shrink-0 text-gray-700">
+            <div class="font-semibold w-36 flex-shrink-0">
                 Email:
             </div>
-            <div class="text-gray-800 flex-grow">
+            <div class="flex-grow">
                 {{ currentUser?.email ?? '-' }}
             </div>
         </div>
     </div>
 
-    <div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md space-y-4 mt-6">
-        <h3 class="text-xl font-semibold text-gray-800 border-b pb-3 mb-4">Account Activity</h3>
+    <div class="max-w-xl mx-auto std-bg p-6 rounded-lg shadow-md space-y-4 mt-6">
+        <h3 class="text-xl font-semibold std-shaded-text border-b pb-3 mb-4">Account Activity</h3>
 
         <div class="flex items-center space-x-2 text-lg">
-            <div class="font-semibold w-36 flex-shrink-0 text-gray-700">
+            <div class="font-semibold w-36 flex-shrink-0">
                 Joined At:
             </div>
-            <div class="text-gray-800 flex-grow">
+            <div class="flex-grow">
                 <ng-container *ngIf="currentUser?.createdAt; else noCreatedAt">
                     {{ currentUser?.createdAt | date:'medium' }}
                 </ng-container>
@@ -57,10 +57,10 @@
         </div>
 
         <div class="flex items-center space-x-2 text-lg">
-            <div class="font-semibold w-36 flex-shrink-0 text-gray-700">
+            <div class="font-semibold w-36 flex-shrink-0">
                 Last updated:
             </div>
-            <div class="text-gray-800 flex-grow">
+            <div class="flex-grow">
                 <ng-container *ngIf="currentUser?.updatedAt; else noUpdatedAt">
                     {{ currentUser?.updatedAt | date:'medium' }}
                 </ng-container>
@@ -69,11 +69,11 @@
         </div>
     </div>
 
-    <div class="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md mt-6">
-        <h3 class="text-xl font-semibold text-gray-800 border-b pb-3 mb-4">Watching Activity</h3>
+    <div class="max-w-6xl mx-auto std-bg p-6 rounded-lg shadow-md mt-6">
+        <h3 class="text-xl font-semibold std-shaded-text std-border-b pb-3 mb-4">Watching Activity</h3>
         <div class="flex flex-col xl:flex-row justify-start items-start">
-            <div class="heatmap-main-content flex p-2 border border-gray-200 rounded-md overflow-x-auto flex-grow min-w-0 w-full">
-                <div class="flex flex-col justify-start mr-2 text-xs text-gray-500 pt-5 flex-shrink-0">
+            <div class="heatmap-main-content flex p-2 std-border rounded-md overflow-x-auto flex-grow min-w-0 w-full">
+                <div class="flex flex-col justify-start mr-2 text-xs std-shaded-text pt-5 flex-shrink-0">
                     <div class="h-[13px] leading-none"></div> 
                     <div class="h-[13px] leading-none mb-1">Mon</div>
                     <div class="h-[13px] leading-none"></div>
@@ -87,7 +87,7 @@
                 <div class="flex flex-col">
                     <div class="flex mb-2 flex-nowrap space-x-9">
                         <ng-container *ngFor="let month of months; let i = index">
-                            <div class="text-xs text-gray-500 text-left" [style.min-width.px]="i === months.length - 1 ? 0 : 40">{{ month }}</div>
+                            <div class="text-xs std-shaded-text text-left" [style.min-width.px]="i === months.length - 1 ? 0 : 40">{{ month }}</div>
                         </ng-container>
                     </div>
 

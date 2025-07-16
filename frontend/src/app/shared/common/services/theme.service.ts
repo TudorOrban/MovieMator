@@ -23,7 +23,6 @@ export class ThemeService {
         this.authSubscription.add(
             this.authService.currentUser$.subscribe(user => {
                 const newTheme = user?.userSettings?.appTheme || "light";
-                console.log("n", newTheme);
                 if (this.currentThemeSubject.getValue() !== newTheme) {
                     this.currentThemeSubject.next(newTheme);
                     this.applyThemeToBody(newTheme);
@@ -39,7 +38,6 @@ export class ThemeService {
         this.renderer.removeClass(document.body, "dark-theme");
 
         if (theme === "dark") {
-            console.log("A");
             this.renderer.addClass(document.body, "dark-theme");
         } else {
             this.renderer.addClass(document.body, "light-theme");
@@ -47,6 +45,19 @@ export class ThemeService {
     }
 
     setTheme(theme: string): void {
+        this.currentThemeSubject.next(theme);
+        this.applyThemeToBody(theme);
+    }
+
+    getTheme(): string {
+        return this.currentThemeSubject.value;
+    }
+
+    toggleTheme(): void {
+        var theme = "dark";
+        if (this.currentThemeSubject.value === "dark") {
+            theme = "light";
+        }
         this.currentThemeSubject.next(theme);
         this.applyThemeToBody(theme);
     }

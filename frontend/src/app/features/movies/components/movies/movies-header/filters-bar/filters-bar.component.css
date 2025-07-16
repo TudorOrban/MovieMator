@@ -34,6 +34,7 @@
     box-sizing: border-box;
     background-color: white;
     color: rgb(84, 84, 84);
+    border: 1px solid var(--border-color);
 }
 
 .clear-filter-btn {
@@ -62,10 +63,4 @@
 
 .clear-all-btn:active {
     transform: scale(0.98);
-}
-
-.filter-box {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    border: 0px solid white;
 }

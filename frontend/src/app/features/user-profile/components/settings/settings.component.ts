@@ -41,7 +41,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         { label: "Director", value: "director" },
         { label: "Runtime", value: "runtimeMinutes" },
         { label: "Watched Date", value: "watchedDate" },
-        { label: "User Rating", value: "userRating" },
+        { label: "Rating", value: "userRating" },
         { label: "Release Year", value: "releaseYear" },
     ];
 
@@ -83,9 +83,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.subscription.add(this.authService.currentUser$.subscribe({
             next: (user) => {
                 this.currentUser = user;
-                if (user?.id && user?.userSettings) { // Ensure user and their settings are available
+                if (user?.id && user?.userSettings) {
                     this.settingsForm.patchValue(user.userSettings);
-                    this.initialSettings = { ...user.userSettings }; // Store for reset
+                    this.initialSettings = { ...user.userSettings };
                 }
                 this.isLoading = false;
             },

@@ -100,9 +100,6 @@ export class AuthService {
     }
 
     private async runLoginChecks(result: SignInOutput, email: string): Promise<any> {
-        if (result.nextStep) {
-            // console.log("AuthService: Next step required:", result.nextStep.signInStep);
-        }
         if (!result.isSignedIn) {
             return;
         }
@@ -140,7 +137,6 @@ export class AuthService {
     async forgotPassword(email: string): Promise<void> {
         try {
             await resetPassword({ username: email });
-            console.log("Password reset code sent successfully.");
         } catch (error: any) {
             console.error("AuthService: Forgot password error:", error);
             throw error;
@@ -154,7 +150,6 @@ export class AuthService {
                 confirmationCode: confirmationCode,
                 newPassword: newPassword
             });
-            console.log("Password reset confirmed successfully.");
         } catch (error: any) {
             console.error("AuthService: Confirm new password error:", error);
             throw error;
@@ -164,7 +159,6 @@ export class AuthService {
     async changeUserPassword(oldPassword: string, newPassword: string): Promise<void> {
         try {
             await updatePassword({ oldPassword, newPassword });
-            console.log("Password changed successfully.");
         } catch (error: any) {
             console.error("AuthService: Change password error:", error);
             throw error;

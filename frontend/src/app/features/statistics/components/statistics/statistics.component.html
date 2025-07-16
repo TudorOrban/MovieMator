@@ -1,28 +1,28 @@
-<div class="relative container mx-auto p-6 md:p-8 lg:p-10 bg-white shadow-lg rounded-lg my-8">
-    <div *ngIf="isLoading" class="absolute inset top-20 flex items-center justify-center w-full h-screen bg-white bg-opacity-80 z-10">
-        <div class="text-center text-gray-600">
+<div class="relative container mx-auto p-6 md:p-8 lg:p-10 shadow-lg rounded-lg my-8">
+    <div *ngIf="isLoading" class="absolute inset top-20 flex items-center justify-center w-full h-screen bg-opacity-80 z-10">
+        <div class="text-center std-shaded-text">
             <fa-icon [icon]="faSpinner" [animation]="'spin'" size="3x"></fa-icon>
             <p class="mt-2 text-lg font-semibold">Computing statistics...</p>
         </div>
     </div>
 
     <div *ngIf="statistics">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b pb-4 mb-6 border-gray-300">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 mb-6 std-border-b">
             <div class="mb-4 sm:mb-0">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Your Movie Statistics</h1>
+                <h1 class="text-3xl font-bold movie-title mb-2">Your Movie Statistics</h1>
             </div>
 
             <div class="flex flex-col sm:flex-row items-end sm:items-center gap-4">
                 <input
                     type="date"
                     placeholder="Start Date"
-                    class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1 h-[42px]"
+                    class="filter-input rounded-md px-3 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1 h-[42px]"
                     [(ngModel)]="startDate"
                 >
                 <input
                     type="date"
                     placeholder="End Date"
-                    class="filter-input rounded-md px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1 h-[42px]"
+                    class="filter-input rounded-md px-3 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1 h-[42px]"
                     [(ngModel)]="endDate"
                 >
 
@@ -37,17 +37,17 @@
         </div>
 
         <div class="space-y-6 mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 border-b border-gray-200 pb-3 mb-4">Overall Summary</h2>
+            <h2 class="text-2xl font-semibold std-shaded-text border-b border-gray-200 pb-3 mb-4">Overall Summary</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-gray-800">
-                <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                <div class="p-4 std-element rounded-lg shadow-sm">
                     <p class="font-semibold text-lg mb-1">Total Watched Movies:</p>
                     <p class="text-3xl font-bold text-blue-600">{{ statistics.totalWatchedMovies }}</p>
                 </div>
-                <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                <div class="p-4 std-element rounded-lg shadow-sm">
                     <p class="font-semibold text-lg mb-1">Total Watch Time:</p>
                     <p class="text-3xl font-bold text-purple-600">{{ statistics.totalWatchTimeMinutes | number:'1.0-0' }} minutes</p>
                 </div>
-                <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                <div class="p-4 std-element rounded-lg shadow-sm">
                     <p class="font-semibold text-lg mb-1">Average User Rating:</p>
                     <p class="text-3xl font-bold text-yellow-500" *ngIf="statistics.averageUserRating > 0; else noAvgRating">{{ statistics.averageUserRating | number:'1.1-1' }} / 10</p>
                     <ng-template #noAvgRating><p class="text-gray-500 italic text-xl">N/A</p></ng-template>
@@ -56,17 +56,17 @@
         </div>
 
         <div class="space-y-6 mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 border-b border-gray-200 pb-3 mb-4">Time-Based Insights</h2>
+            <h2 class="text-2xl font-semibold std-shaded-text border-b border-gray-200 pb-3 mb-4">Time-Based Insights</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-gray-800">
-                <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                <div class="p-4 std-element rounded-lg shadow-sm">
                     <p class="font-semibold text-lg mb-1">Unique Watch Days:</p>
                     <p class="text-3xl font-bold text-green-600">{{ statistics.totalUniqueWatchedDays }}</p>
                 </div>
-                <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                <div class="p-4 std-element rounded-lg shadow-sm">
                     <p class="font-semibold text-lg mb-1">Avg. Movies per Week:</p>
                     <p class="text-3xl font-bold text-orange-600">{{ statistics.averageMoviesPerWeek | number:'1.1-1' }}</p>
                 </div>
-                <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                <div class="p-4 std-element rounded-lg shadow-sm">
                     <p class="font-semibold text-lg mb-1">Avg. Movies per Month:</p>
                     <p class="text-3xl font-bold text-teal-600">{{ statistics.averageMoviesPerMonth | number:'1.1-1' }}</p>
                 </div>
@@ -93,7 +93,7 @@
         </div>
 
         <div class="space-y-6 mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 border-b  border-gray-200 pb-3 mb-4">Categories</h2>
+            <h2 class="text-2xl font-semibold std-shaded-text border-b  border-gray-200 pb-3 mb-4">Categories</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div>
                     <h3 class="text-xl font-semibold mb-3">Top Directors</h3>
@@ -150,7 +150,7 @@
         </div>
 
         <div class="space-y-6 mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 border-b border-gray-200 pb-3 mb-4">Ratings</h2>
+            <h2 class="text-2xl font-semibold std-shaded-text border-b border-gray-200 pb-3 mb-4">Ratings</h2>
             
             <div class="col-span-1 md:col-span-2 lg:col-span-3"> 
                 <div *ngIf="statistics?.userRatingDistribution && (statistics.userRatingDistribution | keyvalue).length > 0; else noRatingDistributionChart"

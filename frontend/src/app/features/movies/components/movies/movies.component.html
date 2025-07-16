@@ -1,4 +1,4 @@
-<div class="w-full">
+<div class="w-full pb-16">
     <app-movies-header
         [searchParams]="searchParams"
         [totalCount]="movies?.totalCount"
@@ -29,6 +29,6 @@
         [totalCount]="movies?.totalCount ?? 0"
         [itemsPerPage]="searchParams.itemsPerPage"
         (pageChanged)="handlePageChange($event)"
-        class="w-full my-4"
+        class="w-full"
     ></app-page-selector>
 </div>

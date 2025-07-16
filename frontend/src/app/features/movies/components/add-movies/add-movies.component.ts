@@ -211,7 +211,6 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
 
         this.mainSubscription.add(this.movieService.isMovieTitleUnique(this.userId, movie.title).subscribe({
             next: (isMovieTitleUnique: boolean) => {
-                console.log("T", isMovieTitleUnique);
                 movie.isTitleUnique = isMovieTitleUnique;
             }
         }))

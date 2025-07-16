@@ -12,14 +12,19 @@
     --primary-color: white;
     --secondary-color: rgb(12, 91, 214); 
     --secondary-text-color: white;
-    --shaded-bg-color: rgb(249, 249, 249);
+    --shaded-bg-color: rgb(250, 250, 250);
+    --shaded-bg-color-xl: rgb(230, 230, 230);
     --shaded-text-color: rgb(56, 56, 56);
     --tertiary-color: rgb(93, 54, 155);
     --tertiary-color-hover: rgb(80, 47, 135);
-    --border-color: #dee2e6;
+    --border-color: #dcdcdd;
     --border-color-secondary: #b3b3b3;
     --scrollbar-color: #d4d4d4;
     --scrollbar-thumb-color: #a9a9a9;
+
+    --home-gradient-from: #eff6ff;
+    --home-gradient-to: #e0e7ff;
+    --home-text-color: #1a202c;
 
     --movie-card-color: rgb(255, 255, 255);
     --movie-title-color: rgb(25, 25, 25);
@@ -33,11 +38,17 @@
     --secondary-color: rgb(12, 91, 214);
     --secondary-text-color: white;
     --shaded-bg-color: rgb(27, 27, 27);
+    --shaded-bg-color-xl: rgb(38, 38, 38);
     --shaded-text-color: rgb(219, 219, 219);
     --border-color: #383737;
     --border-color-secondary: #302f2f;
     --scrollbar-color: #2a2a2a;
     --scrollbar-thumb-color: #404040;
+    
+    --home-gradient-from: #1a202c;
+    --home-gradient-to: #2d3748;
+    --home-text-color: #e2e8f0;
+
     --movie-card-color: rgb(27, 27, 27);
     --movie-title-color: rgb(238, 238, 238);
     --movie-label-color: rgb(219, 219, 219);
@@ -46,4 +57,5 @@
 body {
     background-color: var(--background-color);
     color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }

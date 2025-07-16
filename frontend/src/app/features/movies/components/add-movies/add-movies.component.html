@@ -68,7 +68,7 @@
             <!-- Movie Details -->
             <div class="flex items-center space-x-4 pt-4">
                 <label for="details-toggle-{{i}}" class="form-label text-lg">Movie Details</label>
-                <button id="details-toggle-{{i}}" class="shaded-text-element cursor-pointer" (click)="toggleIsMovieDetailsExpanded(i)" type="button">
+                <button id="details-toggle-{{i}}" class="std-shaded-text cursor-pointer" (click)="toggleIsMovieDetailsExpanded(i)" type="button">
                     <fa-icon [icon]="movie.areMovieDetailsExpanded ? faCaretUp : faCaretDown"/>
                 </button>
             </div>
@@ -212,7 +212,7 @@
             <!-- User Details -->
             <div class="flex items-center space-x-4 pt-4">
                 <label for="details-toggle" class="form-label text-lg">User Details</label>
-                <button id="details-toggle" class="shaded-text-element cursor-pointer" (click)="toggleIsUserDetailsExpanded(i)" type="button">
+                <button id="details-toggle" class="std-shaded-text cursor-pointer" (click)="toggleIsUserDetailsExpanded(i)" type="button">
                     <fa-icon [icon]="movie.areUserDetailsExpanded ? faCaretUp : faCaretDown"/>
                 </button>
             </div>
@@ -335,7 +335,7 @@
 
         <div class="flex items-center justify-between w-full mt-4">
             <button type="button" class="standard-action-button" (click)="addMovie()">
-                <fa-icon [icon]="faPlus" class="shaded-text-element" />
+                <fa-icon [icon]="faPlus" class="std-shaded-text" />
             </button>
             <button type="submit" class="standard-write-button">Create Movies</button>
         </div>

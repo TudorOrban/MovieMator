@@ -54,3 +54,9 @@
         margin-bottom: 0.5rem;
     }
 }
+
+.home-container {
+    background: linear-gradient(to bottom right, var(--home-gradient-from), var(--home-gradient-to));
+    color: var(--home-text-color);
+    transition: background 0.3s ease, color 0.3s ease;
+}

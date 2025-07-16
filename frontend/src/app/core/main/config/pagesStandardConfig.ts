@@ -30,21 +30,20 @@ export const standardFilterOptions: FilterOption[] = [
         key: { label: "Watched Date", value: "watchedDate" },
         filterType: FilterType.DATE,
     },
-    // New
     { 
-        key: { label: 'Status', value: 'status' }, 
+        key: { label: "Status", value: "status" }, 
         filterType: FilterType.ENUM 
     },
     { 
-        key: { label: 'Runtime (mins)', value: 'runtimeMinutes' }, 
+        key: { label: "Runtime", value: "runtimeMinutes" }, 
         filterType: FilterType.NUMBER 
     },
     { 
-        key: { label: 'Genres', value: 'genresIncluding' }, 
+        key: { label: "Genres", value: "genresIncluding" }, 
         filterType: FilterType.MULTI_TEXT 
     },
     { 
-        key: { label: 'Actors', value: 'actorsIncluding' }, 
+        key: { label: "Actors", value: "actorsIncluding" }, 
         filterType: FilterType.MULTI_TEXT 
     }, 
 ];

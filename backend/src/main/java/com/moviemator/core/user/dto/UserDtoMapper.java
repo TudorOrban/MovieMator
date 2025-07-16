@@ -15,6 +15,7 @@ public interface UserDtoMapper {
     @Mapping(source = "user.displayName", target = "displayName")
     @Mapping(source = "user.createdAt", target = "createdAt")
     @Mapping(source = "user.updatedAt", target = "updatedAt")
+    @Mapping(source = "user.userSettings", target = "userSettings")
     UserDataDto userToUserDataDto(User user);
 
     @Mapping(source = "cognitoUserId", target = "cognitoUserId")

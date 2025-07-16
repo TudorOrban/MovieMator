@@ -1,10 +1,11 @@
-package com.moviemator.features.user.service;
+package com.moviemator.core.user.service;
 
 import com.moviemator.core.user.dto.CreateUserDto;
 import com.moviemator.core.user.dto.UpdateUserDto;
 import com.moviemator.core.user.dto.UserDataDto;
 import com.moviemator.core.user.dto.UserDtoMapper;
 import com.moviemator.core.user.model.User;
+import com.moviemator.core.user.model.UserSettings;
 import com.moviemator.core.user.repository.UserRepository;
 import com.moviemator.core.user.service.UserServiceImpl;
 import com.moviemator.shared.error.types.ResourceIdentifierType;
@@ -50,11 +51,11 @@ public class UserServiceImplTest {
         testUser.setEmail("test@example.com");
         testUser.setCognitoUserId("cognito-123");
 
-        testUserDataDto = new UserDataDto(1L, "cognito-123", "test@example.com", "Test User", LocalDateTime.now(), LocalDateTime.now());
+        testUserDataDto = new UserDataDto(1L, "cognito-123", "test@example.com", "Test User", LocalDateTime.now(), LocalDateTime.now(), null);
 
         testCreateUserDto = new CreateUserDto("new-cognito-id", "new@example.com");
 
-        testUpdateUserDto = new UpdateUserDto(1L, "Updated User");
+        testUpdateUserDto = new UpdateUserDto(1L, "Updated User", new UserSettings());
     }
 
     @Test

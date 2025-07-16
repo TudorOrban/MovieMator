@@ -180,6 +180,7 @@ export class AuthService {
     private loadCurrentUser(cognitoUserId: string): void {
         this.userService.getUserByCognitoUserId(cognitoUserId).subscribe({
             next: (userData) => {
+                console.log("SDA", userData);
                 this._currentUserSubject.next(userData);
             },
             error: (err) => {

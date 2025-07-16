@@ -1,5 +1,6 @@
 package com.moviemator.core.user.dto;
 
+import com.moviemator.core.user.model.UserSettings;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,4 +17,7 @@ public class UserDataDto {
     private String displayName;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    // New
+    private UserSettings userSettings;
 }

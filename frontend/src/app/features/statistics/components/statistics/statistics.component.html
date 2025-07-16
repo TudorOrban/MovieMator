@@ -7,9 +7,9 @@
     </div>
 
     <div *ngIf="statistics">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b pb-4 mb-6 border-gray-200">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b pb-4 mb-6 border-gray-300">
             <div class="mb-4 sm:mb-0">
-                <h1 class="text-4xl font-extrabold text-gray-900 mb-2">Your Movie Statistics</h1>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Your Movie Statistics</h1>
             </div>
 
             <div class="flex flex-col sm:flex-row items-end sm:items-center gap-4">
@@ -37,7 +37,7 @@
         </div>
 
         <div class="space-y-6 mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2 mb-4">Overall Summary</h2>
+            <h2 class="text-2xl font-semibold text-gray-800 border-b border-gray-200 pb-3 mb-4">Overall Summary</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-gray-800">
                 <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
                     <p class="font-semibold text-lg mb-1">Total Watched Movies:</p>
@@ -55,10 +55,8 @@
             </div>
         </div>
 
-        <hr class="my-8 border-gray-200">
-
         <div class="space-y-6 mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2 mb-4">Time-Based Insights</h2>
+            <h2 class="text-2xl font-semibold text-gray-800 border-b border-gray-200 pb-3 mb-4">Time-Based Insights</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-gray-800">
                 <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
                     <p class="font-semibold text-lg mb-1">Unique Watch Days:</p>
@@ -76,7 +74,7 @@
 
             <div class="grid grid-cols-1 gap-6 mt-6"> 
                 <div class="col-span-1 md:col-span-2 lg:col-span-3"> 
-                    <h3 class="text-xl font-semibold mb-3">Watched Movies over time (Count)</h3>
+                    <h3 class="text-xl font-semibold mb-3">Watched Movies over time</h3>
                     <div 
                         *ngIf="statistics?.movieCountByWatchedMonthAndYear && (statistics.movieCountByWatchedMonthAndYear | keyvalue).length > 0; else noWatchedMonthYearChart"
                         class="chart-container relative h-64 md:h-80 lg:h-96"
@@ -94,10 +92,8 @@
             </div>
         </div>
 
-        <hr class="my-8 border-gray-200">
-
         <div class="space-y-6 mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2 mb-4">Categories</h2>
+            <h2 class="text-2xl font-semibold text-gray-800 border-b  border-gray-200 pb-3 mb-4">Categories</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div>
                     <h3 class="text-xl font-semibold mb-3">Top Directors</h3>
@@ -153,10 +149,8 @@
             </div>
         </div>
 
-        <hr class="my-8 border-gray-200">
-
         <div class="space-y-6 mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 border-b pb-2 mb-4">Ratings (Count)</h2>
+            <h2 class="text-2xl font-semibold text-gray-800 border-b border-gray-200 pb-3 mb-4">Ratings</h2>
             
             <div class="col-span-1 md:col-span-2 lg:col-span-3"> 
                 <div *ngIf="statistics?.userRatingDistribution && (statistics.userRatingDistribution | keyvalue).length > 0; else noRatingDistributionChart"

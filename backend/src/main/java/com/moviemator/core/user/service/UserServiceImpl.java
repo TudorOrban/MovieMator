@@ -5,6 +5,7 @@ import com.moviemator.core.user.dto.UpdateUserDto;
 import com.moviemator.core.user.dto.UserDataDto;
 import com.moviemator.core.user.dto.UserDtoMapper;
 import com.moviemator.core.user.model.User;
+import com.moviemator.core.user.model.UserSettings;
 import com.moviemator.core.user.repository.UserRepository;
 import com.moviemator.shared.error.types.ResourceIdentifierType;
 import com.moviemator.shared.error.types.ResourceNotFoundException;
@@ -46,6 +47,7 @@ public class UserServiceImpl implements UserService {
         CreateUserDto sanitizedDto = sanitizerService.sanitizeCreateUserDto(userDto);
 
         User user = UserDtoMapper.INSTANCE.createUserDtoToUser(sanitizedDto);
+        user.setUserSettings(new UserSettings());
 
         User savedUser = userRepository.save(user);
 
@@ -59,6 +61,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException(userDto.getId().toString(), ResourceType.USER, ResourceIdentifierType.ID));
 
         existingUser.setDisplayName(sanitizedDto.getDisplayName());
+        existingUser.setUserSettings(sanitizedDto.getUserSettings());
 
         User updatedUser = userRepository.save(existingUser);
 

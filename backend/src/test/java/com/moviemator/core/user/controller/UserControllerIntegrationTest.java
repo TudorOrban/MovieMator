@@ -1,4 +1,4 @@
-package com.moviemator.features.user.controller;
+package com.moviemator.core.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moviemator.MovieMatorApplication;
@@ -6,6 +6,7 @@ import com.moviemator.core.config.SecurityConfig;
 import com.moviemator.core.user.dto.CreateUserDto;
 import com.moviemator.core.user.dto.UserDataDto;
 import com.moviemator.core.user.dto.UpdateUserDto;
+import com.moviemator.core.user.model.UserSettings;
 import com.moviemator.core.user.service.UserService;
 import com.moviemator.features.movie.service.MovieService;
 import org.junit.jupiter.api.BeforeEach;
@@ -83,7 +84,8 @@ public class UserControllerIntegrationTest {
                 "test@example.com",
                 "Test User",
                 LocalDateTime.now(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         );
 
         testUserDataDto2 = new UserDataDto(
@@ -92,12 +94,13 @@ public class UserControllerIntegrationTest {
                 "other@example.com",
                 "Other User",
                 LocalDateTime.now(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         );
 
         testCreateUserDto = new CreateUserDto("new-cognito-id", "new@example.com");
 
-        testUpdateUserDto = new UpdateUserDto(1L, "Updated User Display Name");
+        testUpdateUserDto = new UpdateUserDto(1L, "Updated User Display Name", new UserSettings());
 
         reset(userService, movieService);
 
@@ -111,7 +114,8 @@ public class UserControllerIntegrationTest {
                 "new@example.com",
                 "New User",
                 LocalDateTime.now(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                null
         ));
         when(userService.getUserByCognitoUserId("other-user")).thenReturn(testUserDataDto2);
 

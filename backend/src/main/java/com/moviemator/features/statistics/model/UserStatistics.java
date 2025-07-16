@@ -1,6 +1,5 @@
 package com.moviemator.features.statistics.model;
 
-import com.moviemator.features.movie.model.MovieStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -16,17 +16,20 @@ public class CreateMovieDto {
     private Long userId;
     private Long tmdbId;
     private String title;
+
+    private MovieStatus status;
+    private LocalDate watchedDate;
+    private Float userRating; // 1 to 10
+    private String userReview;
+
     private Integer releaseYear;
     private String posterUrl;
     private String director;
     private String plotSummary;
-    private Float userRating; // 1 to 10
-    private String userReview;
-    private LocalDate watchedDate;
-
-    // New
-    private MovieStatus status;
     private Integer runtimeMinutes;
     private List<String> genres;
     private List<String> actors;
+
+    // New
+    private List<LocalDate> watchedDates;
 }

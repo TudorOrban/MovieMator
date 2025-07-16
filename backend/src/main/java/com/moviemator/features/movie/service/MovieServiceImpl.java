@@ -136,17 +136,18 @@ public class MovieServiceImpl implements MovieService {
 
     private Movie setUpdateMovieDtoToMovie(Movie movie, UpdateMovieDto movieDto) {
         movie.setTitle(movieDto.getTitle());
+        movie.setStatus(movieDto.getStatus());
+        movie.setWatchedDate(movieDto.getWatchedDate());
+        movie.setUserRating(movieDto.getUserRating());
+        movie.setUserReview(movieDto.getUserReview());
         movie.setDirector(movieDto.getDirector());
         movie.setPosterUrl(movieDto.getPosterUrl());
         movie.setPlotSummary(movieDto.getPlotSummary());
-        movie.setUserRating(movieDto.getUserRating());
-        movie.setUserReview(movieDto.getUserReview());
-        movie.setWatchedDate(movieDto.getWatchedDate());
-        // New
-        movie.setStatus(movieDto.getStatus());
         movie.setRuntimeMinutes(movieDto.getRuntimeMinutes());
         movie.setGenres(movieDto.getGenres());
         movie.setActors(movieDto.getActors());
+        // New
+        movie.setWatchedDates(movieDto.getWatchedDates());
 
         return movie;
     }

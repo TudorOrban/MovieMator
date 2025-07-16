@@ -9,6 +9,8 @@ import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -58,7 +60,6 @@ public class Movie {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    // New
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private MovieStatus status;
@@ -74,16 +75,38 @@ public class Movie {
     @Column(name = "actors")
     private List<String> actors;
 
+    // New
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "watched_dates")
+    private List<LocalDate> watchedDates;
+
     @PrePersist
     protected void onCreate() {
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
         }
         updatedAt = LocalDateTime.now();
+        if (watchedDates == null) {
+            watchedDates = new ArrayList<>();
+        }
     }
 
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+        if (watchedDates == null) {
+            watchedDates = new ArrayList<>();
+        }
+        Collections.sort(watchedDates);
+    }
+
+    public void addWatchedDate(LocalDate date) {
+        if (this.watchedDates == null) {
+            this.watchedDates = new ArrayList<>();
+        }
+        if (!this.watchedDates.contains(date)) {
+            this.watchedDates.add(date);
+            Collections.sort(this.watchedDates);
+        }
     }
 }

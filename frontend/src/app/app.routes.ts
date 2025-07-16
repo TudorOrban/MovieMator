@@ -11,6 +11,7 @@ import { SettingsComponent } from './features/user-profile/components/settings/s
 import { StatisticsComponent } from './features/statistics/components/statistics/statistics.component';
 import { UpdateMovieComponent } from './features/movies/components/update-movie/update-movie.component';
 import { AddMoviesComponent } from './features/movies/components/add-movies/add-movies.component';
+import { ChangePasswordComponent } from './core/auth/components/change-password/change-password.component';
 
 export const routes: Routes = [
     {
@@ -56,5 +57,9 @@ export const routes: Routes = [
     {
         path: "settings",
         component: SettingsComponent
+    },
+    {
+        path: "change-password",
+        component: ChangePasswordComponent
     }
 ];

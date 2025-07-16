@@ -5,11 +5,11 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../../auth/service/auth.service';
 import { UserDataDto } from '../../../auth/models/User';
 import { Subscription } from 'rxjs';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-userbar',
-    imports: [CommonModule, FontAwesomeModule, RouterModule],
+    imports: [CommonModule, FontAwesomeModule],
     templateUrl: './userbar.component.html',
 })
 export class UserbarComponent implements OnInit, OnDestroy {
@@ -19,7 +19,8 @@ export class UserbarComponent implements OnInit, OnDestroy {
     private subscription: Subscription = new Subscription();
     
     constructor(
-        readonly authService: AuthService
+        readonly authService: AuthService,
+        private readonly router: Router
     ) {}
 
     ngOnInit(): void {
@@ -39,6 +40,11 @@ export class UserbarComponent implements OnInit, OnDestroy {
 
     toggleExpanded(): void {
         this.isExpanded = !this.isExpanded;
+    }
+
+    navigateTo(path: string): void {
+        this.isExpanded = false;
+        this.router.navigate([path]);
     }
 
     logOut(): void {

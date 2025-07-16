@@ -1,5 +1,4 @@
 .page-title {
-    /* padding: 0.5rem; */
     font-size: 1.6rem;
     line-height: 2.1rem;
     font-weight: 600;
@@ -27,4 +26,36 @@
         padding-left: 1rem;
         padding-right: 1rem;
     }
+}
+
+.std-border-b {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.std-element {
+    background-color: var(--shaded-bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.std-element:hover {
+    background-color: var(--background-color);
+}
+
+.std-element-two {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.shaded-text-element {
+    color: var(--shaded-text-color);
+}
+
+.std-shaded-text {
+    color: var(--shaded-text-color);
+}
+
+.std-shaded-text:hover {
+    color: var(--text-color);
 }

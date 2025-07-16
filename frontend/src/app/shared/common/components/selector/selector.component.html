@@ -2,7 +2,7 @@
     <div>
         <button 
             type="button" 
-            class="inline-flex items-center justify-center w-full h-10 px-4 py-2 bg-white text-gray-700 text-sm font-semibold border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 cursor-pointer whitespace-nowrap" 
+            class="std-element inline-flex items-center justify-center w-full h-10 px-4 py-2 text-sm font-semibold border border-gray-300 rounded-md shadow-sm cursor-pointer whitespace-nowrap" 
             id="menu-button" 
             aria-expanded="true" 
             aria-haspopup="true" 
@@ -15,9 +15,9 @@
         </button>
     </div>
 
-    <div *ngIf="isOpen" class="absolute mt-2 w-56 bg-white border border-gray-300 rounded-md shadow-lg z-40" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+    <div *ngIf="isOpen" class="absolute mt-2 w-56 std-element rounded-md shadow-lg z-40" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
         <div class="py-1" role="none">
-            <a *ngFor="let item of items" (click)="selectItem(item)" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer" role="menuitem" tabindex="-1">
+            <a *ngFor="let item of items" (click)="selectItem(item)" class="block px-4 py-2 text-sm cursor-pointer" role="menuitem" tabindex="-1">
                 <fa-icon *ngIf="item.icon" [icon]="item.icon" class="mr-2"></fa-icon>
                 {{ item.label }}
             </a>

@@ -45,7 +45,7 @@
 
         <div class="flex items-center space-x-4 pt-4">
             <label for="details-toggle" class="form-label text-lg">Movie Details</label>
-            <button id="details-toggle" class="text-gray-800 hover:text-black cursor-pointer" (click)="toggleIsMovieDetailsExpanded()" type="button">
+            <button id="details-toggle" class="expand-caret cursor-pointer" (click)="toggleIsMovieDetailsExpanded()" type="button">
                 <fa-icon [icon]="areMovieDetailsExpanded ? faCaretUp : faCaretDown"/>
             </button>
         </div>
@@ -186,7 +186,7 @@
         <!-- User Details -->
         <div class="flex items-center space-x-4 pt-4">
             <label for="details-toggle" class="form-label text-lg">User Details</label>
-            <button id="details-toggle" class="text-gray-800 hover:text-black cursor-pointer" (click)="toggleIsUserDetailsExpanded()" type="button">
+            <button id="details-toggle" class="expand-caret cursor-pointer" (click)="toggleIsUserDetailsExpanded()" type="button">
                 <fa-icon [icon]="areUserDetailsExpanded ? faCaretUp : faCaretDown"/>
             </button>
         </div>

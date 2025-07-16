@@ -7,33 +7,40 @@
 @import "tailwindcss";
 
 :root {
-    --background-color: #ffffff;
+    --background-color: white;
     --text-color: #000000;
     --primary-color: white;
     --secondary-color: rgb(12, 91, 214); 
     --secondary-text-color: white;
+    --shaded-bg-color: rgb(249, 249, 249);
+    --shaded-text-color: rgb(56, 56, 56);
     --tertiary-color: rgb(93, 54, 155);
     --tertiary-color-hover: rgb(80, 47, 135);
     --border-color: #dee2e6;
     --border-color-secondary: #b3b3b3;
     --scrollbar-color: #d4d4d4;
     --scrollbar-thumb-color: #a9a9a9;
+
     --movie-card-color: rgb(255, 255, 255);
     --movie-title-color: rgb(25, 25, 25);
+    --movie-label-color: rgb(57, 57, 57);
 }
 
 .dark-theme {
     --background-color: #08080e;
     --text-color: #ffffff;
     --primary-color: #0056b3;
-    --secondary-color: rgb(6, 43, 107);
+    --secondary-color: rgb(12, 91, 214);
     --secondary-text-color: white;
-    --border-color: #222121;
+    --shaded-bg-color: rgb(27, 27, 27);
+    --shaded-text-color: rgb(219, 219, 219);
+    --border-color: #383737;
     --border-color-secondary: #302f2f;
     --scrollbar-color: #2a2a2a;
     --scrollbar-thumb-color: #404040;
     --movie-card-color: rgb(27, 27, 27);
     --movie-title-color: rgb(238, 238, 238);
+    --movie-label-color: rgb(219, 219, 219);
 }
 
 body {

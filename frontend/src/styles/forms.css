@@ -1,6 +1,5 @@
 .form-label {
     display: block;
-    color: #1e1e1e;
     font-weight: 600;
 }
 
@@ -11,7 +10,8 @@
     border-radius: 0.25rem;
     width: 100%;
     padding: 0.5rem 0.75rem;
-    color: #4a5568;
+    background-color: white;
+    color: rgb(84, 84, 84);
     line-height: 1.25rem;
 }
 
@@ -64,4 +64,12 @@
 .add-movies-section {
    background: linear-gradient(to right, var(--secondary-color), var(--tertiary-color));
    color: white;
+}
+
+.expand-caret {
+    color: var(--shaded-text-color);
+}
+
+.expand-caret:hover {
+    color: var(--text-color);
 }

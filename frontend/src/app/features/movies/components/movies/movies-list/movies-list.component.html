@@ -16,7 +16,7 @@
         [ngClass]="gridColsClass" >
         <div
             *ngFor="let movie of (movies?.results ?? [])"
-            class="movie-small-card rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out flex flex-col relative border border-gray-100"
+            class="movie-small-card rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out flex flex-col relative"
             [ngClass]="{'border-2 border-blue-500': isDeleteModeOn}"
         >
             <div
@@ -41,10 +41,10 @@
 
                 <div class="p-4 flex flex-col flex-grow justify-between">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-1 line-clamp-2" title="{{movie.title}}">
+                        <h3 class="text-lg font-semibold movie-title mb-1 line-clamp-2" title="{{movie.title}}">
                             {{ movie.title }}
                         </h3>
-                        <p class="text-sm text-gray-600 mb-2">
+                        <p class="movie-label-small mb-2">
                             {{ movie.releaseYear ?? "N/A" }}
                             <span *ngIf="movie.director"> • {{ movie.director }}</span>
                         </p>
@@ -58,7 +58,7 @@
                             {{ movie.status | titlecase }}
                         </span>
 
-                        <p *ngIf="movie.runtimeMinutes" class="text-sm text-gray-700 mt-1">
+                        <p *ngIf="movie.runtimeMinutes" class="movie-label-small mt-2">
                             {{ movie.runtimeMinutes }} min
                         </p>
                     </div>

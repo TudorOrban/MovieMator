@@ -1,8 +1,25 @@
 .movie-small-card {
     background-color: var(--movie-card-color);
     color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.movie-card {
+    background-color: var(--movie-card-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
 }
 
 .movie-title {
     color: var(--movie-title-color);
+}
+
+.movie-label-small {
+    color: var(--movie-label-color);
+    font-size: 0.875rem;
+    line-height: 1.4286;
+}
+
+.movie-label {
+    color: var(--movie-label-color);
 }

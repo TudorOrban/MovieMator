@@ -1,13 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from "./core/main/components/header/header.component";
 import { ToastManagerComponent } from "./shared/common/components/toast-manager/toast-manager.component";
+import { ThemeService } from './shared/common/services/theme.service';
 
 @Component({
     selector: 'app-root',
     imports: [RouterOutlet, HeaderComponent, ToastManagerComponent],
     templateUrl: './app.component.html',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
     
+    constructor(private readonly themeService: ThemeService) {}
+
+    ngOnInit(): void {
+        
+    }
 }

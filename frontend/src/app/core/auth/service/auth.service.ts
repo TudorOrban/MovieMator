@@ -44,6 +44,10 @@ export class AuthService {
         }
     }
 
+    setCurrentUser(user: UserDataDto | null): void {
+        this._currentUserSubject.next(user);
+    }
+
     async signUp(email: string, password: string): Promise<any> {
         try {
             const result = await signUp({
@@ -180,7 +184,6 @@ export class AuthService {
     private loadCurrentUser(cognitoUserId: string): void {
         this.userService.getUserByCognitoUserId(cognitoUserId).subscribe({
             next: (userData) => {
-                console.log("SDA", userData);
                 this._currentUserSubject.next(userData);
             },
             error: (err) => {

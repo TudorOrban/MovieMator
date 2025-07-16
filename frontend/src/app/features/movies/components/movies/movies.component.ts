@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { ToastManagerService } from '../../../../shared/common/services/toast-manager.service';
 import { ToastType } from '../../../../shared/models/UI';
 import { PageSelectorComponent } from "../../../../shared/common/components/page-selector/page-selector.component";
+import { UserSettings } from '../../../../core/auth/models/User';
 
 @Component({
     selector: 'app-movies',
@@ -20,12 +21,13 @@ import { PageSelectorComponent } from "../../../../shared/common/components/page
 export class MoviesComponent implements OnInit, OnDestroy {
     movies?: PaginatedResults<MovieSearchDto>;
     userId?: number;
+    userSettings?: UserSettings;
     searchParams: SearchParams = {
         searchText: "",
         sortBy: "watchedDate",
         isAscending: false,
         page: 1,
-        itemsPerPage: 20
+        itemsPerPage: 27
     };
     movieFilters: MovieFilters = {}
     isLoading: boolean = false;
@@ -45,6 +47,8 @@ export class MoviesComponent implements OnInit, OnDestroy {
         this.subscription = this.authService.currentUser$.subscribe({
             next: (data) => {
                 this.userId = data?.id;
+                this.userSettings = data?.userSettings;
+                this.applyUserSettings();
                 this.searchMovies();
             },
             error: (error) => {
@@ -55,6 +59,13 @@ export class MoviesComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+    }
+
+    private applyUserSettings(): void {
+        if (!this?.userSettings) return;
+        if (this.userSettings?.defaultMovieSortBy) {
+            this.searchParams.sortBy = this.userSettings.defaultMovieSortBy;
+        } 
     }
 
     searchMovies(): void {

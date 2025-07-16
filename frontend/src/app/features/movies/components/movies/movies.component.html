@@ -16,6 +16,7 @@
     <div class="flex w-full h-full page-std-padding-x py-4">
         <app-movies-list 
             [movies]="movies" 
+            [moviesPerRow]="userSettings?.moviesPerRow"
             [isDeleteModeOn]="isDeleteModeOn"
             [isLoading]="isLoading"
             (onNewMovieId)="handleNewDeleteMovieId($event)"

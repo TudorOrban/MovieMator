@@ -1,4 +1,4 @@
-<div class="space-y-4 relative min-h-[100px]"> 
+<div class="space-y-4 relative min-h-[100px]">
     <div *ngIf="isLoading" class="absolute inset-0 top-40 flex items-center justify-center bg-white bg-opacity-80 z-10">
         <div class="text-center text-gray-600">
             <fa-icon [icon]="faSpinner" [animation]="'spin'" size="3x"></fa-icon>
@@ -10,43 +10,45 @@
         <p class="text-lg">No movies found that match your criteria.</p>
     </div>
 
-    <div *ngIf="!isLoading && (movies?.results?.length ?? 0) > 0" 
-         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 py-4"> 
-         <div 
-            *ngFor="let movie of (movies?.results ?? [])" 
-            class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out flex flex-col relative"
+    <div
+        *ngIf="!isLoading && (movies?.results?.length ?? 0) > 0"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-8 py-4"
+        [ngClass]="gridColsClass" >
+        <div
+            *ngFor="let movie of (movies?.results ?? [])"
+            class="movie-small-card rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out flex flex-col relative border border-gray-100"
             [ngClass]="{'border-2 border-blue-500': isDeleteModeOn}"
-        > 
-            <div 
-                *ngIf="isDeleteModeOn" 
+        >
+            <div
+                *ngIf="isDeleteModeOn"
                 class="absolute top-3 left-3 z-20"
             >
-                <input 
-                    type="checkbox" 
+                <input
+                    type="checkbox"
                     (change)="handleCheckboxChange(movie.id)"
                     class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                 />
             </div>
 
             <a [routerLink]="'/movies/' + movie.id" class="flex flex-grow overflow-hidden">
-                <div class="flex-shrink-0 w-24 h-full"> 
-                    <img 
-                        [src]="movie.posterUrl ?? 'assets/images/PlaceholderMoviePoster.png'" 
-                        alt="{{ movie.title }} Poster" 
+                <div class="flex-shrink-0 w-24 h-full">
+                    <img
+                        [src]="movie.posterUrl ?? 'assets/images/PlaceholderMoviePoster.png'"
+                        alt="{{ movie.title }} Poster"
                         class="w-full h-full object-cover rounded-l-lg"
                     >
                 </div>
-                
+
                 <div class="p-4 flex flex-col flex-grow justify-between">
                     <div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-1 line-clamp-2" title="{{movie.title}}">
                             {{ movie.title }}
                         </h3>
                         <p class="text-sm text-gray-600 mb-2">
-                            {{ movie.releaseYear ?? "N/A" }} 
+                            {{ movie.releaseYear ?? "N/A" }}
                             <span *ngIf="movie.director"> • {{ movie.director }}</span>
                         </p>
-                        
+
                         <span *ngIf="movie.status"
                               class="inline-block px-2 py-0.5 rounded-full text-xs font-medium"
                               [ngClass]="{
@@ -55,12 +57,12 @@
                               }">
                             {{ movie.status | titlecase }}
                         </span>
-                        
+
                         <p *ngIf="movie.runtimeMinutes" class="text-sm text-gray-700 mt-1">
                             {{ movie.runtimeMinutes }} min
                         </p>
                     </div>
-                    
+
                     <div *ngIf="movie.userRating" class="mt-2 text-yellow-500 text-base font-bold flex items-center">
                         <fa-icon [icon]="faStar" class="mr-1"></fa-icon>
                         {{ movie.userRating | number:'1.1-1' }}

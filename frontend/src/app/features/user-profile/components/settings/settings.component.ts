@@ -74,7 +74,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
             appTheme: ["light", Validators.required],
             confirmDeletions: [true],
             defaultMovieSortBy: ["watchedDate", Validators.required], 
-            moviesPerRow: [4, [Validators.required, Validators.min(1)]],
+            moviesPerRow: [3, [Validators.required, Validators.min(1)]],
             defaultStatsTimePeriod: [StatsTimePeriodOption.LAST_YEAR, Validators.required],
         });
     }
@@ -83,6 +83,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.subscription.add(this.authService.currentUser$.subscribe({
             next: (user) => {
                 this.currentUser = user;
+                if (user?.id && user?.userSettings) { // Ensure user and their settings are available
+                    this.settingsForm.patchValue(user.userSettings);
+                    this.initialSettings = { ...user.userSettings }; // Store for reset
+                }
                 this.isLoading = false;
             },
             error: (err) => {
@@ -121,6 +125,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         ).subscribe({
             next: (updatedUser: UserDataDto) => {
                 this.initialSettings = { ...updatedUser.userSettings };
+                this.authService.setCurrentUser(updatedUser); 
                 this.toastService.addToast({
                     title: "Success",
                     details: "Settings saved successfully!",

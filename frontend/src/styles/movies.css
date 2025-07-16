@@ -1,0 +1,8 @@
+.movie-small-card {
+    background-color: var(--movie-card-color);
+    color: var(--text-color);
+}
+
+.movie-title {
+    color: var(--movie-title-color);
+}

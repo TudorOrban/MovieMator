@@ -25,3 +25,8 @@
     font-size: 0.875rem;
     margin-top: 0.25rem;
 }
+
+.add-movies-section {
+   background: linear-gradient(to right, var(--secondary-color), var(--tertiary-color));
+   color: white;
+}

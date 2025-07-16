@@ -88,7 +88,7 @@ export interface UpdateMovieDto {
     watchedDate?: Date;
     userRating?: number;
     userReview?: string;
-    
+
     releaseYear?: number;
     posterUrl?: string;
     director?: string;
@@ -103,7 +103,8 @@ export interface UpdateMovieDto {
 
 // UI
 export interface CreateMovieDtoUi extends CreateMovieDto {
-    areDetailsExpanded?: boolean;
+    areMovieDetailsExpanded?: boolean;
+    areUserDetailsExpanded?: boolean;
     tmdbSearchResults: TmdbMovieResult[];
     searchTerms: Subject<string>;
     searchSubscription?: Subscription;

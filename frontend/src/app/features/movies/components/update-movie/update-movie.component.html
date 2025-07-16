@@ -43,244 +43,264 @@
             </ul>
         </div>
 
-        <!-- Release Year -->
-        <div class="space-y-2 mt-4">
-            <label for="releaseYear" class="form-label">Release Year</label>
-            <input 
-                type="number"
-                id="releaseYear"
-                name="releaseYear"
-                [(ngModel)]="movie.releaseYear"
-                class="form-input"
-                #releaseYearInput="ngModel"
-                min="1800"
-                max="2025"
-                pattern="^[0-9]*$"
-            >
-            <div 
-                *ngIf="hasBeenSubmitted() && releaseYearInput.invalid" 
-                class="form-error"
-            >
-                <div *ngIf="releaseYearInput.errors?.['pattern']">Release year must be a valid number.</div>
-                <div *ngIf="releaseYearInput.errors?.['type']">Release year must be a valid number.</div>
-                <div *ngIf="releaseYearInput.errors?.['min']">Release year is too early (min {{ releaseYearInput.errors?.['min']?.min }}).</div>
-                <div *ngIf="releaseYearInput.errors?.['max']">Release year cannot be in the future (max {{ releaseYearInput.errors?.['max']?.max }}).</div>
-            </div>
-        </div>
-
-        <!-- Runtime Minutes -->
-        <div class="space-y-2 mt-4">
-            <label for="runtimeMinutes" class="form-label">Runtime (minutes)</label>
-            <input
-                type="number"
-                id="runtimeMinutes"
-                name="runtimeMinutes"
-                [(ngModel)]="movie.runtimeMinutes"
-                class="form-input"
-                #runtimeMinutesInput="ngModel"
-                min="1"
-                max="999" >
-            <div
-                *ngIf="hasBeenSubmitted() && runtimeMinutesInput.invalid"
-                class="form-error"
-            >
-                <div *ngIf="runtimeMinutesInput.errors?.['min']">Runtime must be at least 1 minute.</div>
-                <div *ngIf="runtimeMinutesInput.errors?.['max']">Runtime cannot exceed {{ runtimeMinutesInput.errors?.['max']?.max }} minutes.</div>
-            </div>
-        </div>
-
-        <!-- Poster URL -->
-        <div class="space-y-2 mt-4">
-            <label for="posterUrl" class="form-label">Poster URL</label>
-            <input 
-                type="url"
-                id="posterUrl" 
-                name="posterUrl" 
-                [(ngModel)]="movie.posterUrl"
-                class="form-input"
-                #posterUrlInput="ngModel"
-            >
-            <div 
-                *ngIf="hasBeenSubmitted() && posterUrlInput.invalid" 
-                class="form-error"
-            >
-                <div *ngIf="posterUrlInput.errors?.['url']">Please enter a valid URL.</div>
-                <div *ngIf="posterUrlInput.errors?.['type']">Please enter a valid URL.</div>
-            </div>
-        </div>
-
-        <!-- Director -->
-        <div class="space-y-2 mt-4">
-            <label for="director" class="form-label">Director</label>
-            <input 
-                type="text" 
-                id="director" 
-                name="director" 
-                [(ngModel)]="movie.director"
-                class="form-input"
-                #directorInput="ngModel"
-                minlength="2" 
-                maxlength="100" 
-            >
-            <div 
-                *ngIf="hasBeenSubmitted() && directorInput.invalid" 
-                class="form-error"
-            >
-                <div *ngIf="directorInput.errors?.['minlength']">Director name must be at least 2 characters.</div>
-                <div *ngIf="directorInput.errors?.['maxlength']">Director name cannot exceed 100 characters.</div>
-            </div>
-        </div>
-
-        <!-- Plot Summary -->
-        <div class="space-y-2 mt-4">
-            <label for="plotSummary" class="form-label">Plot Summary</label>
-            <textarea 
-                id="plotSummary" 
-                name="plotSummary" 
-                [(ngModel)]="movie.plotSummary"
-                class="form-input"
-                rows="4"
-                minlength="10"
-                maxlength="1000"
-                #plotSummaryInput="ngModel"
-            ></textarea>
-            <div 
-                *ngIf="hasBeenSubmitted() && plotSummaryInput.invalid" 
-                class="form-error"
-            >
-                <div *ngIf="plotSummaryInput.errors?.['minlength']">Plot summary must be at least 10 characters.</div>
-                <div *ngIf="plotSummaryInput.errors?.['maxlength']">Plot summary cannot exceed 1000 characters.</div>
-            </div>
-        </div>
-
-        <!-- Genres -->
-        <div class="space-y-2 mt-4">
-            <app-tag-input
-                label="Genres"
-                placeholder="e.g., Action, Sci-Fi, Drama"
-                [currentTags]="movie.genres"
-                (tagsChange)="handleGenresChange($event)"
-            ></app-tag-input>
-        </div>
-
-        <!-- Actors -->
-        <div class="space-y-2 mt-4">
-            <app-tag-input
-                label="Actors"
-                placeholder="e.g., Tom Hanks, Emma Stone"
-                [currentTags]="movie.actors"
-                (tagsChange)="handleActorsChange($event)"
-            ></app-tag-input>
-        </div>
-
-        <!-- Status -->
-        <div class="space-y-2 mt-4">
-            <label for="status" class="form-label">Movie Status</label>
-            <app-enum-selector
-                [selectedValue]="movie.status"
-                [options]="movieStatusOptions"
-                placeholder="Select Movie Status"
-                (valueChange)="handleMovieStatusChange($event)"
-            ></app-enum-selector>
-        </div>
-
-        <!-- Watched Date -->
-        <!-- <div *ngIf="movie.status == MovieStatus.WATCHED" class="space-y-2 mt-4">
-            <label for="watchedDate" class="form-label">Watched Date</label>
-            <input 
-                type="date" 
-                id="watchedDate" 
-                name="watchedDate" 
-                [(ngModel)]="movie.watchedDate"
-                class="form-input"
-                #watchedDateInput="ngModel"
-            >
-            <div 
-                *ngIf="hasBeenSubmitted() && watchedDateInput.invalid" 
-                class="form-error"
-            >
-                <div *ngIf="watchedDateInput.errors?.['required']">Watched Date is required.</div>
-            </div>
-        </div> -->
-
-        <!-- Watched Dates -->
-        <div *ngIf="movie.status == MovieStatus.WATCHED" class="space-y-2 mt-4">
-            <label class="form-label">Watched Dates</label>
-            <div *ngIf="!movie.watchedDates || movie.watchedDates.length === 0" class="text-sm text-gray-500">
-                No watched dates added yet. Click '+' to add one.
-            </div>
-
-            <div *ngFor="let date of movie.watchedDates; let i = index" class="flex items-center space-x-2 mb-2">
-                <input
-                    type="date"
-                    id="watchedDates-{{i}}"
-                    name="watchedDates-{{i}}"
-                    [ngModel]="date | date:'yyyy-MM-dd'" (ngModelChange)="onWatchedDateChange(i, $event)"
-                    class="form-input flex-grow"
-                >
-                <button
-                    type="button"
-                    class="standard-action-button text-red-600 hover:text-red-700"
-                    (click)="removeWatchedDate(i)"
-                    aria-label="Remove watched date"
-                >
-                    <fa-icon [icon]="faTrash" />
-                </button>
-            </div>
-            <button
-                type="button"
-                class="standard-action-button bg-gray-50 space-x-2"
-                (click)="addWatchedDate()"
-                aria-label="Add new watched date"
-            >
-                <fa-icon [icon]="faPlus" /> 
-                <div>Add Watched Date</div>
+        <div class="flex items-center space-x-4 pt-4">
+            <label for="details-toggle" class="form-label text-lg">Movie Details</label>
+            <button id="details-toggle" class="text-gray-800 hover:text-black cursor-pointer" (click)="toggleIsMovieDetailsExpanded()" type="button">
+                <fa-icon [icon]="areMovieDetailsExpanded ? faCaretUp : faCaretDown"/>
             </button>
         </div>
-        
-        <!-- User Rating -->
-        <div class="space-y-2 mt-4">
-            <label for="userRating" class="form-label">Your Rating (1-10)</label>
-            <input 
-                type="number" 
-                id="userRating" 
-                name="userRating" 
-                [(ngModel)]="movie.userRating"
-                class="form-input"
-                #userRatingInput="ngModel"
-                min="1"
-                max="10"
-                step="0.1"
-            >
-            <div 
-                *ngIf="hasBeenSubmitted() && userRatingInput.invalid" 
-                class="form-error"
-            >
-                <div *ngIf="userRatingInput.errors?.['pattern']">Rating must be a digit between 1 and 10.</div>
-                <div *ngIf="userRatingInput.errors?.['type']">Rating must be a valid number.</div>
-                <div *ngIf="userRatingInput.errors?.['min']">Rating must be at least {{ userRatingInput.errors?.['min']?.min }}.</div>
-                <div *ngIf="userRatingInput.errors?.['max']">Rating cannot exceed {{ userRatingInput.errors?.['max']?.max }}.</div>
+
+        <!-- Movie Details -->
+        <div *ngIf="areMovieDetailsExpanded" class="space-y-2">
+            <!-- Release Year -->
+            <div class="space-y-2 mt-4">
+                <label for="releaseYear" class="form-label">Release Year</label>
+                <input 
+                    type="number"
+                    id="releaseYear"
+                    name="releaseYear"
+                    [(ngModel)]="movie.releaseYear"
+                    class="form-input"
+                    #releaseYearInput="ngModel"
+                    min="1800"
+                    max="2025"
+                    pattern="^[0-9]*$"
+                >
+                <div 
+                    *ngIf="hasBeenSubmitted() && releaseYearInput.invalid" 
+                    class="form-error"
+                >
+                    <div *ngIf="releaseYearInput.errors?.['pattern']">Release year must be a valid number.</div>
+                    <div *ngIf="releaseYearInput.errors?.['type']">Release year must be a valid number.</div>
+                    <div *ngIf="releaseYearInput.errors?.['min']">Release year is too early (min {{ releaseYearInput.errors?.['min']?.min }}).</div>
+                    <div *ngIf="releaseYearInput.errors?.['max']">Release year cannot be in the future (max {{ releaseYearInput.errors?.['max']?.max }}).</div>
+                </div>
+            </div>
+
+            <!-- Runtime Minutes -->
+            <div class="space-y-2 mt-4">
+                <label for="runtimeMinutes" class="form-label">Runtime (minutes)</label>
+                <input
+                    type="number"
+                    id="runtimeMinutes"
+                    name="runtimeMinutes"
+                    [(ngModel)]="movie.runtimeMinutes"
+                    class="form-input"
+                    #runtimeMinutesInput="ngModel"
+                    min="1"
+                    max="999" >
+                <div
+                    *ngIf="hasBeenSubmitted() && runtimeMinutesInput.invalid"
+                    class="form-error"
+                >
+                    <div *ngIf="runtimeMinutesInput.errors?.['min']">Runtime must be at least 1 minute.</div>
+                    <div *ngIf="runtimeMinutesInput.errors?.['max']">Runtime cannot exceed {{ runtimeMinutesInput.errors?.['max']?.max }} minutes.</div>
+                </div>
+            </div>
+
+            <!-- Poster URL -->
+            <div class="space-y-2 mt-4">
+                <label for="posterUrl" class="form-label">Poster URL</label>
+                <input 
+                    type="url"
+                    id="posterUrl" 
+                    name="posterUrl" 
+                    [(ngModel)]="movie.posterUrl"
+                    class="form-input"
+                    #posterUrlInput="ngModel"
+                >
+                <div 
+                    *ngIf="hasBeenSubmitted() && posterUrlInput.invalid" 
+                    class="form-error"
+                >
+                    <div *ngIf="posterUrlInput.errors?.['url']">Please enter a valid URL.</div>
+                    <div *ngIf="posterUrlInput.errors?.['type']">Please enter a valid URL.</div>
+                </div>
+            </div>
+
+            <!-- Director -->
+            <div class="space-y-2 mt-4">
+                <label for="director" class="form-label">Director</label>
+                <input 
+                    type="text" 
+                    id="director" 
+                    name="director" 
+                    [(ngModel)]="movie.director"
+                    class="form-input"
+                    #directorInput="ngModel"
+                    minlength="2" 
+                    maxlength="100" 
+                >
+                <div 
+                    *ngIf="hasBeenSubmitted() && directorInput.invalid" 
+                    class="form-error"
+                >
+                    <div *ngIf="directorInput.errors?.['minlength']">Director name must be at least 2 characters.</div>
+                    <div *ngIf="directorInput.errors?.['maxlength']">Director name cannot exceed 100 characters.</div>
+                </div>
+            </div>
+
+            <!-- Plot Summary -->
+            <div class="space-y-2 mt-4">
+                <label for="plotSummary" class="form-label">Plot Summary</label>
+                <textarea 
+                    id="plotSummary" 
+                    name="plotSummary" 
+                    [(ngModel)]="movie.plotSummary"
+                    class="form-input"
+                    rows="4"
+                    minlength="10"
+                    maxlength="1000"
+                    #plotSummaryInput="ngModel"
+                ></textarea>
+                <div 
+                    *ngIf="hasBeenSubmitted() && plotSummaryInput.invalid" 
+                    class="form-error"
+                >
+                    <div *ngIf="plotSummaryInput.errors?.['minlength']">Plot summary must be at least 10 characters.</div>
+                    <div *ngIf="plotSummaryInput.errors?.['maxlength']">Plot summary cannot exceed 1000 characters.</div>
+                </div>
+            </div>
+
+            <!-- Genres -->
+            <div class="space-y-2 mt-4">
+                <app-tag-input
+                    label="Genres"
+                    placeholder="e.g., Action, Sci-Fi, Drama"
+                    [currentTags]="movie.genres"
+                    (tagsChange)="handleGenresChange($event)"
+                ></app-tag-input>
+            </div>
+
+            <!-- Actors -->
+            <div class="space-y-2 mt-4">
+                <app-tag-input
+                    label="Actors"
+                    placeholder="e.g., Tom Hanks, Emma Stone"
+                    [currentTags]="movie.actors"
+                    (tagsChange)="handleActorsChange($event)"
+                ></app-tag-input>
             </div>
         </div>
 
-        <!-- User Review -->
-        <div class="space-y-2 mt-4">
-            <label for="userReview" class="form-label">Your Review</label>
-            <textarea 
-                id="userReview" 
-                name="userReview" 
-                [(ngModel)]="movie.userReview"
-                class="form-input"
-                rows="3" 
-                minlength="5"
-                #userReviewInput="ngModel"
-            ></textarea>
-            <div 
-                *ngIf="hasBeenSubmitted() && userReviewInput.invalid" 
-                class="form-error"
-            >
-                <div *ngIf="userReviewInput.errors?.['minlength']">Review must be at least 5 characters.</div>
-                <div *ngIf="userReviewInput.errors?.['maxlength']">Review cannot exceed 500 characters.</div>
+        <!-- User Details -->
+        <div class="flex items-center space-x-4 pt-4">
+            <label for="details-toggle" class="form-label text-lg">User Details</label>
+            <button id="details-toggle" class="text-gray-800 hover:text-black cursor-pointer" (click)="toggleIsUserDetailsExpanded()" type="button">
+                <fa-icon [icon]="areUserDetailsExpanded ? faCaretUp : faCaretDown"/>
+            </button>
+        </div>
+
+        <div *ngIf="areUserDetailsExpanded" class="space-y-2">
+            <!-- Status -->
+            <div class="space-y-2 mt-4">
+                <label for="status" class="form-label">Movie Status</label>
+                <app-enum-selector
+                    [selectedValue]="movie.status"
+                    [options]="movieStatusOptions"
+                    placeholder="Select Movie Status"
+                    (valueChange)="handleMovieStatusChange($event)"
+                ></app-enum-selector>
+            </div>
+
+            <!-- Watched Date -->
+            <!-- <div *ngIf="movie.status == MovieStatus.WATCHED" class="space-y-2 mt-4">
+                <label for="watchedDate" class="form-label">Watched Date</label>
+                <input 
+                    type="date" 
+                    id="watchedDate" 
+                    name="watchedDate" 
+                    [(ngModel)]="movie.watchedDate"
+                    class="form-input"
+                    #watchedDateInput="ngModel"
+                >
+                <div 
+                    *ngIf="hasBeenSubmitted() && watchedDateInput.invalid" 
+                    class="form-error"
+                >
+                    <div *ngIf="watchedDateInput.errors?.['required']">Watched Date is required.</div>
+                </div>
+            </div> -->
+
+            <!-- Watched Dates -->
+            <div *ngIf="movie.status == MovieStatus.WATCHED" class="space-y-2 mt-4">
+                <label class="form-label">Watched Dates</label>
+                <div *ngIf="!movie.watchedDates || movie.watchedDates.length === 0" class="text-sm text-gray-500">
+                    No watched dates added yet. Click '+' to add one.
+                </div>
+
+                <div *ngFor="let date of movie.watchedDates; let i = index" class="flex items-center space-x-2 mb-2">
+                    <input
+                        type="date"
+                        id="watchedDates-{{i}}"
+                        name="watchedDates-{{i}}"
+                        [ngModel]="date | date:'yyyy-MM-dd'" (ngModelChange)="onWatchedDateChange(i, $event)"
+                        class="form-input flex-grow"
+                    >
+                    <button
+                        type="button"
+                        class="standard-action-button text-red-600 hover:text-red-700"
+                        (click)="removeWatchedDate(i)"
+                        aria-label="Remove watched date"
+                    >
+                        <fa-icon [icon]="faTrash" />
+                    </button>
+                </div>
+                <button
+                    type="button"
+                    class="standard-action-button bg-gray-50 space-x-2 shadow-sm"
+                    (click)="addWatchedDate()"
+                    aria-label="Add new watched date"
+                >
+                    <fa-icon [icon]="faPlus" /> 
+                    <div>Add Watched Date</div>
+                </button>
+            </div>
+            
+            <!-- User Rating -->
+            <div class="space-y-2 mt-4">
+                <label for="userRating" class="form-label">Your Rating (1-10)</label>
+                <input 
+                    type="number" 
+                    id="userRating" 
+                    name="userRating" 
+                    [(ngModel)]="movie.userRating"
+                    class="form-input"
+                    #userRatingInput="ngModel"
+                    min="1"
+                    max="10"
+                    step="0.1"
+                >
+                <div 
+                    *ngIf="hasBeenSubmitted() && userRatingInput.invalid" 
+                    class="form-error"
+                >
+                    <div *ngIf="userRatingInput.errors?.['pattern']">Rating must be a digit between 1 and 10.</div>
+                    <div *ngIf="userRatingInput.errors?.['type']">Rating must be a valid number.</div>
+                    <div *ngIf="userRatingInput.errors?.['min']">Rating must be at least {{ userRatingInput.errors?.['min']?.min }}.</div>
+                    <div *ngIf="userRatingInput.errors?.['max']">Rating cannot exceed {{ userRatingInput.errors?.['max']?.max }}.</div>
+                </div>
+            </div>
+
+            <!-- User Review -->
+            <div class="space-y-2 mt-4">
+                <label for="userReview" class="form-label">Your Review</label>
+                <textarea 
+                    id="userReview" 
+                    name="userReview" 
+                    [(ngModel)]="movie.userReview"
+                    class="form-input"
+                    rows="3" 
+                    minlength="5"
+                    #userReviewInput="ngModel"
+                ></textarea>
+                <div 
+                    *ngIf="hasBeenSubmitted() && userReviewInput.invalid" 
+                    class="form-error"
+                >
+                    <div *ngIf="userReviewInput.errors?.['minlength']">Review must be at least 5 characters.</div>
+                    <div *ngIf="userReviewInput.errors?.['maxlength']">Review cannot exceed 500 characters.</div>
+                </div>
             </div>
         </div>
 

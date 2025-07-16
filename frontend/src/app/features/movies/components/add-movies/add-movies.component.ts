@@ -75,7 +75,8 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
             tmdbId: -1,
             title: "",
             status: MovieStatus.WATCHED,
-            areDetailsExpanded: false,
+            areMovieDetailsExpanded: false,
+            areUserDetailsExpanded: true,
             tmdbSearchResults: [],
             searchTerms: new Subject<string>(),
             isTitleUnique: true,
@@ -139,7 +140,7 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
         }
 
         const moviesToCreate: CreateMovieDto[] = this.movies.map(movieUi => {
-            const { areDetailsExpanded, tmdbSearchResults, searchTerms, searchSubscription, ...rest } = movieUi;
+            const { areMovieDetailsExpanded: areDetailsExpanded, tmdbSearchResults, searchTerms, searchSubscription, ...rest } = movieUi;
             return rest;
         });
 
@@ -242,7 +243,11 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
     }
 
     toggleIsMovieDetailsExpanded(index: number): void {
-        this.movies[index].areDetailsExpanded = !this.movies[index].areDetailsExpanded;
+        this.movies[index].areMovieDetailsExpanded = !this.movies[index].areMovieDetailsExpanded;
+    }
+
+    toggleIsUserDetailsExpanded(index: number): void {
+        this.movies[index].areUserDetailsExpanded = !this.movies[index].areUserDetailsExpanded;
     }
 
     MovieStatus = MovieStatus;

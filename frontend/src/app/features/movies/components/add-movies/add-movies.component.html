@@ -1,16 +1,17 @@
 <div class="page-std-padding-x page-std-padding-y">
-    <div class="text-2xl font-semibold py-4">
+    <div class="text-3xl font-semibold py-4">
         Add Movies
     </div>
 
     <form (ngSubmit)="onSubmit()">
         <div *ngFor="let movie of movies; let i = index">
-            <div *ngIf="i > 0" class="border-t border-gray-300 my-8"></div>
+            <!-- <div class="border-t border-gray-400 mt-4"></div> -->
 
-            <div class="flex items-center justify-between py-4">
-                <div class="text-xl font-semibold">
-                    • Movie #{{ i + 1 }}
-                </div>
+            <div class="add-movies-section flex items-center justify-between p-4 my-4 border border-gray-300 rounded-md">
+                <h2 class="text-2xl font-semibold">
+                    Movie #{{ i + 1 }}
+                </h2>
+
                 <button
                     type="button"
                     class="standard-action-button text-red-600 hover:text-red-700"
@@ -20,6 +21,8 @@
                     <fa-icon [icon]="faTrash" />
                 </button>
             </div>
+
+            <!-- <div class="border-t border-gray-400 mb-4"></div> -->
 
             <!-- Title Search -->
             <div class="space-y-2 relative">
@@ -70,11 +73,11 @@
             <div class="flex items-center space-x-4 pt-4">
                 <label for="details-toggle-{{i}}" class="form-label text-lg">Movie Details</label>
                 <button id="details-toggle-{{i}}" class="text-gray-800 hover:text-black" (click)="toggleIsMovieDetailsExpanded(i)" type="button">
-                    <fa-icon [icon]="movie.areDetailsExpanded ? faCaretUp : faCaretDown"/>
+                    <fa-icon [icon]="movie.areMovieDetailsExpanded ? faCaretUp : faCaretDown"/>
                 </button>
             </div>
 
-            <div *ngIf="movie.areDetailsExpanded" class="space-y-2">
+            <div *ngIf="movie.areMovieDetailsExpanded" class="space-y-2">
                 <!-- Release Year -->
                 <div class="space-y-2 mt-4">
                     <label for="releaseYear-{{i}}" class="form-label">Release Year</label>
@@ -210,116 +213,126 @@
                 </div>
             </div>
 
-            <!-- Status -->
-            <div class="space-y-2 mt-4">
-                <label for="status-{{i}}" class="form-label">Movie Status</label>
-                <app-enum-selector
-                    id="status-{{i}}"
-                    name="status_{{i}}"
-                    [selectedValue]="movie.status"
-                    [options]="movieStatusOptions"
-                    placeholder="Select Movie Status"
-                    (valueChange)="handleMovieStatusChange(i, $event)"
-                ></app-enum-selector>
-            </div>
-
-            <!-- Watched Date -->
-            <!-- <div *ngIf="movie.status == MovieStatus.WATCHED" class="space-y-2 mt-4">
-                <label for="watchedDate-{{i}}" class="form-label">Watched Date</label>
-                <input 
-                    type="date" 
-                    id="watchedDate-{{i}}" 
-                    name="watchedDate-{{i}}" 
-                    [(ngModel)]="movie.watchedDate"
-                    class="form-input"
-                    #watchedDateInput="ngModel"
-                >
-                <div 
-                    *ngIf="hasBeenSubmitted() && watchedDateInput.invalid" 
-                    class="form-error"
-                >
-                    <div *ngIf="watchedDateInput.errors?.['required']">Watched Date is required.</div>
-                </div>
-            </div> -->
-
-            <!-- Watched Dates -->
-            <div *ngIf="movie.status == MovieStatus.WATCHED" class="space-y-2 mt-4">
-                <label class="form-label">Watched Dates</label>
-                <div *ngIf="!movie.watchedDates || movie.watchedDates.length === 0" class="text-sm text-gray-500">
-                    No watched dates added yet. Click '+' to add one.
-                </div>
-
-                <div *ngFor="let date of movie.watchedDates; let j = index" class="flex items-center space-x-2 mb-2">
-                    <input
-                        type="date"
-                        id="watchedDate-{{i}}-{{j}}"
-                        name="watchedDate-{{i}}-{{j}}"
-                        [ngModel]="date | date:'yyyy-MM-dd'" (ngModelChange)="onWatchedDateChange(i, j, $event)"
-                        class="form-input flex-grow"
-                    >
-                    <button
-                        type="button"
-                        class="standard-action-button text-red-600 hover:text-red-700"
-                        (click)="removeWatchedDate(i, j)"
-                        aria-label="Remove watched date"
-                    >
-                        <fa-icon [icon]="faTrash" />
-                    </button>
-                </div>
-                <button
-                    type="button"
-                    class="standard-action-button bg-gray-50 space-x-2"
-                    (click)="addWatchedDate(i)"
-                    aria-label="Add new watched date"
-                >
-                    <fa-icon [icon]="faPlus" /> 
-                    <div>Add Watched Date</div>
+            <!-- User Details -->
+            <div class="flex items-center space-x-4 pt-4">
+                <label for="details-toggle" class="form-label text-lg">User Details</label>
+                <button id="details-toggle" class="text-gray-800 hover:text-black cursor-pointer" (click)="toggleIsUserDetailsExpanded(i)" type="button">
+                    <fa-icon [icon]="movie.areUserDetailsExpanded ? faCaretUp : faCaretDown"/>
                 </button>
             </div>
 
-            <!-- User Rating -->
-            <div class="space-y-2 mt-4">
-                <label for="userRating-{{i}}" class="form-label">Your Rating (1-10)</label>
-                <input 
-                    type="number" 
-                    id="userRating-{{i}}" 
-                    name="userRating-{{i}}" 
-                    [(ngModel)]="movie.userRating"
-                    class="form-input"
-                    #userRatingInput="ngModel"
-                    min="1"
-                    max="10"
-                    step="0.1"
-                >
-                <div 
-                    *ngIf="hasBeenSubmitted() && userRatingInput.invalid" 
-                    class="form-error"
-                >
-                    <div *ngIf="userRatingInput.errors?.['pattern']">Rating must be a digit between 1 and 10.</div>
-                    <div *ngIf="userRatingInput.errors?.['type']">Rating must be a valid number.</div>
-                    <div *ngIf="userRatingInput.errors?.['min']">Rating must be at least {{ userRatingInput.errors?.['min']?.min }}.</div>
-                    <div *ngIf="userRatingInput.errors?.['max']">Rating cannot exceed {{ userRatingInput.errors?.['max']?.max }}.</div>
+            <div *ngIf="movie.areUserDetailsExpanded" class="space-y-2">
+                <!-- Status -->
+                <div class="space-y-2 mt-4">
+                    <label for="status-{{i}}" class="form-label">Movie Status</label>
+                    <app-enum-selector
+                        id="status-{{i}}"
+                        name="status_{{i}}"
+                        [selectedValue]="movie.status"
+                        [options]="movieStatusOptions"
+                        placeholder="Select Movie Status"
+                        (valueChange)="handleMovieStatusChange(i, $event)"
+                    ></app-enum-selector>
                 </div>
-            </div>
 
-            <!-- User Review -->
-            <div class="space-y-2 mt-4">
-                <label for="userReview-{{i}}" class="form-label">Your Review</label>
-                <textarea 
-                    id="userReview-{{i}}" 
-                    name="userReview-{{i}}" 
-                    [(ngModel)]="movie.userReview"
-                    class="form-input"
-                    rows="3" 
-                    minlength="5"
-                    #userReviewInput="ngModel"
-                ></textarea>
-                <div 
-                    *ngIf="hasBeenSubmitted() && userReviewInput.invalid" 
-                    class="form-error"
-                >
-                    <div *ngIf="userReviewInput.errors?.['minlength']">Review must be at least 5 characters.</div>
-                    <div *ngIf="userReviewInput.errors?.['maxlength']">Review cannot exceed 500 characters.</div>
+                <!-- Watched Date -->
+                <!-- <div *ngIf="movie.status == MovieStatus.WATCHED" class="space-y-2 mt-4">
+                    <label for="watchedDate-{{i}}" class="form-label">Watched Date</label>
+                    <input 
+                        type="date" 
+                        id="watchedDate-{{i}}" 
+                        name="watchedDate-{{i}}" 
+                        [(ngModel)]="movie.watchedDate"
+                        class="form-input"
+                        #watchedDateInput="ngModel"
+                    >
+                    <div 
+                        *ngIf="hasBeenSubmitted() && watchedDateInput.invalid" 
+                        class="form-error"
+                    >
+                        <div *ngIf="watchedDateInput.errors?.['required']">Watched Date is required.</div>
+                    </div>
+                </div> -->
+
+                <!-- Watched Dates -->
+                <div *ngIf="movie.status == MovieStatus.WATCHED" class="space-y-2 mt-4">
+                    <label class="form-label">Watched Dates</label>
+                    <div *ngIf="!movie.watchedDates || movie.watchedDates.length === 0" class="text-sm text-gray-500">
+                        No watched dates added yet. Click '+' to add one.
+                    </div>
+
+                    <div *ngFor="let date of movie.watchedDates; let j = index" class="flex items-center space-x-2 mb-2">
+                        <input
+                            type="date"
+                            id="watchedDate-{{i}}-{{j}}"
+                            name="watchedDate-{{i}}-{{j}}"
+                            [ngModel]="date | date:'yyyy-MM-dd'" (ngModelChange)="onWatchedDateChange(i, j, $event)"
+                            class="form-input flex-grow"
+                        >
+                        <button
+                            type="button"
+                            class="standard-action-button text-red-600 hover:text-red-700"
+                            (click)="removeWatchedDate(i, j)"
+                            aria-label="Remove watched date"
+                        >
+                            <fa-icon [icon]="faTrash" />
+                        </button>
+                    </div>
+                    <button
+                        type="button"
+                        class="standard-action-button bg-gray-50 space-x-2"
+                        (click)="addWatchedDate(i)"
+                        aria-label="Add new watched date"
+                    >
+                        <fa-icon [icon]="faPlus" /> 
+                        <div>Add Watched Date</div>
+                    </button>
+                </div>
+
+                <!-- User Rating -->
+                <div class="space-y-2 mt-4">
+                    <label for="userRating-{{i}}" class="form-label">Your Rating (1-10)</label>
+                    <input 
+                        type="number" 
+                        id="userRating-{{i}}" 
+                        name="userRating-{{i}}" 
+                        [(ngModel)]="movie.userRating"
+                        class="form-input"
+                        #userRatingInput="ngModel"
+                        min="1"
+                        max="10"
+                        step="0.1"
+                    >
+                    <div 
+                        *ngIf="hasBeenSubmitted() && userRatingInput.invalid" 
+                        class="form-error"
+                    >
+                        <div *ngIf="userRatingInput.errors?.['pattern']">Rating must be a digit between 1 and 10.</div>
+                        <div *ngIf="userRatingInput.errors?.['type']">Rating must be a valid number.</div>
+                        <div *ngIf="userRatingInput.errors?.['min']">Rating must be at least {{ userRatingInput.errors?.['min']?.min }}.</div>
+                        <div *ngIf="userRatingInput.errors?.['max']">Rating cannot exceed {{ userRatingInput.errors?.['max']?.max }}.</div>
+                    </div>
+                </div>
+
+                <!-- User Review -->
+                <div class="space-y-2 mt-4">
+                    <label for="userReview-{{i}}" class="form-label">Your Review</label>
+                    <textarea 
+                        id="userReview-{{i}}" 
+                        name="userReview-{{i}}" 
+                        [(ngModel)]="movie.userReview"
+                        class="form-input"
+                        rows="3" 
+                        minlength="5"
+                        #userReviewInput="ngModel"
+                    ></textarea>
+                    <div 
+                        *ngIf="hasBeenSubmitted() && userReviewInput.invalid" 
+                        class="form-error"
+                    >
+                        <div *ngIf="userReviewInput.errors?.['minlength']">Review must be at least 5 characters.</div>
+                        <div *ngIf="userReviewInput.errors?.['maxlength']">Review cannot exceed 500 characters.</div>
+                    </div>
                 </div>
             </div>
         </div>

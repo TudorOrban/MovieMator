@@ -13,7 +13,7 @@ import { TagInputComponent } from "../../../../shared/common/components/tag-inpu
 import { TmdbMovieCredits, TmdbMovieDetails, TmdbMovieResult } from '../../models/Tmdb';
 import { TmdbService } from '../../services/tmdb.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown, faCaretUp, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-update-movie',
@@ -29,6 +29,8 @@ export class UpdateMovieComponent implements OnInit, OnDestroy {
         tmdbId: -1,
         title: ""
     }
+    areMovieDetailsExpanded: boolean = false;
+    areUserDetailsExpanded: boolean = true;
     hasBeenSubmitted = signal(false);
 
     movieStatusOptions: { label: string, value: MovieStatus }[] = [
@@ -56,6 +58,10 @@ export class UpdateMovieComponent implements OnInit, OnDestroy {
         });
         this.addUserSubscription();
         this.addSearchSubscription();
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
     private loadMovie(): void {
@@ -109,8 +115,12 @@ export class UpdateMovieComponent implements OnInit, OnDestroy {
         }));
     }
 
-    ngOnDestroy(): void {
-        this.subscription.unsubscribe();
+    toggleIsMovieDetailsExpanded(): void {
+        this.areMovieDetailsExpanded = !this.areMovieDetailsExpanded;
+    }
+
+    toggleIsUserDetailsExpanded(): void {
+        this.areUserDetailsExpanded = !this.areUserDetailsExpanded;
     }
 
     onSubmit(): void {
@@ -210,4 +220,6 @@ export class UpdateMovieComponent implements OnInit, OnDestroy {
     MovieStatus = MovieStatus;
     faTrash = faTrash;
     faPlus = faPlus;
+    faCaretUp = faCaretUp;
+    faCaretDown = faCaretDown;
 }

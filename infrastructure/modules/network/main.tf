@@ -96,13 +96,9 @@ resource "aws_eip" "nat" {
 }
 
 resource "aws_nat_gateway" "main" {
-  # count         = length(var.public_subnet_cidrs)
-  # allocation_id = aws_eip.nat[count.index].id
-  # subnet_id     = aws_subnet.public[count.index].id
   allocation_id = aws_eip.nat.id
   subnet_id     = aws_subnet.public[0].id
   tags = {
-    # Name        = "${var.env}-nat-gateway-${count.index + 1}"
     Name        = "${var.env}-nat-gateway"
     Environment = var.env
     Project     = var.project_name
@@ -114,9 +110,8 @@ resource "aws_route" "private_nat_gateway" {
   count                  = length(var.private_subnet_cidrs)
   route_table_id         = aws_route_table.private[count.index].id
   destination_cidr_block = "0.0.0.0/0"
-  # nat_gateway_id         = aws_nat_gateway.main[count.index].id
-  nat_gateway_id = aws_nat_gateway.main.id
-  depends_on     = [aws_nat_gateway.main]
+  nat_gateway_id         = aws_nat_gateway.main.id
+  depends_on             = [aws_nat_gateway.main]
 }
 
 resource "aws_vpc_endpoint" "s3_gateway" {

@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, filter, switchMap, take } from "rxjs";
-import { signUp, confirmSignUp, signIn, SignInOutput, fetchAuthSession, signOut, getCurrentUser } from "aws-amplify/auth";
+import { signUp, confirmSignUp, signIn, SignInOutput, fetchAuthSession, signOut, getCurrentUser, resetPassword, confirmResetPassword } from "aws-amplify/auth";
 import { UserService } from "./user.service";
 import { CreateUserDto, UserDataDto } from "../models/User";
 
@@ -131,6 +131,30 @@ export class AuthService {
             next: (data) => this._currentUserSubject.next(data),
             error: (error) => console.error("AuthService: Error creating user:", error)
         });
+    }
+
+    async forgotPassword(email: string): Promise<void> {
+        try {
+            await resetPassword({ username: email });
+            console.log("Password reset code sent successfully.");
+        } catch (error: any) {
+            console.error("AuthService: Forgot password error:", error);
+            throw error;
+        }
+    }
+
+    async confirmNewPassword(email: string, confirmationCode: string, newPassword: string): Promise<void> {
+        try {
+            await confirmResetPassword({
+                username: email,
+                confirmationCode: confirmationCode,
+                newPassword: newPassword
+            });
+            console.log("Password reset confirmed successfully.");
+        } catch (error: any) {
+            console.error("AuthService: Confirm new password error:", error);
+            throw error;
+        }
     }
 
     async logout(): Promise<void> {

@@ -131,8 +131,8 @@
                 </div>
 
                 <div class="text-sm movie-label pt-4 border-t border-gray-200 flex justify-between flex-wrap gap-2">
-                    <p *ngIf="movie.createdAt">Added: {{ movie.createdAt | date:'medium' }}</p>
-                    <p *ngIf="movie.updatedAt">Last Updated: {{ movie.updatedAt | date:'medium' }}</p>
+                    <p *ngIf="movie.createdAt">Added: {{ movie.createdAt | date:'medium':'UTC' }}</p>
+                    <p *ngIf="movie.updatedAt">Last Updated: {{ movie.updatedAt | date:'medium':'UTC' }}</p>
                 </div>
             </div>
         </div>

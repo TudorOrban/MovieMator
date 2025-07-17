@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit {
             { name: "twitter:card", content: "summary_large_image" },
             { name: "twitter:title", content: "MovieMator - Track, Rate & Organize Your Movies!" },
             { name: "twitter:description", content: "Effortlessly log, rate, and explore your cinematic journey with MovieMator. Start tracking today!" },
-            { name: "twitter:image", content: "https://www.moviemator.org/assets/images/moviemator-twitter-card.jpg" }
+            { name: "twitter:image", content: "https://www.moviemator.org/assets/images/Logo.jpg" }
         ]);
     }
 

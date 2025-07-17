@@ -188,11 +188,10 @@ describe("MoviesComponent", () => {
 
         // Act
         component.searchMovies();
-        // Assert isLoading is true immediately after calling the method (synchronous part)
         expect(component.isLoading).toBeTrue(); 
         
-        tick(); // Flush the asynchronous observable completion
-
+        tick(); 
+        
         // Assert after async operation
         expect(mockMovieService.searchMovies).toHaveBeenCalledWith(
             component.userId,
@@ -212,11 +211,11 @@ describe("MoviesComponent", () => {
 
         // Act
         component.searchMovies();
-        // Assert isLoading is true immediately after calling the method (synchronous part)
+        // Assert
         expect(component.isLoading).toBeTrue(); 
 
-        tick(); // Flush the asynchronous observable error
-
+        tick();
+        
         // Assert after async operation
         expect(mockMovieService.searchMovies).toHaveBeenCalled();
         expect(console.error).toHaveBeenCalledWith("Error searching movies: ", errorResponse);
@@ -233,7 +232,7 @@ describe("MoviesComponent", () => {
 
         // Assert
         expect(mockMovieService.searchMovies).not.toHaveBeenCalled();
-        expect(component.isLoading).toBeFalse(); // Should be false as no API call was made
+        expect(component.isLoading).toBeFalse(); 
     });
 
 
@@ -257,7 +256,7 @@ describe("MoviesComponent", () => {
         // Act
         component.handleMovieFiltersChange(newFilters);
         
-        tick(); // Flush the searchMovies call made inside the handler
+        tick(); 
 
         // Assert
         expect(component.movieFilters).toEqual(newFilters);
@@ -274,7 +273,7 @@ describe("MoviesComponent", () => {
         // Act
         component.handlePageChange(newPage);
         
-        tick(); // Flush the searchMovies call made inside the handler
+        tick();
 
         // Assert
         expect(component.searchParams.page).toBe(newPage);
@@ -288,13 +287,13 @@ describe("MoviesComponent", () => {
 
         // Act
         component.toggleDeleteMode();
-        // Assert after first toggle
+        // Assert
         expect(component.isDeleteModeOn).toBeTrue();
         expect(component.toBeDeletedMovieIds).toEqual([]);
 
         // Act again
         component.toggleDeleteMode();
-        // Assert after second toggle
+        // Assert
         expect(component.isDeleteModeOn).toBeFalse();
         expect(component.toBeDeletedMovieIds).toEqual([]);
     });
@@ -344,11 +343,11 @@ describe("MoviesComponent", () => {
 
         // Act
         component.deleteMovies();
-        // Assert isLoading is true immediately after calling the method (synchronous part)
+        
+        // Assert
         expect(component.isLoading).toBeTrue(); 
 
-        tick(); // Flush the deleteMovies observable
-        // Assert state after deleteMovies completes
+        tick();
         expect(component.isDeleteModeOn).toBeFalse();
         expect(component.toBeDeletedMovieIds).toEqual([]);
         expect(mockToastManagerService.addToast).toHaveBeenCalledWith({
@@ -359,8 +358,7 @@ describe("MoviesComponent", () => {
         expect(component.searchParams.page).toBe(1);
         expect(mockMovieService.searchMovies).toHaveBeenCalledTimes(1);
         
-        tick(); // Flush the searchMovies observable that happens after successful deletion
-        // Assert isLoading after the re-search
+        tick();
         expect(component.isLoading).toBeFalse();
     }));
 
@@ -375,21 +373,19 @@ describe("MoviesComponent", () => {
 
         // Act
         component.deleteMovies();
-        // Assert isLoading is true immediately after calling the method (synchronous part)
         expect(component.isLoading).toBeTrue(); 
 
-        tick(); // Flush the deleteMovies observable
-
-        // Assert state after deleteMovies error
-        expect(component.isDeleteModeOn).toBeTrue(); // State should not reset on error
-        expect(component.toBeDeletedMovieIds).toEqual([1, 2]); // IDs should not clear on error
+        tick(); 
+        
+        expect(component.isDeleteModeOn).toBeTrue();
+        expect(component.toBeDeletedMovieIds).toEqual([1, 2]);
         expect(mockToastManagerService.addToast).toHaveBeenCalledWith({
             title: "Error",
             details: "An error occurred deleting the movies.",
             type: ToastType.ERROR
         });
         expect(console.error).toHaveBeenCalledWith("Error deleting movies: ", errorResponse);
-        expect(mockMovieService.searchMovies).not.toHaveBeenCalled(); // Should not re-search on deletion error
+        expect(mockMovieService.searchMovies).not.toHaveBeenCalled();
         expect(component.isLoading).toBeFalse();
     }));
 
@@ -421,8 +417,8 @@ describe("MoviesComponent", () => {
         mockMovieService.searchMovies.and.returnValue(of(mockPaginatedMovies));
 
         // Act
-        fixture.detectChanges(); // ngOnInit triggers the subscription and reassignment of component.subscription
-        currentUserSubject.next(mockUserData); // Ensure the subscription is active
+        fixture.detectChanges();
+        currentUserSubject.next(mockUserData);
 
         component.ngOnDestroy();
 

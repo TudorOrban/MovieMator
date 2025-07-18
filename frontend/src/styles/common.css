@@ -32,6 +32,14 @@
     background-color: var(--background-color);
 }
 
+.std-bg-hover {
+    background-color: var(--shaded-bg-color);
+}
+
+.std-bg-hover:hover {
+    background-color: var(--background-color);
+}
+
 .std-shaded-bg {
     background-color: var(--shaded-bg-color);
 }

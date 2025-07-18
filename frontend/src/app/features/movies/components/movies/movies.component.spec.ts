@@ -56,6 +56,7 @@ describe("MoviesComponent", () => {
             moviesPerRow: 5,
             defaultStatsTimePeriod: StatsTimePeriodOption.LAST_YEAR
         },
+        isProfilePublic: false
     };
 
     beforeEach(async () => {

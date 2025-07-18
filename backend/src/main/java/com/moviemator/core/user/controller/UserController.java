@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping("/cognito-id/{cognitoUserId}")
-    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isCognitoUserOrAdmin(#cognitoUserId, authentication)")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isCognitoUserOrAdmin(#cognitoUserId, authentication) or @userSecurity.isProfilePublic(#cognitoUserId)")
     public ResponseEntity<UserDataDto> getUserByCognitoUserId(@PathVariable String cognitoUserId, Authentication authentication) {
         UserDataDto user = userService.getUserByCognitoUserId(cognitoUserId);
         return ResponseEntity.ok(user);

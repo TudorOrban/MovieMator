@@ -51,11 +51,11 @@ public class UserServiceImplTest {
         testUser.setEmail("test@example.com");
         testUser.setCognitoUserId("cognito-123");
 
-        testUserDataDto = new UserDataDto(1L, "cognito-123", "test@example.com", "Test User", LocalDateTime.now(), LocalDateTime.now(), null);
+        testUserDataDto = new UserDataDto(1L, "cognito-123", "test@example.com", "Test User", LocalDateTime.now(), LocalDateTime.now(), null, null);
 
         testCreateUserDto = new CreateUserDto("new-cognito-id", "new@example.com");
 
-        testUpdateUserDto = new UpdateUserDto(1L, "Updated User", new UserSettings());
+        testUpdateUserDto = new UpdateUserDto(1L, "Updated User", new UserSettings(), null);
     }
 
     @Test

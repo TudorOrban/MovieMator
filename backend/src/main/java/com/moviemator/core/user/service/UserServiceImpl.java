@@ -62,6 +62,7 @@ public class UserServiceImpl implements UserService {
 
         existingUser.setDisplayName(sanitizedDto.getDisplayName());
         existingUser.setUserSettings(sanitizedDto.getUserSettings());
+        existingUser.setIsProfilePublic(sanitizedDto.getIsProfilePublic());
 
         User updatedUser = userRepository.save(existingUser);
 

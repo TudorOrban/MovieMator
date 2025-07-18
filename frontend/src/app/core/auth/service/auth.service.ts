@@ -26,24 +26,6 @@ export class AuthService {
         this.loadUserIfAuthenticated();
     }
 
-    private async loadUserIfAuthenticated(): Promise<void> {
-        try {
-            const currentUser = await getCurrentUser();
-            const authSession = await fetchAuthSession();
-
-            if (currentUser && authSession.userSub && authSession.tokens?.accessToken) {
-                this._isAuthenticatedSubject.next(true);
-                this._cognitoUserDataSubject.next(currentUser);
-                this._accessTokenSubject.next(authSession.tokens.accessToken.toString());
-                this.loadCurrentUser(authSession.userSub);
-            } else {
-                this.clearAllAuthStates();
-            }
-        } catch (e: any) {
-            this.clearAllAuthStates();
-        }
-    }
-
     setCurrentUser(user: UserDataDto | null): void {
         this._currentUserSubject.next(user);
     }
@@ -83,6 +65,65 @@ export class AuthService {
         } catch (error: any) {
             console.error("AuthService: Direct Login error:", error);
             throw error;
+        }
+    }
+
+    async forgotPassword(email: string): Promise<void> {
+        try {
+            await resetPassword({ username: email });
+        } catch (error: any) {
+            console.error("AuthService: Forgot password error:", error);
+            throw error;
+        }
+    }
+
+    async confirmNewPassword(email: string, confirmationCode: string, newPassword: string): Promise<void> {
+        try {
+            await confirmResetPassword({
+                username: email,
+                confirmationCode: confirmationCode,
+                newPassword: newPassword
+            });
+        } catch (error: any) {
+            console.error("AuthService: Confirm new password error:", error);
+            throw error;
+        }
+    }
+
+    async changeUserPassword(oldPassword: string, newPassword: string): Promise<void> {
+        try {
+            await updatePassword({ oldPassword, newPassword });
+        } catch (error: any) {
+            console.error("AuthService: Change password error:", error);
+            throw error;
+        }
+    }
+
+    async logout(): Promise<void> {
+        try {
+            await signOut();
+            this.clearAllAuthStates();
+        } catch (error: any) {
+            console.error("AuthService: Error during logout:", error);
+            this.clearAllAuthStates();
+        }
+    }
+
+    private async loadUserIfAuthenticated(): Promise<void> {
+        try {
+            const currentUser = await getCurrentUser();
+            const authSession = await fetchAuthSession();
+
+            if (currentUser && authSession.userSub && authSession.tokens?.accessToken) {
+                this._isAuthenticatedSubject.next(true);
+                this._cognitoUserDataSubject.next(currentUser);
+                this._accessTokenSubject.next(authSession.tokens.accessToken.toString());
+                this.loadCurrentUser(authSession.userSub);
+            } else {
+                this.clearAllAuthStates();
+            }
+        } catch (e: any) {
+            this.clearAllAuthStates();
         }
     }
 
@@ -132,47 +173,6 @@ export class AuthService {
             next: (data) => this._currentUserSubject.next(data),
             error: (error) => console.error("AuthService: Error creating user:", error)
         });
-    }
-
-    async forgotPassword(email: string): Promise<void> {
-        try {
-            await resetPassword({ username: email });
-        } catch (error: any) {
-            console.error("AuthService: Forgot password error:", error);
-            throw error;
-        }
-    }
-
-    async confirmNewPassword(email: string, confirmationCode: string, newPassword: string): Promise<void> {
-        try {
-            await confirmResetPassword({
-                username: email,
-                confirmationCode: confirmationCode,
-                newPassword: newPassword
-            });
-        } catch (error: any) {
-            console.error("AuthService: Confirm new password error:", error);
-            throw error;
-        }
-    }
-
-    async changeUserPassword(oldPassword: string, newPassword: string): Promise<void> {
-        try {
-            await updatePassword({ oldPassword, newPassword });
-        } catch (error: any) {
-            console.error("AuthService: Change password error:", error);
-            throw error;
-        }
-    }
-
-    async logout(): Promise<void> {
-        try {
-            await signOut();
-            this.clearAllAuthStates();
-        } catch (error: any) {
-            console.error("AuthService: Error during logout:", error);
-            this.clearAllAuthStates();
-        }
     }
 
     private loadCurrentUser(cognitoUserId: string): void {

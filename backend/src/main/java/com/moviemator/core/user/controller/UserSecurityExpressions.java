@@ -3,6 +3,8 @@ package com.moviemator.core.user.controller;
 import com.moviemator.core.user.dto.CreateUserDto;
 import com.moviemator.core.user.dto.UpdateUserDto;
 import com.moviemator.core.user.dto.UserDataDto;
+import com.moviemator.core.user.model.User;
+import com.moviemator.core.user.repository.UserRepository;
 import com.moviemator.core.user.service.UserService;
 import com.moviemator.features.movie.dto.CreateMovieDto;
 import com.moviemator.features.movie.dto.MovieDataDto;
@@ -18,17 +20,21 @@ import java.util.List;
 public class UserSecurityExpressions {
 
     private final UserService userService;
+    private final UserRepository userRepository;
     private final MovieService movieService;
 
     @Autowired
     public UserSecurityExpressions(
             UserService userService,
+            UserRepository userRepository,
             MovieService movieService
     ) {
         this.userService = userService;
+        this.userRepository = userRepository;
         this.movieService = movieService;
     }
 
+    // User
     public boolean canCreateUserWithCognitoId(CreateUserDto userDto, Authentication authentication) {
         if (authentication == null || authentication.getName() == null || userDto == null || userDto.getCognitoUserId() == null) {
             return false;
@@ -68,6 +74,13 @@ public class UserSecurityExpressions {
         }
     }
 
+    public boolean isProfilePublic(String cognitoUserId) {
+        return userRepository.findByCognitoUserId(cognitoUserId)
+                .map(User::getIsProfilePublic)
+                .orElse(false);
+    }
+
+    // Movie
     public boolean isMovieOwnerById(Long movieId, Authentication authentication) {
         if (authentication == null || authentication.getName() == null || movieId == null) {
             return false;

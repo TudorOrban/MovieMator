@@ -117,7 +117,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
         const updatedUser: UpdateUserDto = {
             id: this.currentUser.id,
             displayName: this.currentUser.displayName,
-            userSettings: updatedSettings
+            userSettings: updatedSettings,
+            isProfilePublic: this.currentUser.isProfilePublic
         };
 
         this.userService.updateUser(updatedUser).pipe(

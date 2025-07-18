@@ -14,4 +14,5 @@ public class UpdateUserDto {
     private Long id;
     private String displayName;
     private UserSettings userSettings;
+    private Boolean isProfilePublic;
 }

@@ -20,4 +20,5 @@ public class UserDataDto {
 
     // New
     private UserSettings userSettings;
+    private Boolean isProfilePublic;
 }

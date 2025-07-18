@@ -39,6 +39,9 @@ public class User {
     @Column(name = "user_settings", columnDefinition = "jsonb")
     private UserSettings userSettings = new UserSettings();
 
+    @Column(name = "is_profile_public", nullable = false)
+    private Boolean isProfilePublic;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

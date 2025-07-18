@@ -26,7 +26,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
     editProfileData: UpdateUserDto = {
         id: -1,
-        displayName: ""
+        displayName: "",
+        isProfilePublic: false
     };
 
     formSubmitted: boolean = false;
@@ -39,15 +40,15 @@ export class EditProfileComponent implements OnInit, OnDestroy {
         this.subscription = this.authService.currentUser$.subscribe({
             next: (data) => {
                 if (!data) {
-                    this.router.navigate(["/signup"]);
                     return;
                 }
-                this.editProfileData.id = data?.id;
-                this.editProfileData.displayName = data?.displayName;
+                this.editProfileData.id = data.id;
+                this.editProfileData.displayName = data.displayName;
+                this.editProfileData.userSettings = data.userSettings;
+                this.editProfileData.isProfilePublic = data.isProfilePublic ?? false;
             },
             error: (error) => {
                 console.error("Error getting current user: ", error);
-                this.router.navigate(["/signup"]);
             }
         })
     }
@@ -68,6 +69,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
         this.userService.updateUser(this.editProfileData).subscribe({
             next: (data) => {
                 this.toastService.addToast({ title: "Success", details: "Profile edited successfully.", type: ToastType.SUCCESS });
+                this.authService.setCurrentUser(data);
                 this.router.navigate(["/user-profile"]);
             },
             error: (error) => {

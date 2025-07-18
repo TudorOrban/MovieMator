@@ -8,6 +8,7 @@ export interface UserDataDto {
     updatedAt?: Date;
 
     userSettings: UserSettings;
+    isProfilePublic: boolean;
 }
 
 export interface CreateUserDto {
@@ -19,6 +20,7 @@ export interface UpdateUserDto {
     id: number;
     displayName?: string;
     userSettings?: UserSettings;
+    isProfilePublic?: boolean;
 }
 
 export interface UserSettings {

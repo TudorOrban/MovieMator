@@ -51,7 +51,6 @@ export class AddMovieComponent implements OnInit, OnDestroy {
         this.subscription = this.authService.currentUser$.subscribe({
             next: (data) => {
                 if (!data) {
-                    this.router.navigate(["/signup"]);
                     return;
                 }
                 this.movie.userId = data?.id;

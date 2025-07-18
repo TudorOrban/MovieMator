@@ -13,6 +13,7 @@ import { UpdateMovieComponent } from './features/movies/components/update-movie/
 import { AddMoviesComponent } from './features/movies/components/add-movies/add-movies.component';
 import { ChangePasswordComponent } from './core/auth/components/change-password/change-password.component';
 import { PrivacyPolicyComponent } from './core/main/components/privacy-policy/privacy-policy.component';
+import { TermsAndConditionsComponent } from './core/main/components/terms-and-conditions/terms-and-conditions.component';
 
 export const routes: Routes = [
     {
@@ -66,5 +67,9 @@ export const routes: Routes = [
     { 
         path: "privacy-policy", 
         component: PrivacyPolicyComponent 
+    },
+    { 
+        path: "terms-and-conditions", 
+        component: TermsAndConditionsComponent
     },
 ];

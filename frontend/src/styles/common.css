@@ -52,6 +52,10 @@
     background-color: var(--bg-color);
 }
 
+.std-text {
+    color: var(--text-color);
+}
+
 .std-shaded-text {
     color: var(--shaded-text-color);
 }
@@ -66,6 +70,10 @@
 
 .std-border-b {
     border-bottom: 1px solid var(--border-color);
+}
+
+.std-border-t {
+    border-top: 1px solid var(--border-color);
 }
 
 .std-element {

@@ -1,9 +1,13 @@
-<main class="">
+<main class="pt-16 flex flex-col min-h-screen ">
     <app-header
-        class="w-full"
+        class="fixed top-0 w-full z-30"
     ></app-header>
 
-    <router-outlet></router-outlet>
+    <div class="flex-grow">
+        <router-outlet class="h-full"></router-outlet>
+    </div>
+
+    <app-footer></app-footer>
 </main>
 
 <app-toast-manager></app-toast-manager>

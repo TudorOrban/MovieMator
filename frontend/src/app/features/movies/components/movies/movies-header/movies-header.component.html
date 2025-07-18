@@ -1,4 +1,4 @@
-<div class="w-full page-std-padding-x page-std-padding-y std-border-b">
+<div class="w-full page-std-padding-x page-std-padding-y std-border-b shadow-sm">
     <div class="flex items-center justify-between mb-6">
         <h2 class="page-title">Movies ({{ totalCount }})</h2>
     </div>
@@ -18,7 +18,7 @@
                         [items]="searchConfig.sortOptions"
                         [selectedValue]="searchParams.sortBy"
                         (selectedItemChange)="handleSortOptionChange($event)"
-                        class="w-full sm:w-auto"
+                        class="w-full sm:w-auto min-w-80"
                     ></app-selector>
                 </div>
 

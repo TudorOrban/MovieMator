@@ -26,6 +26,8 @@ export class StatisticsComponent implements OnInit, OnDestroy {
 
     isLoading: boolean = false;
 
+    directorDisplayLimit: number = 20;
+    showAllDirectors: boolean = false;
     actorDisplayLimit: number = 20;
     showAllActors: boolean = false;
 
@@ -223,6 +225,10 @@ export class StatisticsComponent implements OnInit, OnDestroy {
 
     onComputeStatistics(): void {
         this.loadStatistics();
+    }
+
+    toggleShowAllDirectors(): void {
+        this.showAllDirectors = !this.showAllDirectors;
     }
 
     toggleShowAllActors(): void {

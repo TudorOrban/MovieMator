@@ -5,6 +5,7 @@ import { UserDataDto } from '../../../../core/auth/models/User';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MovieService } from '../../../movies/services/movie.service';
+import { ThemeService } from '../../../../shared/common/services/theme.service';
 
 @Component({
     selector: 'app-user-profile',
@@ -14,6 +15,7 @@ import { MovieService } from '../../../movies/services/movie.service';
 export class UserProfileComponent implements OnInit, OnDestroy {
     currentUser: UserDataDto | null = null;
     isEditModeOn: boolean = false;
+    currentTheme: string = "light";
 
     subscription: Subscription = new Subscription();
 
@@ -27,21 +29,34 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
     constructor(
         private readonly authService: AuthService,
-        private readonly movieService: MovieService
+        private readonly movieService: MovieService,
+        private readonly themeService: ThemeService
     ) {
         this.currentHeatmapYear = new Date().getFullYear();
     }
 
     ngOnInit(): void {
-        this.subscription = this.authService.currentUser$.subscribe({
-            next: (user) => {
-                this.currentUser = user;
+        this.subscription.add(
+            this.authService.currentUser$.subscribe({
+                next: (user) => {
+                    this.currentUser = user;
 
-                if (user?.id) {
-                    this.fetchAllWatchedDates(user.id);
+                    if (user?.id) {
+                        this.fetchAllWatchedDates(user.id);
+                    }
+                },
+            })
+        );
+        this.subscription.add(
+            this.themeService.currentTheme$.subscribe({
+                next: (theme: string) => {
+                    this.currentTheme = theme;
+                },
+                error: (err) => {
+                    console.error("Error fetching theme:", err);
                 }
-            },
-        });
+            })
+        );
     }
 
     ngOnDestroy(): void {
@@ -166,7 +181,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     }
     
     getHeatmapColor(count: number): string {
-        if (count === 0) return "bg-gray-200";
+        const emptyColor = this.currentTheme === "light" ? "bg-gray-200" : "bg-gray-700";
+
+        if (count === 0) return emptyColor;
 
         if (this.maxDailyWatchCount === 0) {
             return "bg-green-100";
@@ -179,7 +196,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
             case 2: return "bg-green-300";
             case 3: return "bg-green-500";
             case 4: return "bg-green-700";
-            default: return "bg-gray-200"; 
+            default: return emptyColor; 
         }
     }
 }

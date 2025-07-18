@@ -22,7 +22,7 @@
                 >
             </div>
             <div class="flex-grow space-y-6">
-                <div class="flex items-center justify-between w-full space-x-4 border-b border-gray-200">
+                <div class="flex items-center justify-between w-full space-x-4 std-border-b">
                     <div class="pb-4 mb-4">
                         <h1 class="text-4xl font-extrabold movie-title mb-2">{{ movie.title }}</h1>
                         <p class="text-xl movie-label">
@@ -110,7 +110,7 @@
                     
                     </div>
 
-                <div class="space-y-2 pt-4 border-t border-gray-200">
+                <div class="space-y-2 pt-4 std-border-t">
                     <h2 class="text-xl font-semibold">Plot Summary:</h2>
                     <p class="leading-relaxed" *ngIf="movie.plotSummary; else noPlot">
                         {{ movie.plotSummary }}
@@ -120,7 +120,7 @@
                     </ng-template>
                 </div>
 
-                <div class="space-y-2 pt-4 border-t border-gray-200">
+                <div class="space-y-2 pt-4 std-border-t">
                     <h2 class="text-xl font-semibold">Your Review:</h2>
                     <p class="leading-relaxed" *ngIf="movie.userReview; else noReview">
                         {{ movie.userReview }}
@@ -130,7 +130,7 @@
                     </ng-template>
                 </div>
 
-                <div class="text-sm movie-label pt-4 border-t border-gray-200 flex justify-between flex-wrap gap-2">
+                <div class="text-sm movie-label pt-4 std-border-t flex justify-between flex-wrap gap-2">
                     <p *ngIf="movie.createdAt">Added: {{ movie.createdAt | date:'medium':'UTC' }}</p>
                     <p *ngIf="movie.updatedAt">Last Updated: {{ movie.updatedAt | date:'medium':'UTC' }}</p>
                 </div>

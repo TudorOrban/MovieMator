@@ -16,7 +16,7 @@
         [ngClass]="gridColsClass" >
         <div
             *ngFor="let movie of (movies?.results ?? [])"
-            class="movie-small-card rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out flex flex-col relative"
+            class="movie-small-card rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-[1.02] flex flex-col relative"
             [ngClass]="{'border-2 border-blue-500': isDeleteModeOn}"
         >
             <div

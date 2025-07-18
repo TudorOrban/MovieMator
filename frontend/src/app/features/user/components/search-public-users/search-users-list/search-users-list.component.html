@@ -15,7 +15,7 @@
             *ngFor="let user of (users?.results ?? [])"
             class="std-element rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-[1.02] overflow-hidden cursor-pointer"
         >
-            <a [routerLink]="'/users/cognito-id/' + user.displayName" class="p-6 flex items-center space-x-4">
+            <a [routerLink]="'/user-profile/' + user.id" class="p-6 flex items-center space-x-4">
                 <div class="flex-shrink-0">
                     <fa-icon [icon]="faUserCircle" size="2x" class="text-gray-400"></fa-icon>
                 </div>

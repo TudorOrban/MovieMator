@@ -26,14 +26,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isUserOrAdmin(#id, authentication)")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isUserOrAdmin(#id, authentication) or @userSecurity.isProfilePublic(#id)")
     public ResponseEntity<UserDataDto> getUserById(@PathVariable Long id, Authentication authentication) {
         UserDataDto user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
     @GetMapping("/cognito-id/{cognitoUserId}")
-    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isCognitoUserOrAdmin(#cognitoUserId, authentication) or @userSecurity.isProfilePublic(#cognitoUserId)")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isCognitoUserOrAdmin(#cognitoUserId, authentication)")
     public ResponseEntity<UserDataDto> getUserByCognitoUserId(@PathVariable String cognitoUserId, Authentication authentication) {
         UserDataDto user = userService.getUserByCognitoUserId(cognitoUserId);
         return ResponseEntity.ok(user);
@@ -55,7 +55,6 @@ public class UserController {
         PaginatedResults<UserSearchDto> results = userService.getPublicUsers(searchParams);
         return ResponseEntity.ok(results);
     }
-
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN') or @userSecurity.canCreateUserWithCognitoId(#userDto, authentication)")

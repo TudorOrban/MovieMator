@@ -74,8 +74,8 @@ public class UserSecurityExpressions {
         }
     }
 
-    public boolean isProfilePublic(String cognitoUserId) {
-        return userRepository.findByCognitoUserId(cognitoUserId)
+    public boolean isProfilePublic(Long id) {
+        return userRepository.findById(id)
                 .map(User::getIsProfilePublic)
                 .orElse(false);
     }

@@ -1,0 +1,66 @@
+<div class="max-w-6xl mx-auto std-bg p-6 rounded-lg shadow-md mt-6 transition-all duration-300 ease-in-out transform hover:scale-[1.02]">
+    <h3 class="text-xl font-semibold std-shaded-text std-border-b pb-3 mb-4">Watching Activity</h3>
+    <div class="flex flex-col xl:flex-row justify-start items-start">
+        <div class="heatmap-main-content flex p-2 std-border rounded-md overflow-x-auto flex-grow min-w-0 w-full">
+            <div class="flex flex-col justify-start mr-2 text-xs std-shaded-text pt-5 flex-shrink-0">
+                <div class="h-[13px] leading-none"></div> 
+                <div class="h-[13px] leading-none mb-1">Mon</div>
+                <div class="h-[13px] leading-none"></div>
+                <div class="h-[13px] leading-none mb-1">Wed</div>
+                <div class="h-[13px] leading-none"></div>
+                <div class="h-[13px] leading-none mb-1">Fri</div>
+                <div class="h-[13px] leading-none"></div>
+            </div>
+
+            <div class="flex flex-col">
+                <div class="flex mb-2 flex-nowrap space-x-9">
+                    <ng-container *ngFor="let month of months; let i = index">
+                        <div class="text-xs std-shaded-text text-left" [style.min-width.px]="i === months.length - 1 ? 0 : 40">{{ month }}</div>
+                    </ng-container>
+                </div>
+
+                <div class="flex flex-nowrap">
+                    <ng-container *ngFor="let week of calendarDays; let i = index">
+                        <div class="flex flex-col space-y-1 mr-1 flex-shrink-0">
+                            <ng-container *ngFor="let day of week">
+                                <div
+                                    *ngIf="day.count !== -1"
+                                    [class]="'w-[13px] h-[13px] rounded-sm ' + getHeatmapColor(day.count)"
+                                    [title]="day.count + ' movies on ' + (day.date | date:'mediumDate')"
+                                ></div>
+                                <div
+                                    *ngIf="day.count === -1"
+                                    class="w-[13px] h-[13px] rounded-sm bg-transparent"
+                                ></div>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        
+        <div class="ml-0 xl:ml-6 mt-4 xl:mt-0 flex flex-row xl:flex-col justify-center xl:justify-start items-center xl:items-start space-x-4 xl:space-x-0 xl:space-y-2 w-full xl:w-auto font-semibold">
+            <button
+                *ngFor="let year of availableYears"
+                (click)="changeHeatmapYear(year)"
+                [ngClass]="{
+                    'font-bold text-blue-700 bg-blue-100 shadow-md ring-2 ring-blue-400': year === currentHeatmapYear,
+                    'text-gray-700 hover:bg-gray-200 active:bg-gray-300 hover:shadow-sm': year !== currentHeatmapYear
+                }"
+                class="px-3 py-1 rounded-md transition-all duration-200 ease-in-out text-sm whitespace-nowrap flex-shrink-0 cursor-pointer"
+            >
+                {{ year }}
+            </button>
+        </div>
+    </div>
+
+    <div class="flex justify-end items-center mt-2 text-xs text-gray-500">
+        Less
+        <div class="w-[13px] h-[13px] rounded-sm bg-gray-200 ml-1 mr-0.5"></div>
+        <div class="w-[13px] h-[13px] rounded-sm bg-green-100 mr-0.5"></div>
+        <div class="w-[13px] h-[13px] rounded-sm bg-green-300 mr-0.5"></div>
+        <div class="w-[13px] h-[13px] rounded-sm bg-green-500 mr-0.5"></div>
+        <div class="w-[13px] h-[13px] rounded-sm bg-green-700 mr-1"></div>
+        More
+    </div>
+</div>

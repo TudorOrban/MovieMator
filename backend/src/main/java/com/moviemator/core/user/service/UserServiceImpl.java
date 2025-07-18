@@ -1,9 +1,6 @@
 package com.moviemator.core.user.service;
 
-import com.moviemator.core.user.dto.CreateUserDto;
-import com.moviemator.core.user.dto.UpdateUserDto;
-import com.moviemator.core.user.dto.UserDataDto;
-import com.moviemator.core.user.dto.UserDtoMapper;
+import com.moviemator.core.user.dto.*;
 import com.moviemator.core.user.model.User;
 import com.moviemator.core.user.model.UserSettings;
 import com.moviemator.core.user.repository.UserRepository;
@@ -11,8 +8,12 @@ import com.moviemator.shared.error.types.ResourceIdentifierType;
 import com.moviemator.shared.error.types.ResourceNotFoundException;
 import com.moviemator.shared.error.types.ResourceType;
 import com.moviemator.shared.sanitization.service.EntitySanitizerService;
+import com.moviemator.shared.search.models.PaginatedResults;
+import com.moviemator.shared.search.models.SearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -41,6 +42,15 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException(cognitoUserId, ResourceType.USER, ResourceIdentifierType.ID));
 
         return UserDtoMapper.INSTANCE.userToUserDataDto(user);
+    }
+
+    public PaginatedResults<UserSearchDto> getPublicUsers(SearchParams searchParams) {
+        PaginatedResults<User> users = userRepository.searchPublicUsers(searchParams);
+
+        return new PaginatedResults<>(
+                users.getResults().stream().map(UserDtoMapper.INSTANCE::userToUserSearchDto).toList(),
+                users.getTotalCount()
+        );
     }
 
     public UserDataDto createUser(CreateUserDto userDto) {

@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faMoon, faUser } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../../auth/service/auth.service';
-import { UserDataDto } from '../../../auth/models/User';
+import { UserDataDto } from '../../../../features/user/models/User';
 import { Subscription } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
 import { ThemeService } from '../../../../shared/common/services/theme.service';

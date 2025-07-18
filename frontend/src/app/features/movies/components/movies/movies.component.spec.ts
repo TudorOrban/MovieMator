@@ -10,7 +10,7 @@ import { RouterModule } from "@angular/router";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { PaginatedResults, SearchParams, MovieFilters } from "../../../../shared/models/Search";
 import { MovieSearchDto, MovieStatus } from "../../models/Movie";
-import { UserDataDto, UserSettings, StatsTimePeriodOption } from "../../../../core/auth/models/User";
+import { UserDataDto, UserSettings, StatsTimePeriodOption } from "../../../user/models/User";
 import { ToastType } from "../../../../shared/models/UI";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";

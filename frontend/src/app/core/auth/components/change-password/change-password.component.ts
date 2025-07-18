@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UserDataDto } from '../../models/User';
+import { UserDataDto } from '../../../../features/user/models/User';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../service/auth.service';
 import { FormsModule, NgForm } from '@angular/forms';

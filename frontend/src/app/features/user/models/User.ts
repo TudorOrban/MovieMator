@@ -11,6 +11,17 @@ export interface UserDataDto {
     isProfilePublic: boolean;
 }
 
+export interface UserSearchDto {
+    id: number;
+    cognitoUserId: string;
+    email: string;
+    displayName?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+
+    isProfilePublic: boolean;
+}
+
 export interface CreateUserDto {
     cognitoUserId: string;
     email: string;

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../../../../core/auth/service/auth.service';
 import { Subscription } from 'rxjs';
-import { UserDataDto } from '../../../../core/auth/models/User';
+import { UserDataDto } from '../../models/User';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MovieService } from '../../../movies/services/movie.service';

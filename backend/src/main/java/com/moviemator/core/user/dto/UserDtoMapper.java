@@ -20,6 +20,16 @@ public interface UserDtoMapper {
     @Mapping(source = "user.isProfilePublic", target = "isProfilePublic")
     UserDataDto userToUserDataDto(User user);
 
+    @Mapping(source = "user.id", target = "id")
+    @Mapping(source = "user.cognitoUserId", target = "cognitoUserId")
+    @Mapping(source = "user.email", target = "email")
+    @Mapping(source = "user.displayName", target = "displayName")
+    @Mapping(source = "user.createdAt", target = "createdAt")
+    @Mapping(source = "user.updatedAt", target = "updatedAt")
+    // New
+    @Mapping(source = "user.isProfilePublic", target = "isProfilePublic")
+    UserSearchDto userToUserSearchDto(User user);
+
     @Mapping(source = "cognitoUserId", target = "cognitoUserId")
     @Mapping(source = "email", target = "email")
     User createUserDtoToUser(CreateUserDto userDto);

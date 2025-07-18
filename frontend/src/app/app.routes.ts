@@ -5,15 +5,16 @@ import { MovieComponent } from './features/movies/components/movie/movie.compone
 import { HomeComponent } from './core/main/components/home/home.component';
 import { LogInComponent } from './core/auth/components/log-in/log-in.component';
 import { SignUpComponent } from './core/auth/components/sign-up/sign-up.component';
-import { UserProfileComponent } from './features/user-profile/components/user-profile/user-profile.component';
-import { EditProfileComponent } from './features/user-profile/components/edit-profile/edit-profile.component';
-import { SettingsComponent } from './features/user-profile/components/settings/settings.component';
+import { UserProfileComponent } from './features/user/components/user-profile/user-profile.component';
+import { EditProfileComponent } from './features/user/components/edit-profile/edit-profile.component';
+import { SettingsComponent } from './features/user/components/settings/settings.component';
 import { StatisticsComponent } from './features/statistics/components/statistics/statistics.component';
 import { UpdateMovieComponent } from './features/movies/components/update-movie/update-movie.component';
 import { AddMoviesComponent } from './features/movies/components/add-movies/add-movies.component';
 import { ChangePasswordComponent } from './core/auth/components/change-password/change-password.component';
-import { PrivacyPolicyComponent } from './core/main/components/privacy-policy/privacy-policy.component';
-import { TermsAndConditionsComponent } from './core/main/components/terms-and-conditions/terms-and-conditions.component';
+import { PrivacyPolicyComponent } from './core/main/components/compliance/privacy-policy/privacy-policy.component';
+import { TermsAndConditionsComponent } from './core/main/components/compliance/terms-and-conditions/terms-and-conditions.component';
+import { SearchPublicUsersComponent } from './features/user/components/search-public-users/search-public-users.component';
 
 export const routes: Routes = [
     {
@@ -55,6 +56,10 @@ export const routes: Routes = [
     {
         path: "edit-profile",
         component: EditProfileComponent
+    },
+    {
+        path: "search-public-users",
+        component: SearchPublicUsersComponent
     },
     {
         path: "settings",

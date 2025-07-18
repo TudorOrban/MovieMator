@@ -1,0 +1,26 @@
+<div class="space-y-4 relative min-h-[100px]">
+    <div *ngIf="isLoading" class="flex items-center justify-center py-40 bg-opacity-80 z-10">
+        <div class="text-center text-gray-600">
+            <fa-icon [icon]="faSpinner" [animation]="'spin'" size="3x"></fa-icon>
+            <p class="mt-2 text-lg font-semibold">Loading users...</p>
+        </div>
+    </div>
+
+    <div *ngIf="!isLoading && (users?.results?.length === 0 || !users?.results)" class="text-center text-gray-500 py-8">
+        <p class="text-lg">No users found that match your criteria.</p>
+    </div>
+
+    <div
+        *ngIf="!isLoading && (users?.results?.length ?? 0) > 0"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-8 py-4"
+        [ngClass]="gridColsClass" >
+        <div
+            *ngFor="let user of (users?.results ?? [])"
+            class="movie-small-card rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-[1.02] flex flex-col relative"
+        >
+            <a [routerLink]="'/users/' + user.id" class="flex flex-grow overflow-hidden">
+                {{ user.displayName ?? "-" }}
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ConsentService } from '../../services/consent.service';
+import { ConsentService } from '../../../services/consent.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 

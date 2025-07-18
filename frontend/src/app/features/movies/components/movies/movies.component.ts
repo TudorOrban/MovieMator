@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 import { ToastManagerService } from '../../../../shared/common/services/toast-manager.service';
 import { ToastType } from '../../../../shared/models/UI';
 import { PageSelectorComponent } from "../../../../shared/common/components/page-selector/page-selector.component";
-import { UserSettings } from '../../../../core/auth/models/User';
+import { UserSettings } from '../../../user/models/User';
 
 @Component({
     selector: 'app-movies',

@@ -4,7 +4,7 @@ import { HttpClient } from "@angular/common/http";
 import { MovieFilters, PaginatedResults, SearchParams } from "../../../shared/models/Search";
 import { Observable, of, tap } from "rxjs";
 import { CreateMovieDto, MovieDataDto, MovieSearchDto, UpdateMovieDto } from "../models/Movie";
-import { MovieCacheService } from "./movie-search-cache.service";
+import { MovieCacheService } from "./movie-cache.service";
 
 @Injectable({
     providedIn: "root"

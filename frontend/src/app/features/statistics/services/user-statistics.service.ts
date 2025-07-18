@@ -3,7 +3,7 @@ import { environment } from "../../../../environments/environment";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable, of, tap } from "rxjs";
 import { UserStatistics } from "../models/UserStatistics";
-import { MovieCacheService } from "../../movies/services/movie-search-cache.service";
+import { MovieCacheService } from "../../movies/services/movie-cache.service";
 
 @Injectable({
     providedIn: "root"

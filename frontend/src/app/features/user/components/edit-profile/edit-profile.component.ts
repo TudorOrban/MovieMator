@@ -4,9 +4,9 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../../../core/auth/service/auth.service';
 import { ToastManagerService } from '../../../../shared/common/services/toast-manager.service';
 import { Router, RouterModule } from '@angular/router';
-import { UpdateUserDto } from '../../../../core/auth/models/User';
+import { UpdateUserDto } from '../../models/User';
 import { Subscription } from 'rxjs';
-import { UserService } from '../../../../core/auth/service/user.service';
+import { UserService } from '../../services/user.service';
 import { ToastType } from '../../../../shared/models/UI';
 
 @Component({

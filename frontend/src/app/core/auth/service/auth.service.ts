@@ -1,8 +1,8 @@
 import { inject, Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, filter, switchMap, take } from "rxjs";
 import { signUp, confirmSignUp, signIn, SignInOutput, fetchAuthSession, signOut, getCurrentUser, resetPassword, confirmResetPassword, updatePassword } from "aws-amplify/auth";
-import { UserService } from "./user.service";
-import { CreateUserDto, UserDataDto } from "../models/User";
+import { UserService } from "../../../features/user/services/user.service";
+import { CreateUserDto, UserDataDto } from "../../../features/user/models/User";
 
 @Injectable({
     providedIn: "root"

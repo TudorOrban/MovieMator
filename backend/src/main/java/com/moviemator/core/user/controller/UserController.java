@@ -3,7 +3,10 @@ package com.moviemator.core.user.controller;
 import com.moviemator.core.user.dto.CreateUserDto;
 import com.moviemator.core.user.dto.UpdateUserDto;
 import com.moviemator.core.user.dto.UserDataDto;
+import com.moviemator.core.user.dto.UserSearchDto;
 import com.moviemator.core.user.service.UserService;
+import com.moviemator.shared.search.models.PaginatedResults;
+import com.moviemator.shared.search.models.SearchParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -35,6 +38,24 @@ public class UserController {
         UserDataDto user = userService.getUserByCognitoUserId(cognitoUserId);
         return ResponseEntity.ok(user);
     }
+
+    @GetMapping("/search")
+    // Public endpoint
+    public ResponseEntity<PaginatedResults<UserSearchDto>> searchPublicUsers(
+            @RequestParam(value = "searchText", required = false, defaultValue = "") String searchText,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+            @RequestParam(value = "isAscending", required = false, defaultValue = "true") Boolean isAscending,
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "itemsPerPage", defaultValue = "10") Integer itemsPerPage
+    ) {
+        SearchParams searchParams = new SearchParams(
+                searchText, sortBy, isAscending, page, itemsPerPage
+        );
+
+        PaginatedResults<UserSearchDto> results = userService.getPublicUsers(searchParams);
+        return ResponseEntity.ok(results);
+    }
+
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN') or @userSecurity.canCreateUserWithCognitoId(#userDto, authentication)")

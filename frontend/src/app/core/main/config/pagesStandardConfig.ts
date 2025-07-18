@@ -2,7 +2,13 @@ import { FilterOption, FilterType, PagesSearchConfiguration } from "../../../sha
 import { UIItem } from "../../../shared/models/UI";
 
 
-export const standardSortOptions: UIItem[] = [
+export const userSortOptions: UIItem[] = [
+    { label: "Created At", value: "createdAt" },
+    { label: "Last Modified", value: "updatedAt" },
+    { label: "Display Name", value: "displayName" },
+];
+
+export const movieSortOptions: UIItem[] = [
     { label: "Created At", value: "createdAt" },
     { label: "Last Modified", value: "updatedAt" },
     { label: "Title", value: "title" },
@@ -51,7 +57,11 @@ export const standardFilterOptions: FilterOption[] = [
 export const pagesSearchConfiguration: PagesSearchConfiguration = {
     pagesConfig: {
         "/movies": {
-            sortOptions: standardSortOptions,
+            sortOptions: movieSortOptions,
+            filterOptions: standardFilterOptions
+        },
+        "/users": {
+            sortOptions: userSortOptions,
             filterOptions: standardFilterOptions
         },
     },

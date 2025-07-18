@@ -1,0 +1,25 @@
+<div class="w-full pb-16">
+    <app-search-users-header
+        [searchParams]="searchParams"
+        [totalCount]="users?.totalCount"
+        (searchParamsChanged)="searchUsers()"
+        (sortOptionsChanged)="handleSortOptionsChange()"
+        class="w-full border-b border-gray-300 shadow-sm"
+    ></app-search-users-header>
+
+    <div class="flex w-full h-full page-std-padding-x py-4">
+        <app-search-users-list 
+            [users]="users"
+            [isLoading]="isLoading"
+            class="w-full"
+        ></app-search-users-list>
+    </div>
+
+    <app-page-selector
+        [currentPage]="searchParams.page"
+        [totalCount]="users?.totalCount ?? 0"
+        [itemsPerPage]="searchParams.itemsPerPage"
+        (pageChanged)="handlePageChange($event)"
+        class="w-full"
+    ></app-page-selector>
+</div>

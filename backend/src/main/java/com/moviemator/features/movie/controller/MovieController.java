@@ -55,7 +55,6 @@ public class MovieController {
             @RequestParam(value = "genresIncluding", required = false) List<String> genresIncluding,
             @RequestParam(value = "actorsIncluding", required = false) List<String> actorsIncluding
     ) {
-
         SearchParams searchParams = new SearchParams(
                 searchText, sortBy, isAscending, page, itemsPerPage
         );

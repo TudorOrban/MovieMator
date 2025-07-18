@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { StatsTimePeriodOption, UpdateUserDto, UserDataDto, UserSettings } from '../../../../core/auth/models/User';
+import { StatsTimePeriodOption, UpdateUserDto, UserDataDto, UserSettings } from '../../models/User';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../core/auth/service/auth.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -8,7 +8,7 @@ import { finalize } from 'rxjs/operators';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../../../../core/auth/service/user.service';
+import { UserService } from '../../services/user.service';
 import { ToastManagerService } from '../../../../shared/common/services/toast-manager.service';
 import { ToastType } from '../../../../shared/models/UI';
 

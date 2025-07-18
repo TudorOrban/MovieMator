@@ -62,7 +62,7 @@ public class UserSearchRepositoryImpl implements UserSearchRepository {
         predicates.add(builder.equal(root.get("isProfilePublic"), true)); // Essential line
 
         if (searchParams.getSearchText() != null && !searchParams.getSearchText().isEmpty()) {
-            predicates.add(builder.like(builder.lower(root.get("title")), "%" + searchParams.getSearchText().toLowerCase() + "%"));
+            predicates.add(builder.like(builder.lower(root.get("displayName")), "%" + searchParams.getSearchText().toLowerCase() + "%"));
         }
 
         return builder.and(predicates.toArray(new Predicate[0]));

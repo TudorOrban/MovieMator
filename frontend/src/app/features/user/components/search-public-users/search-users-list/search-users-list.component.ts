@@ -3,7 +3,7 @@ import { PaginatedResults } from '../../../../../shared/models/Search';
 import { UserSearchDto } from '../../../models/User';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { faSpinner, faStar } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faStar, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
@@ -51,4 +51,5 @@ export class SearchUsersListComponent implements OnInit {
 
     faSpinner = faSpinner;
     faStar = faStar;
+    faUserCircle = faUserCircle;
 }

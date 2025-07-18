@@ -10,16 +10,21 @@
         <p class="text-lg">No users found that match your criteria.</p>
     </div>
 
-    <div
-        *ngIf="!isLoading && (users?.results?.length ?? 0) > 0"
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-8 py-4"
-        [ngClass]="gridColsClass" >
+    <div *ngIf="!isLoading && (users?.results?.length ?? 0) > 0" class="max-w-1/2 py-4">
         <div
             *ngFor="let user of (users?.results ?? [])"
-            class="movie-small-card rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-[1.02] flex flex-col relative"
+            class="std-element rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-[1.02] overflow-hidden cursor-pointer"
         >
-            <a [routerLink]="'/users/' + user.id" class="flex flex-grow overflow-hidden">
-                {{ user.displayName ?? "-" }}
+            <a [routerLink]="'/users/cognito-id/' + user.displayName" class="p-6 flex items-center space-x-4">
+                <div class="flex-shrink-0">
+                    <fa-icon [icon]="faUserCircle" size="2x" class="text-gray-400"></fa-icon>
+                </div>
+                <div class="flex-grow">
+                    <h3 class="text-xl font-semibold std-shaded-text truncate">{{ user.displayName }}</h3>
+                </div>
+                <div class="flex-shrink-0 text-gray-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </div>
             </a>
         </div>
     </div>

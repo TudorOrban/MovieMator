@@ -50,7 +50,7 @@ export const routes: Routes = [
         component: StatisticsComponent 
     },
     {
-        path: "user-profile",
+        path: "user-profile/:id",
         component: UserProfileComponent
     },
     {

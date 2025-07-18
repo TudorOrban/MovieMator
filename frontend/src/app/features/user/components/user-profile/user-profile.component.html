@@ -1,10 +1,35 @@
 <div class="page-std-padding-x page-std-padding-y space-y-8 std-shaded-bg min-h-screen">
     <h1 class="text-3xl font-bold movie-title mb-6 text-center">User Profile</h1>
 
-    <div class="flex flex-col items-center mb-8">
+    <!-- Loading State -->
+    <div *ngIf="isLoadingProfile" class="flex items-center justify-center py-40">
+        <div class="text-center std-shaded-text">
+            <fa-icon [icon]="faSpinner" [animation]="'spin'" size="3x"></fa-icon>
+            <p class="mt-2 text-lg font-semibold">Loading profile...</p>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="!isLoadingProfile && (isForbidden || profileLoadError)" class="py-20">
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative max-w-md mx-auto" role="alert">
+            <strong class="font-bold">Error!</strong>
+            <span class="block sm:inline"> {{ profileLoadError }}</span>
+        </div>
+        <div class="flex items-center justify-center w-full">
+            <a
+                *ngIf="isForbidden"
+                class="mt-4 standard-write-button"
+                [routerLink]="'/search-public-users'"
+            >
+                Discover Public Profiles
+            </a>
+        </div>
+    </div>
+
+    <div *ngIf="!isLoadingProfile && profileUser && !isForbidden && !profileLoadError" class="flex flex-col items-center mb-8">
         <div class="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center text-blue-800 text-5xl font-bold border-2 border-blue-400">
-            <ng-container *ngIf="currentUser?.displayName; else defaultAvatar">
-                {{ currentUser?.displayName?.charAt(0)?.toUpperCase() }}
+            <ng-container *ngIf="profileUser?.displayName; else defaultAvatar">
+                {{ profileUser.displayName?.charAt(0)?.toUpperCase() }}
             </ng-container>
             <ng-template #defaultAvatar>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -13,13 +38,13 @@
             </ng-template>
         </div>
         <h2 class="mt-4 text-2xl font-semibold">
-            {{ currentUser?.displayName ?? 'New User' }}
+            {{ profileUser.displayName ?? 'New User' }}
         </h2>
         <p class="text-sm text-gray-500">
-            {{ currentUser?.email }} </p>
+            {{ profileUser.email }} </p>
     </div>
 
-    <div class="max-w-xl mx-auto std-bg p-6 rounded-lg shadow-md space-y-4">
+    <div *ngIf="!isLoadingProfile && profileUser && !isForbidden && !profileLoadError" class="max-w-xl mx-auto std-bg p-6 rounded-lg shadow-md space-y-4">
         <h3 class="text-xl font-semibold border-b pb-3 mb-4">Personal Information</h3>
 
         <div class="flex items-center space-x-2 text-lg">
@@ -27,7 +52,7 @@
                 Display Name:
             </div>
             <div class="flex-grow">
-                {{ currentUser?.displayName ?? '-' }}
+                {{ profileUser.displayName ?? '-' }}
             </div>
         </div>
 
@@ -36,12 +61,12 @@
                 Email:
             </div>
             <div class="flex-grow">
-                {{ currentUser?.email ?? '-' }}
+                {{ profileUser.email }}
             </div>
         </div>
     </div>
 
-    <div class="max-w-xl mx-auto std-bg p-6 rounded-lg shadow-md space-y-4 mt-6">
+    <div *ngIf="!isLoadingProfile && profileUser && !isForbidden && !profileLoadError" class="max-w-xl mx-auto std-bg p-6 rounded-lg shadow-md space-y-4 mt-6">
         <h3 class="text-xl font-semibold std-shaded-text border-b pb-3 mb-4">Account Activity</h3>
 
         <div class="flex items-center space-x-2 text-lg">
@@ -49,8 +74,8 @@
                 Joined At:
             </div>
             <div class="flex-grow">
-                <ng-container *ngIf="currentUser?.createdAt; else noCreatedAt">
-                    {{ currentUser?.createdAt | date:'medium' }}
+                <ng-container *ngIf="profileUser?.createdAt; else noCreatedAt">
+                    {{ profileUser.createdAt | date:'medium' }}
                 </ng-container>
                 <ng-template #noCreatedAt>-</ng-template>
             </div>
@@ -61,15 +86,16 @@
                 Last updated:
             </div>
             <div class="flex-grow">
-                <ng-container *ngIf="currentUser?.updatedAt; else noUpdatedAt">
-                    {{ currentUser?.updatedAt | date:'medium' }}
+                <ng-container *ngIf="profileUser?.updatedAt; else noUpdatedAt">
+                    {{ profileUser.updatedAt | date:'medium' }}
                 </ng-container>
                 <ng-template #noUpdatedAt>-</ng-template>
             </div>
         </div>
     </div>
 
-    <div class="max-w-6xl mx-auto std-bg p-6 rounded-lg shadow-md mt-6">
+    <!-- Heatmap -->
+    <div *ngIf="!isLoadingProfile && profileUser && !isForbidden && !profileLoadError" class="max-w-6xl mx-auto std-bg p-6 rounded-lg shadow-md mt-6">
         <h3 class="text-xl font-semibold std-shaded-text std-border-b pb-3 mb-4">Watching Activity</h3>
         <div class="flex flex-col xl:flex-row justify-start items-start">
             <div class="heatmap-main-content flex p-2 std-border rounded-md overflow-x-auto flex-grow min-w-0 w-full">
@@ -83,7 +109,6 @@
                     <div class="h-[13px] leading-none"></div>
                 </div>
 
-                <!-- Heatmap -->
                 <div class="flex flex-col">
                     <div class="flex mb-2 flex-nowrap space-x-9">
                         <ng-container *ngFor="let month of months; let i = index">
@@ -137,7 +162,7 @@
         </div>
     </div>
 
-    <div class="flex justify-center space-x-4 mt-8">
+    <div *ngIf="!isLoadingProfile && profileUser && !isForbidden && !profileLoadError" class="flex justify-center space-x-4 mt-8">
         <a [routerLink]="'/edit-profile'" class="standard-write-button">
             Edit Profile
         </a>

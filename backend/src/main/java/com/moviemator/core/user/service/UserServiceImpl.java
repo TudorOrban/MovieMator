@@ -58,6 +58,7 @@ public class UserServiceImpl implements UserService {
 
         User user = UserDtoMapper.INSTANCE.createUserDtoToUser(sanitizedDto);
         user.setUserSettings(new UserSettings());
+        user.setIsProfilePublic(false);
 
         User savedUser = userRepository.save(user);
 

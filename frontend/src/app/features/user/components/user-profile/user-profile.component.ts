@@ -3,19 +3,29 @@ import { AuthService } from '../../../../core/auth/service/auth.service';
 import { Subscription } from 'rxjs';
 import { UserDataDto } from '../../models/User';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MovieService } from '../../../movies/services/movie.service';
 import { ThemeService } from '../../../../shared/common/services/theme.service';
+import { UserService } from '../../services/user.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-user-profile',
-    imports: [CommonModule, RouterModule],
+    imports: [CommonModule, RouterModule, FontAwesomeModule],
     templateUrl: './user-profile.component.html',
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
+    profileId: number | null = null;
+    profileUser: UserDataDto | null = null;
     currentUser: UserDataDto | null = null;
     isEditModeOn: boolean = false;
     currentTheme: string = "light";
+
+    isLoadingProfile: boolean = true;
+    isForbidden: boolean = false;
+    profileLoadError: string | null = null;
 
     subscription: Subscription = new Subscription();
 
@@ -28,21 +38,35 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     currentHeatmapYear: number;
 
     constructor(
+        private readonly userService: UserService,
         private readonly authService: AuthService,
         private readonly movieService: MovieService,
-        private readonly themeService: ThemeService
+        private readonly themeService: ThemeService,
+        private readonly route: ActivatedRoute,
     ) {
         this.currentHeatmapYear = new Date().getFullYear();
     }
 
     ngOnInit(): void {
         this.subscription.add(
+            this.route.paramMap.subscribe((params) => {
+                this.profileId = Number(params.get("id"));
+                this.profileUser = null;
+                this.isForbidden = false;
+                this.profileLoadError = null;
+                this.isLoadingProfile = true;
+                this.loadUser();
+            })
+        )
+        this.subscription.add(
             this.authService.currentUser$.subscribe({
                 next: (user) => {
                     this.currentUser = user;
 
-                    if (user?.id) {
-                        this.fetchAllWatchedDates(user.id);
+                    if (this.currentUser && this.profileId === this.currentUser.id) {
+                        this.fetchAllWatchedDates(this.currentUser.id);
+                    } else if (this.profileUser?.isProfilePublic) {
+                        this.fetchAllWatchedDates(this.profileId!);
                     }
                 },
             })
@@ -52,8 +76,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
                 next: (theme: string) => {
                     this.currentTheme = theme;
                 },
-                error: (err) => {
-                    console.error("Error fetching theme:", err);
+                error: (error: HttpErrorResponse) => {
+                    console.error("Error loading current theme: ", error);
                 }
             })
         );
@@ -61,6 +85,48 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+    }
+
+    loadUser(): void {
+        if (!this.profileId) return;
+
+        this.subscription.add(
+            this.userService.getUserById(this.profileId).subscribe({
+                next: (data) => {
+                    this.profileUser = data;
+                    this.isLoadingProfile = false;
+                    if (this.currentUser && this.profileId === this.currentUser.id) {
+                        this.fetchAllWatchedDates(this.currentUser.id);
+                    } else if (this.profileUser.isProfilePublic && this.profileId) {
+                        this.fetchAllWatchedDates(this.profileId);
+                    }
+                },
+                error: (error) => {
+                    this.isLoadingProfile = false;
+                    console.error("Error loading profile user: ", error);
+                    if (error.status === 403) {
+                        this.isForbidden = true;
+                        this.profileLoadError = error.error?.message || "You do not have permission to view this profile. It might be private.";
+                    } else if (error.status === 404) {
+                        this.profileLoadError = "User not found.";
+                    } else {
+                        this.profileLoadError = "An unexpected error occurred while loading the profile.";
+                    }
+                }
+            })
+        )
+    }
+
+    isOwnProfile(): boolean {
+        return this.currentUser?.id === this.profileId;
+    }
+
+    isProfilePublic(): boolean {
+        return this.profileUser?.isProfilePublic === true;
+    }
+
+    shouldShowPrivateInfo(): boolean {
+        return this.isOwnProfile() || this.isProfilePublic();
     }
 
     get availableYears(): number[] {
@@ -73,6 +139,12 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     }
 
     private fetchAllWatchedDates(userId: number): void {
+        if (!this.shouldShowPrivateInfo()) {
+            this.allWatchedDates = [];
+            this.processAndGenerateCalendar();
+            return;
+        }
+
         this.subscription.add(
             this.movieService.getWatchedDatesByUserId(userId).subscribe({
                 next: (dates) => {
@@ -80,7 +152,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
                     this.processAndGenerateCalendar();
                 },
                 error: (err) => {
-                    console.error('Error fetching all watched dates:', err);
+                    console.error("Error fetching all watched dates:", err);
                     this.allWatchedDates = [];
                     this.processAndGenerateCalendar();
                 }
@@ -199,4 +271,6 @@ export class UserProfileComponent implements OnInit, OnDestroy {
             default: return emptyColor; 
         }
     }
+
+    faSpinner = faSpinner;
 }

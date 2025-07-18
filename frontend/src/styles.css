@@ -14,6 +14,7 @@
     --secondary-text-color: white;
     --shaded-bg-color: rgb(250, 250, 250);
     --shaded-bg-color-xl: rgb(230, 230, 230);
+    --shaded-opposite-bg-color: rgb(44, 44, 44);
     --shaded-text-color: rgb(56, 56, 56);
     --tertiary-color: rgb(93, 54, 155);
     --tertiary-color-hover: rgb(80, 47, 135);
@@ -39,6 +40,7 @@
     --secondary-text-color: white;
     --shaded-bg-color: rgb(27, 27, 27);
     --shaded-bg-color-xl: rgb(38, 38, 38);
+    --shaded-opposite-bg-color: rgb(230, 230, 230);
     --shaded-text-color: rgb(219, 219, 219);
     --border-color: #383737;
     --border-color-secondary: #302f2f;

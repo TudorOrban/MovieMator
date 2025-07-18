@@ -17,6 +17,7 @@ public interface MovieService {
     MovieDataDto getMovieById(Long id);
     List<LocalDate> getWatchedMovieDatesForUser(Long userId);
     boolean isMovieTitleUnique(Long userId, String title);
+    List<MovieSearchDto> getTopRatedMovies(Long userId, Integer limit);
     MovieDataDto createMovie(CreateMovieDto movieDto);
     List<MovieDataDto> createMoviesBulk(List<CreateMovieDto> movieDtos);
     MovieDataDto updateMovie(UpdateMovieDto movieDto);

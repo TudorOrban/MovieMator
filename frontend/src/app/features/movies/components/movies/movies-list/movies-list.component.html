@@ -13,7 +13,8 @@
     <div
         *ngIf="!isLoading && (movies?.results?.length ?? 0) > 0"
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-8 py-4"
-        [ngClass]="gridColsClass" >
+        [ngClass]="gridColsClass" 
+    >
         <div
             *ngFor="let movie of (movies?.results ?? [])"
             class="movie-small-card rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-[1.02] flex flex-col relative"

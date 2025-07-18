@@ -4,6 +4,7 @@ import com.moviemator.features.movie.model.Movie;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Pageable;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -40,4 +41,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long>, MovieSearch
             "AND jsonb_array_length(m.watched_dates) > 0",
             nativeQuery = true)
     List<Date> findAllWatchedDatesByUserId(@Param("userId") Long userId);
+
+    List<Movie> findByUserIdOrderByUserRatingDesc(Long userId, Pageable pageable);
 }

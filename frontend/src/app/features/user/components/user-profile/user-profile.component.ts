@@ -12,6 +12,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HeatmapComponent } from "./heatmap/heatmap.component";
 import { ErrorMapperService } from '../../services/error-mapper.service';
+import { MovieSearchDto } from '../../../movies/models/Movie';
 
 @Component({
     selector: 'app-user-profile',
@@ -21,6 +22,8 @@ import { ErrorMapperService } from '../../services/error-mapper.service';
 export class UserProfileComponent implements OnInit, OnDestroy {
     profileId: number | null = null;
     profileUser: UserDataDto | null = null;
+    profileMovies: MovieSearchDto[] | null = null;
+
     currentUser: UserDataDto | null = null;
     isEditModeOn: boolean = false;
     currentTheme: string = "light";
@@ -50,7 +53,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
                 this.isForbidden = false;
                 this.profileLoadError = null;
                 this.isLoadingProfile = true;
-                this.loadUser();
+                this.loadUserData();
             })
         )
         this.subscription.add(
@@ -82,7 +85,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         this.subscription.unsubscribe();
     }
 
-    loadUser(): void {
+    loadUserData(): void {
         if (!this.profileId) return;
 
         this.subscription.add(
@@ -99,10 +102,17 @@ export class UserProfileComponent implements OnInit, OnDestroy {
                 error: (error) => {
                     this.isLoadingProfile = false;
                     console.error("Error loading profile user: ", error);
-                    
+
                     const { message, isForbidden } = this.errorMapperService.mapProfileError(error);
                     this.profileLoadError = message;
                     this.isForbidden = isForbidden;
+                }
+            })
+        );
+        this.subscription.add(
+            this.movieService.getTopRatedMovies(this.profileId, 5).subscribe({
+                next: (data) => {
+                    this.profileMovies = data;
                 }
             })
         )

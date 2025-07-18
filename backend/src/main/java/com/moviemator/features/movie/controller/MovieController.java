@@ -87,6 +87,16 @@ public class MovieController {
         return ResponseEntity.ok(isMovieTitleUnique);
     }
 
+    @GetMapping("/top-rated/user/{userId}")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isSearchingOwnMovies(#userId, authentication) or @userSecurity.isProfilePublic(#userId)")
+    public ResponseEntity<List<MovieSearchDto>> getTopRatedMovies(
+            @PathVariable Long userId,
+            @RequestParam(value = "limit", defaultValue = "5") Integer limit
+    ) {
+        List<MovieSearchDto> movies = movieService.getTopRatedMovies(userId, limit);
+        return ResponseEntity.ok(movies);
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('ADMIN') or @userSecurity.isMovieOwnerForCreate(#movieDto, authentication)")
     public ResponseEntity<MovieDataDto> createMovie(@RequestBody CreateMovieDto movieDto) {

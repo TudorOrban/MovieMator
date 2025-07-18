@@ -48,7 +48,7 @@
         <div 
             class="max-w-xl mx-auto std-bg p-6 rounded-lg shadow-md space-y-4 transition-all duration-300 ease-in-out transform hover:scale-[1.02]"
         >
-            <h3 class="text-xl font-semibold border-b pb-3 mb-4">Personal Information</h3>
+            <h3 class="text-xl font-semibold std-border-b pb-3 mb-4">Personal Information</h3>
 
             <div class="flex items-center space-x-2 text-lg">
                 <div class="font-semibold w-36 flex-shrink-0">
@@ -72,7 +72,7 @@
         <div 
             class="max-w-xl mx-auto std-bg p-6 rounded-lg shadow-md space-y-4 mt-6 transition-all duration-300 ease-in-out transform hover:scale-[1.02]"
         >
-            <h3 class="text-xl font-semibold std-shaded-text border-b pb-3 mb-4">Account Activity</h3>
+            <h3 class="text-xl font-semibold std-shaded-text std-border-b pb-3 mb-4">Account Activity</h3>
 
             <div class="flex items-center space-x-2 text-lg">
                 <div class="font-semibold w-36 flex-shrink-0">
@@ -95,6 +95,29 @@
                         {{ profileUser.updatedAt | date:'medium' }}
                     </ng-container>
                     <ng-template #noUpdatedAt>-</ng-template>
+                </div>
+            </div>
+        </div>
+
+        <div 
+            class="max-w-xl mx-auto std-bg p-6 rounded-lg shadow-md space-y-4 mt-6 transition-all duration-300 ease-in-out transform hover:scale-[1.02] cursor-pointer"
+            [routerLink]="'user-profile/' + profileId + '/movies'"
+        >
+            <div class="flex items-center pb-3 mb-4 space-x-8 std-border-b">
+                <h3 class="text-xl font-semibold std-shaded-text">Top Rated Movies</h3>
+
+                <div class="flex-shrink-0 text-gray-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-2 text-lg">
+                <div *ngFor="let movie of profileMovies">
+                    <img
+                        [src]="movie.posterUrl ?? 'assets/images/PlaceholderMoviePoster.png'"
+                        alt="{{ movie.title }} Poster"
+                        class="w-full h-full object-cover rounded-l-lg"
+                    >
                 </div>
             </div>
         </div>

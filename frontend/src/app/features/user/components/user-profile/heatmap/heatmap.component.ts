@@ -23,8 +23,7 @@ export class HeatmapComponent implements OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes["allWatchedDates"]?.currentValue?.length > 0 
-            && changes["allWatchedDates"]?.currentValue?.length !== changes["allWatchedDates"]?.previousValue?.length) {
+        if (changes["allWatchedDates"]?.currentValue?.length !== changes["allWatchedDates"]?.previousValue?.length) {
             this.processAndGenerateCalendar();
         }
     }

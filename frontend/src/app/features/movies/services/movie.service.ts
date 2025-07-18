@@ -62,6 +62,11 @@ export class MovieService {
         return this.http.get<boolean>(`${this.apiUrl}/movie-title/${title}/user/${userId}`);
     }
 
+
+    getTopRatedMovies(userId: number, limit: number = 5): Observable<MovieSearchDto[]> {
+        return this.http.get<MovieSearchDto[]>(`${this.apiUrl}/top-rated/user/${userId}`, { params: { limit: limit }});
+    }
+
     createMovie(movieDto: CreateMovieDto): Observable<MovieDataDto> {
         return this.http.post<MovieDataDto>(this.apiUrl, movieDto).pipe(
             tap(() => {

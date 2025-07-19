@@ -15,6 +15,7 @@ import { ChangePasswordComponent } from './core/auth/components/change-password/
 import { PrivacyPolicyComponent } from './core/main/components/compliance/privacy-policy/privacy-policy.component';
 import { TermsAndConditionsComponent } from './core/main/components/compliance/terms-and-conditions/terms-and-conditions.component';
 import { SearchPublicUsersComponent } from './features/user/components/search-public-users/search-public-users.component';
+import { AuthGuard } from './core/auth/guards/auth.guard';
 
 export const routes: Routes = [
     {
@@ -30,57 +31,68 @@ export const routes: Routes = [
         component: SignUpComponent
     },
     { 
-        path: "movies", 
-        component: MoviesComponent,
-        data: { isCurrentUserMoviesPage: true }
-    },
-    {
-        path: "movies/add-movies",
-        component: AddMoviesComponent,
-    },
-    {
-        path: "movies/update-movie/:movieId",
-        component: UpdateMovieComponent
-    },
-    {
-        path: "movies/:movieId",
-        component: MovieComponent
-    },
-    { 
-        path: "statistics", 
-        component: StatisticsComponent 
-    },
-    {
-        path: "user-profile/:userId",
-        component: UserProfileComponent
-    },
-    {
-        path: "user-profile/:userId/movies",
-        component: MoviesComponent,
-        data: { isCurrentUserMoviesPage: false } 
-    },
-    {
-        path: "edit-profile",
-        component: EditProfileComponent
-    },
-    {
-        path: "search-public-users",
-        component: SearchPublicUsersComponent
-    },
-    {
-        path: "settings",
-        component: SettingsComponent
-    },
-    {
-        path: "change-password",
-        component: ChangePasswordComponent
-    },
-    { 
         path: "privacy-policy", 
-        component: PrivacyPolicyComponent 
+        component: PrivacyPolicyComponent
     },
     { 
         path: "terms-and-conditions", 
         component: TermsAndConditionsComponent
+    },
+    { 
+        path: "movies", 
+        component: MoviesComponent,
+        data: { isCurrentUserMoviesPage: true },
+        canActivate: [AuthGuard]
+    },
+    {
+        path: "movies/add-movies",
+        component: AddMoviesComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: "movies/update-movie/:movieId",
+        component: UpdateMovieComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: "movies/:movieId",
+        component: MovieComponent,
+        canActivate: [AuthGuard]
+    },
+    { 
+        path: "statistics", 
+        component: StatisticsComponent ,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: "user-profile/:userId",
+        component: UserProfileComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: "user-profile/:userId/movies",
+        component: MoviesComponent,
+        data: { isCurrentUserMoviesPage: false } ,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: "edit-profile",
+        component: EditProfileComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: "search-public-users",
+        component: SearchPublicUsersComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: "settings",
+        component: SettingsComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: "change-password",
+        component: ChangePasswordComponent,
+        canActivate: [AuthGuard]
     },
 ];

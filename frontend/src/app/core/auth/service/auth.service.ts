@@ -22,6 +22,9 @@ export class AuthService {
     private _currentUserSubject: BehaviorSubject<UserDataDto | null> = new BehaviorSubject<UserDataDto | null>(null);
     currentUser$: Observable<UserDataDto | null> = this._currentUserSubject.asObservable();
 
+    private _isAuthCheckComplete: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    isAuthCheckComplete$: Observable<boolean> = this._isAuthCheckComplete.asObservable();
+    
     constructor() {
         this.loadUserIfAuthenticated();
     }
@@ -118,12 +121,14 @@ export class AuthService {
                 this._isAuthenticatedSubject.next(true);
                 this._cognitoUserDataSubject.next(currentUser);
                 this._accessTokenSubject.next(authSession.tokens.accessToken.toString());
-                this.loadCurrentUser(authSession.userSub);
+                await this.loadCurrentUser(authSession.userSub);
             } else {
                 this.clearAllAuthStates();
             }
         } catch (e: any) {
             this.clearAllAuthStates();
+        } finally {
+            this._isAuthCheckComplete.next(true);
         }
     }
 
@@ -175,16 +180,20 @@ export class AuthService {
         });
     }
 
-    private loadCurrentUser(cognitoUserId: string): void {
-        this.userService.getUserByCognitoUserId(cognitoUserId).subscribe({
-            next: (userData) => {
-                this._currentUserSubject.next(userData);
-            },
-            error: (err) => {
-                console.error("AuthService: Failed to load current app user:", err);
-                this._currentUserSubject.next(null);
-                this.logout();
-            }
+    private loadCurrentUser(cognitoUserId: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.userService.getUserByCognitoUserId(cognitoUserId).subscribe({
+                next: (userData) => {
+                    this._currentUserSubject.next(userData);
+                    resolve();
+                },
+                error: (err) => {
+                    console.error("AuthService: Failed to load current app user:", err);
+                    this._currentUserSubject.next(null);
+                    this.logout();
+                    reject(err);
+                }
+            });
         });
     }
 

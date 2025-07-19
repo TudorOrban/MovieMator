@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../../../../environments/environment";
 import { Observable } from "rxjs";
-import { CreateUserDto, UpdateUserDto, UserDataDto, UserSearchDto } from "../models/User";
+import { CreateUserDto, PublicUserDataDto, UpdateUserDto, UserDataDto, UserSearchDto } from "../models/User";
 import { HttpClient } from "@angular/common/http";
 import { PaginatedResults, SearchParams } from "../../../shared/models/Search";
 
@@ -15,6 +15,10 @@ export class UserService {
 
     getUserById(id: number): Observable<UserDataDto> {
         return this.http.get<UserDataDto>(`${this.apiUrl}/${id}`);
+    }
+
+    getPublicUserById(id: number): Observable<PublicUserDataDto> {
+        return this.http.get<PublicUserDataDto>(`${this.apiUrl}/public/${id}`);
     }
 
     getUserByCognitoUserId(cognitoUserId: string): Observable<UserDataDto> {

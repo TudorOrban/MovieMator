@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../../../../core/auth/service/auth.service';
-import { Subscription } from 'rxjs';
-import { UserDataDto } from '../../models/User';
+import { combineLatest, filter, Subscription } from 'rxjs';
+import { PublicUserDataDto, UserDataDto } from '../../models/User';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MovieService } from '../../../movies/services/movie.service';
@@ -23,8 +23,9 @@ import { LoadingFallbackComponent } from "../../../../shared/fallback/components
     templateUrl: './user-profile.component.html',
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
-    profileId: number | null = null;
-    profileUser: UserDataDto | null = null;
+    isCurrentUserProfilePage: boolean = false;
+    userId: number | null = null;
+    profileUser: UserDataDto | PublicUserDataDto | null = null;
     profileMovies: MovieSearchDto[] | null = null;
 
     currentUser: UserDataDto | null = null;
@@ -48,24 +49,22 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.subscription.add(
-            this.route.paramMap.subscribe((params) => {
-                this.profileId = Number(params.get("userId"));
-                this.profileUser = null;
-                this.fallbackState = { isLoading: true, errorMessage: null, isForbidden: false };
-                this.loadUserData();
-            })
-        )
-        this.subscription.add(
-            this.authService.currentUser$.subscribe({
-                next: (user) => {
-                    this.currentUser = user;
+            combineLatest([
+                this.route.paramMap,
+                this.authService.currentUser$.pipe(
+                    filter(user => !!user)
+                )
+            ])
+            .subscribe({
+                next: ([paramMap, currentUser]) => {
+                    this.userId = Number(paramMap.get("userId"));
+                    this.isCurrentUserProfilePage = !!this.userId && this.userId === currentUser?.id;
+                    this.currentUser = currentUser;
 
-                    if (this.currentUser && this.profileId === this.currentUser.id) {
-                        this.fetchAllWatchedDates(this.currentUser.id);
-                    } else if (this.profileUser?.isProfilePublic) {
-                        this.fetchAllWatchedDates(this.profileId!);
-                    }
-                },
+                    this.profileUser = null;
+                    this.fallbackState = { isLoading: true, errorMessage: null, isForbidden: false };
+                    this.loadUserData();
+                }
             })
         );
         this.subscription.add(
@@ -85,42 +84,46 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     }
 
     loadUserData(): void {
-        if (!this.profileId) return;
+        if (!this.userId) return;
 
-        this.subscription.add(
-            this.userService.getUserById(this.profileId).subscribe({
-                next: (data) => {
-                    this.profileUser = data;
-                    this.fallbackState.isLoading = false;
+        this.loadMainData();
+        this.loadTopRatedMovies();
+        this.fetchAllWatchedDates();
+    }
 
-                    var userIdToFetchDates;
-                    if (this.currentUser && this.profileId === this.currentUser.id) {
-                        userIdToFetchDates = this.currentUser.id;
-                    } else if (this.profileUser.isProfilePublic && this.profileId) {
-                        userIdToFetchDates = this.profileId;
-                    } else {
-                        return;
-                    }
-                    this.fetchAllWatchedDates(userIdToFetchDates);
-                },
-                error: (error) => {
-                    console.error("Error loading profile user: ", error);
-                    const { message, isForbidden } = this.errorMapperService.mapProfileError(error);
-                    this.fallbackState = { isLoading: false, errorMessage: message, isForbidden: isForbidden };
-                }
-            })
-        );
+    loadMainData(): void {
+        if (!this.userId) return;
+
+        if (this.isCurrentUserProfilePage) {
+
+            this.subscription.add(
+                this.userService.getUserById(this.userId).subscribe({
+                    next: (data) => this.handleAPIResponse(data),
+                    error: (error) => this.handleAPIError(error)
+                })
+            );
+        } else {
+            this.subscription.add(
+                this.userService.getPublicUserById(this.userId).subscribe({
+                    next: (data) => this.handleAPIResponse(data),
+                    error: (error) => this.handleAPIError(error)
+                })
+            );
+        }
+    }
+
+    loadTopRatedMovies(): void {
         this.subscription.add(
-            this.movieService.getTopRatedMovies(this.profileId, 5).subscribe({
+            this.movieService.getTopRatedMovies(this.userId!, 5).subscribe({
                 next: (data) => {
                     this.profileMovies = data;
                 }
             })
-        )
+        );
     }
 
     isOwnProfile(): boolean {
-        return this.currentUser?.id === this.profileId;
+        return this.currentUser?.id === this.userId;
     }
 
     isProfilePublic(): boolean {
@@ -131,14 +134,26 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         return this.isOwnProfile() || this.isProfilePublic();
     }
 
-    private fetchAllWatchedDates(userId: number): void {
+    private handleAPIResponse(data: UserDataDto | PublicUserDataDto) {
+        this.profileUser = data;
+        this.fallbackState.isLoading = false;
+        this.fetchAllWatchedDates();
+    }
+
+    private handleAPIError(error: HttpErrorResponse): void {
+        console.error("Error loading profile user: ", error);
+        const { message, isForbidden } = this.errorMapperService.mapProfileError(error);
+        this.fallbackState = { isLoading: false, errorMessage: message, isForbidden: isForbidden };
+    }
+
+    private fetchAllWatchedDates(): void {
         if (!this.shouldShowPrivateInfo()) {
             this.allWatchedDates = [];
             return;
         }
 
         this.subscription.add(
-            this.movieService.getWatchedDatesByUserId(userId).subscribe({
+            this.movieService.getWatchedDatesByUserId(this.userId!).subscribe({
                 next: (dates) => {
                     this.allWatchedDates = dates.map(d => new Date(d));
                 },

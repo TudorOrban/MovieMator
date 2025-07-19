@@ -32,7 +32,7 @@ public class MovieController {
     }
 
     @GetMapping("/search/user/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isSearchingOwnMovies(#userId, authentication)")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isSearchingOwnMovies(#userId, authentication) or @userSecurity.isProfilePublic(#userId)")
     public ResponseEntity<PaginatedResults<MovieSearchDto>> searchMovies(
             @PathVariable Long userId,
             @RequestParam(value = "searchText", required = false, defaultValue = "") String searchText,

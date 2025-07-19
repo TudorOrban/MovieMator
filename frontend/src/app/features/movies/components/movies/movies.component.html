@@ -3,7 +3,6 @@
         [fallbackState]="fallbackState"
     ></app-error-fallback>
 
-    <!-- Content -->
     <div *ngIf="!fallbackState.isForbidden && !fallbackState.errorMessage">
         <app-movies-header
             [username]="isCurrentUserMoviesPage ? undefined : undefined"
@@ -17,7 +16,6 @@
             (deleteModeToggled)="toggleDeleteMode()"
             (onDeleteMovies)="deleteMovies()"
             (cancelDeleteMovies)="clearDeleteMovieIds()"
-            class="w-full border-b border-gray-300 shadow-sm"
         ></app-movies-header>
 
         <app-loading-fallback

@@ -26,8 +26,28 @@
                 *ngIf="hasBeenSubmitted() && displayNameInput.invalid"
                 class="form-error"
             >
-                <div *ngIf="displayNameInput.errors?.['required']">DisplayName is required.</div>
-                <div *ngIf="displayNameInput.errors?.['displayName']">Please enter a valid displayName.</div>
+                <div *ngIf="displayNameInput.errors?.['required']">Display Name is required.</div>
+                <div *ngIf="displayNameInput.errors?.['displayName']">Please enter a valid Display Name.</div>
+            </div>
+        </div>
+        
+        <!-- Contact Info -->
+        <div class="space-y-2">
+            <label for="contactInfo" class="form-label">Contact Information</label>
+            <input
+                type="contactInfo"
+                id="contactInfo"
+                name="contactInfo"
+                [(ngModel)]="editProfileData.contactInfo"
+                contactInfo
+                class="form-input"
+                #contactInfoInput="ngModel"
+            >
+            <div
+                *ngIf="hasBeenSubmitted() && contactInfoInput.invalid"
+                class="form-error"
+            >
+                <div *ngIf="contactInfoInput.errors?.['contactInfo']">Please enter a valid contactInfo.</div>
             </div>
         </div>
 
@@ -51,3 +71,9 @@
         </button>
     </form>
 </div>
+
+<app-public-profile-consent
+    *ngIf="showPublicProfileConsentModal"
+    (confirmed)="onConsentConfirmed()"
+    (cancelled)="onConsentCancelled()"
+></app-public-profile-consent>

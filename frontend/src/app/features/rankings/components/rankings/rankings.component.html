@@ -1,1 +1,42 @@
-<p>rankings works!</p>
+<div class="w-full pb-16">
+    <app-error-fallback
+        [fallbackState]="fallbackState"
+    ></app-error-fallback>
+
+    <div *ngIf="!fallbackState.isForbidden && !fallbackState.errorMessage">
+        <app-rankings-header
+            [username]="isCurrentUserRankingsPage ? undefined : undefined"
+            [searchParams]="searchParams"
+            [totalCount]="rankings?.totalCount"
+            [isDeleteModeOn]="isDeleteModeOn"
+            (searchParamsChanged)="searchRankings()"
+            (sortOptionsChanged)="handleSortOptionsChange()"
+            (deleteModeToggled)="toggleDeleteMode()"
+            (onDeleteRankings)="deleteRankings()"
+            (cancelDeleteRankings)="clearDeleteRankingIds()"
+        ></app-rankings-header>
+
+        <app-loading-fallback
+            [fallbackState]="fallbackState"
+        ></app-loading-fallback>
+
+        <div *ngIf="!fallbackState.isLoading" class="flex w-full h-full page-std-padding-x py-4">
+            <app-rankings-list 
+                [rankings]="rankings" 
+                [rankingsPerRow]="userSettings?.rankingsPerRow"
+                [isDeleteModeOn]="isDeleteModeOn"
+                [isLoading]="fallbackState.isLoading"
+                (onNewRankingId)="handleNewDeleteRankingId($event)"
+                class="w-full"
+            ></app-rankings-list>
+        </div>
+
+        <app-page-selector
+            [currentPage]="searchParams.page"
+            [totalCount]="rankings?.totalCount ?? 0"
+            [itemsPerPage]="searchParams.itemsPerPage"
+            (pageChanged)="handlePageChange($event)"
+            class="w-full"
+        ></app-page-selector>
+    </div>
+</div>

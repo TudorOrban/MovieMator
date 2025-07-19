@@ -19,6 +19,12 @@ export const movieSortOptions: UIItem[] = [
     { label: "Release Year", value: "releaseYear" },
 ];
 
+export const rankingSortOptions: UIItem[] = [
+    { label: "Created At", value: "createdAt" },
+    { label: "Last Modified", value: "updatedAt" },
+    { label: "Title", value: "title" },
+];
+
 export const standardFilterOptions: FilterOption[] = [
     {
         key: { label: "Release Year", value: "releaseYear" },
@@ -56,12 +62,16 @@ export const standardFilterOptions: FilterOption[] = [
 
 export const pagesSearchConfiguration: PagesSearchConfiguration = {
     pagesConfig: {
+        "/users": {
+            sortOptions: userSortOptions,
+            filterOptions: standardFilterOptions
+        },
         "/movies": {
             sortOptions: movieSortOptions,
             filterOptions: standardFilterOptions
         },
-        "/users": {
-            sortOptions: userSortOptions,
+        "/rankings": {
+            sortOptions: movieSortOptions,
             filterOptions: standardFilterOptions
         },
     },

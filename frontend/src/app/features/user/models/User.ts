@@ -51,7 +51,9 @@ export interface UserSettings {
     appTheme: string;
     confirmDeletions: boolean;
     defaultMovieSortBy: string;
+    defaultRankingSortBy?: string;
     moviesPerRow: number;
+    rankingsPerRow?: number;
     defaultStatsTimePeriod: StatsTimePeriodOption;
 }
 

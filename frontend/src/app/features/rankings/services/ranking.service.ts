@@ -31,11 +31,6 @@ export class RankingService {
         return this.http.get<boolean>(`${this.apiUrl}/ranking-title/${title}/user/${userId}`);
     }
 
-
-    getTopRatedRankings(userId: number, limit: number = 5): Observable<RankingSearchDto[]> {
-        return this.http.get<RankingSearchDto[]>(`${this.apiUrl}/top-rated/user/${userId}`, { params: { limit: limit }});
-    }
-
     createRanking(rankingDto: CreateRankingDto): Observable<RankingDataDto> {
         return this.http.post<RankingDataDto>(this.apiUrl, rankingDto);
     }

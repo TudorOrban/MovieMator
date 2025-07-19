@@ -1,6 +1,4 @@
 <div class="header flex flex-col md:flex-row md:items-center md:justify-between p-4 shadow-lg std-border-b">
-
-    <!-- Small screens -->
     <div class="flex items-center justify-between w-full mb-4 md:hidden">
         <div class="logo-container flex-shrink-0">
             <img src="/assets/images/Logo_transparent.png" class="w-23 h-15"/>
@@ -23,10 +21,10 @@
         <img src="/assets/images/Logo_transparent.png" class="w-23 h-15"/>
     </div>
 
-    <!-- Large screens -->
     <div class="nav-links flex justify-center space-x-4 md:space-x-12 xl:space-x-20 md:mx-auto mb-4 md:mb-0">
         <a [routerLink]="''" class="text-xl font-semibold">Home</a>
         <a [routerLink]="'/movies'" class="text-xl font-semibold">Movies</a>
+        <a [routerLink]="'/rankings'" class="text-xl font-semibold">Rankings</a>
         <a [routerLink]="'/statistics'" class="text-xl font-semibold">Stats</a>
     </div>
 

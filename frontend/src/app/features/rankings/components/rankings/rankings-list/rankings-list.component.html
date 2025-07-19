@@ -1,0 +1,42 @@
+<div class="space-y-4 relative min-h-[100px]">
+    <div *ngIf="!isLoading && (rankings?.results?.length === 0 || !rankings?.results)" class="text-center text-gray-500 py-8">
+        <p class="text-lg">No rankings found that match your criteria.</p>
+    </div>
+
+    <div
+        *ngIf="!isLoading && (rankings?.results?.length ?? 0) > 0"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-8 py-4"
+        [ngClass]="gridColsClass" 
+    >
+        <div
+            *ngFor="let ranking of (rankings?.results ?? [])"
+            class="ranking-small-card rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-[1.02] flex flex-col relative"
+            [ngClass]="{'border-2 border-blue-500': isDeleteModeOn}"
+        >
+            <div
+                *ngIf="isDeleteModeOn"
+                class="absolute top-3 left-3 z-20"
+            >
+                <input
+                    type="checkbox"
+                    (change)="handleCheckboxChange(ranking.id)"
+                    class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                />
+            </div>
+
+            <a [routerLink]="'/rankings/' + ranking.id" class="flex flex-grow overflow-hidden">
+                <div class="flex-shrink-0 w-24 h-full">
+                    <!-- <img
+                        [src]="ranking.posterUrl ?? 'assets/images/PlaceholderRankingPoster.png'"
+                        alt="{{ ranking.title }} Poster"
+                        class="w-full h-full object-cover rounded-l-lg"
+                    > -->
+                </div>
+
+                <div class="p-4 flex flex-col flex-grow justify-between">
+                    
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

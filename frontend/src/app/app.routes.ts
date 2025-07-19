@@ -16,6 +16,7 @@ import { PrivacyPolicyComponent } from './core/main/components/compliance/privac
 import { TermsAndConditionsComponent } from './core/main/components/compliance/terms-and-conditions/terms-and-conditions.component';
 import { SearchPublicUsersComponent } from './features/user/components/search-public-users/search-public-users.component';
 import { AuthGuard } from './core/auth/guards/auth.guard';
+import { RankingsComponent } from './features/rankings/components/rankings/rankings.component';
 
 export const routes: Routes = [
     {
@@ -57,6 +58,12 @@ export const routes: Routes = [
     {
         path: "movies/:movieId",
         component: MovieComponent,
+        canActivate: [AuthGuard]
+    },
+    { 
+        path: "rankings", 
+        component: RankingsComponent,
+        data: { isCurrentUserRankingsPage: true },
         canActivate: [AuthGuard]
     },
     { 

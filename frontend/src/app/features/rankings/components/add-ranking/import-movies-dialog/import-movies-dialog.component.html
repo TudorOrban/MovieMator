@@ -8,11 +8,27 @@
     </div>
 
     <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full space-y-4 md:space-y-0 md:space-x-4">
-
         <div class="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
             <app-search-input
                 (onSearch)="handleSearchTextChange($event)"
             ></app-search-input>
+
+            <div class="flex items-center space-x-2">
+                <div>
+                    <app-selector
+                        [items]="searchConfig.sortOptions"
+                        [selectedValue]="searchParams.sortBy"
+                        (selectedItemChange)="handleSortOptionChange($event)"
+                        class="w-full sm:w-auto min-w-80"
+                    ></app-selector>
+                </div>
+
+                <div>
+                    <button class="standard-action-button shadow-sm w-12" (click)="handleToggleIsAscending()">
+                        <fa-icon [icon]="searchParams.isAscending ? faArrowUpWideShort : faArrowDownShortWide"></fa-icon>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -34,7 +34,7 @@ export interface ListData {}
 
 export interface TierListData {
     tiers: TierData[];
-    tierMovies: Record<string, number[]>;
+    tierMovies: Record<string, MovieSearchDto[]>;
     availableMovies: MovieSearchDto[];
 }
 

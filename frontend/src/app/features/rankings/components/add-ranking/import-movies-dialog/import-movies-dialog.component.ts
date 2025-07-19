@@ -12,11 +12,12 @@ import { faArrowDownShortWide, faArrowUpWideShort } from '@fortawesome/free-soli
 import { ToastManagerService } from '../../../../../shared/common/services/toast-manager.service';
 import { FallbackState, initialFallbackState } from '../../../../../shared/fallback/models/Fallback';
 import { MovieSearchDto } from '../../../../movies/models/Movie';
-import { ToastType } from '../../../../../shared/models/UI';
+import { ToastType, UIItem } from '../../../../../shared/models/UI';
+import { SelectorComponent } from "../../../../../shared/common/components/selector/selector.component";
 
 @Component({
     selector: 'app-import-movies-dialog',
-    imports: [CommonModule, SearchInputComponent, FontAwesomeModule, FiltersBarComponent],
+    imports: [CommonModule, SearchInputComponent, FontAwesomeModule, FiltersBarComponent, SelectorComponent],
     templateUrl: './import-movies-dialog.component.html',
     styleUrl: './import-movies-dialog.component.css'
 })
@@ -63,6 +64,14 @@ export class ImportMoviesDialogComponent implements OnInit, OnDestroy {
         this.searchParams.page = 1;
     }
 
+    handleSortOptionChange(item: UIItem): void {
+        this.searchParams.sortBy = item?.value;
+    }
+
+    handleToggleIsAscending(): void {
+        this.searchParams.isAscending = !this.searchParams.isAscending;
+    }
+    
     handleMovieFiltersChange(newFilters: MovieFilters): void {
         this.movieFilters = newFilters;
         this.searchParams.page = 1;

@@ -71,7 +71,7 @@
         </div>
 
         <div *ngIf="ranking.rankingType === RankingType.TIER_LIST" class="space-y-2 mt-4">
-            <label for="rankingData" class="form-label">Tier List</label>
+            <label for="rankingData" class="form-label text-xl py-4">Tier List</label>
             <app-tier-list
                 [rankingData]="ranking.rankingData"
                 (onRankingDataChange)="handleRankingDataChange($event)"

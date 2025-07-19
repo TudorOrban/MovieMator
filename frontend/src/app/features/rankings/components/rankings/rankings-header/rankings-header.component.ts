@@ -30,7 +30,6 @@ export class RankingsHeaderComponent {
 
     handleSearchTextChange(searchText: string): void {
         this.searchParams.searchText = searchText;
-        console.log("DAS");
         this.searchParamsChanged.emit();
     }
 

@@ -17,6 +17,7 @@ import { TermsAndConditionsComponent } from './core/main/components/compliance/t
 import { SearchPublicUsersComponent } from './features/user/components/search-public-users/search-public-users.component';
 import { AuthGuard } from './core/auth/guards/auth.guard';
 import { RankingsComponent } from './features/rankings/components/rankings/rankings.component';
+import { AddRankingComponent } from './features/rankings/components/add-ranking/add-ranking.component';
 
 export const routes: Routes = [
     {
@@ -64,6 +65,11 @@ export const routes: Routes = [
         path: "rankings", 
         component: RankingsComponent,
         data: { isCurrentUserRankingsPage: true },
+        canActivate: [AuthGuard]
+    },
+    {
+        path: "rankings/add-ranking",
+        component: AddRankingComponent,
         canActivate: [AuthGuard]
     },
     { 

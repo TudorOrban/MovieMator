@@ -47,7 +47,7 @@
         <div class="flex items-center space-x-4 pt-4">
             <label for="title" class="form-label text-lg">Movie Details</label>
             <button class="text-gray-800 hover:text-black" (click)="toggleIsMovieDetailsExpanded()" type="button">
-                <fa-icon [icon]="isMovieDetailsExpanded ? faCaretUp : faCaretDown"/>
+                <fa-icon [icon]="isMovieDetailsExpanded() ? faCaretUp : faCaretDown"/>
             </button>
         </div>
 

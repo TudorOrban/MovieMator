@@ -33,7 +33,7 @@ export class AddMovieComponent implements OnInit, OnDestroy {
         { label: "Watched", value: MovieStatus.WATCHED },
         { label: "Watchlist", value: MovieStatus.WATCHLIST }
     ];
-    isMovieDetailsExpanded: boolean = false;
+    isMovieDetailsExpanded = signal(false);
 
     tmdbSearchResults: TmdbMovieResult[] = [];
     private searchTerms = new Subject<string>();
@@ -57,7 +57,6 @@ export class AddMovieComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
                 console.error("Error getting current user: ", error);
-                this.router.navigate(["/signup"]);
             }
         });
         this.subscription.add(this.searchTerms.pipe(
@@ -164,7 +163,7 @@ export class AddMovieComponent implements OnInit, OnDestroy {
     }
 
     toggleIsMovieDetailsExpanded(): void {
-        this.isMovieDetailsExpanded = !this.isMovieDetailsExpanded;
+        this.isMovieDetailsExpanded.set(!this.isMovieDetailsExpanded());
     }
 
     MovieStatus = MovieStatus;

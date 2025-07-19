@@ -38,6 +38,7 @@ public class Ranking {
     private LocalDateTime lastViewedAt;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "ranking_type")
     private RankingType rankingType;
 

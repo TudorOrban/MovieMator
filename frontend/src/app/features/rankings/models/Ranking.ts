@@ -24,7 +24,7 @@ export interface RankingDataDto {
 }
 
 export interface RankingData {
-    smth: number;
+    smth?: number;
 }
 
 export enum RankingType {

@@ -7,21 +7,31 @@ import { MovieService } from '../../services/movie.service';
 import { MoviesHeaderComponent } from "./movies-header/movies-header.component";
 import { MoviesListComponent } from "./movies-list/movies-list.component";
 import { AuthService } from '../../../../core/auth/service/auth.service';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { ToastManagerService } from '../../../../shared/common/services/toast-manager.service';
 import { ToastType } from '../../../../shared/models/UI';
 import { PageSelectorComponent } from "../../../../shared/common/components/page-selector/page-selector.component";
 import { UserSettings } from '../../../user/models/User';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ErrorMapperService } from '../../../user/services/error-mapper.service';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-movies',
-    imports: [CommonModule, FontAwesomeModule, MoviesHeaderComponent, MoviesListComponent, PageSelectorComponent],
+    imports: [CommonModule, FontAwesomeModule, RouterModule, MoviesHeaderComponent, MoviesListComponent, PageSelectorComponent],
     templateUrl: './movies.component.html',
 })
 export class MoviesComponent implements OnInit, OnDestroy {
-    movies?: PaginatedResults<MovieSearchDto>;
+    isCurrentUserMoviesPage?: boolean = true;
+
     userId?: number;
+    movies?: PaginatedResults<MovieSearchDto>;
     userSettings?: UserSettings;
+
+    isLoading: boolean = false;
+    isForbidden: boolean = false;
+    loadingError: string | null = null;
+
     searchParams: SearchParams = {
         searchText: "",
         sortBy: "watchedDate",
@@ -30,7 +40,6 @@ export class MoviesComponent implements OnInit, OnDestroy {
         itemsPerPage: 27
     };
     movieFilters: MovieFilters = {}
-    isLoading: boolean = false;
 
     isDeleteModeOn: boolean = false;
     toBeDeletedMovieIds: number[] = [];
@@ -41,20 +50,44 @@ export class MoviesComponent implements OnInit, OnDestroy {
         private readonly movieService: MovieService,
         private readonly authService: AuthService,
         private readonly toastService: ToastManagerService,
+        private readonly errorMapperService: ErrorMapperService,
+        private readonly route: ActivatedRoute
     ) {}
 
     ngOnInit() {
-        this.subscription = this.authService.currentUser$.subscribe({
-            next: (data) => {
-                this.userId = data?.id;
-                this.userSettings = data?.userSettings;
-                this.applyUserSettings();
-                this.searchMovies();
-            },
-            error: (error) => {
-                console.error("Error getting current user: ", error);
-            }
-        })
+        this.isLoading = true;
+
+        this.subscription.add(
+            combineLatest([
+                this.route.paramMap,
+                this.authService.currentUser$
+            ])
+            .subscribe({
+                next: ([paramMap, currentUser]) => {
+                    const userIdParam = paramMap.get("userId");
+                    this.userSettings = currentUser?.userSettings;
+
+                    if (userIdParam) {
+                        // Is on /user-profile/:userId/movies route
+                        this.isCurrentUserMoviesPage = false;
+                        this.userId = +userIdParam;
+                    } else {
+                        // Is on /movies route (current user)
+                        this.isCurrentUserMoviesPage = true;
+                        this.userId = currentUser?.id;
+                    }
+
+                    if (this.userSettings) {
+                        this.applyUserSettings();
+                    }
+
+                    this.searchMovies();
+                },
+                error: (error) => {
+                    console.error("Error combining route data and current user:", error);
+                }
+            })
+        );
     }
 
     ngOnDestroy(): void {
@@ -79,8 +112,12 @@ export class MoviesComponent implements OnInit, OnDestroy {
                 this.isLoading = false;
             },
             error: (error) => {
-                console.error("Error searching movies: ", error);
                 this.isLoading = false;
+                console.error("Error searching movies: ", error);
+
+                const { message, isForbidden } = this.errorMapperService.mapProfileError(error);
+                this.loadingError = message;
+                this.isForbidden = isForbidden;
             }
         });
     }
@@ -138,4 +175,6 @@ export class MoviesComponent implements OnInit, OnDestroy {
             }
         })
     }
+
+    faSpinner = faSpinner;
 }

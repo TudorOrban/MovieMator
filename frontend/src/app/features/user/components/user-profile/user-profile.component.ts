@@ -48,7 +48,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.subscription.add(
             this.route.paramMap.subscribe((params) => {
-                this.profileId = Number(params.get("id"));
+                this.profileId = Number(params.get("userId"));
                 this.profileUser = null;
                 this.isForbidden = false;
                 this.profileLoadError = null;

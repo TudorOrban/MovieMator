@@ -1,34 +1,62 @@
 <div class="w-full pb-16">
-    <app-movies-header
-        [searchParams]="searchParams"
-        [totalCount]="movies?.totalCount"
-        [movieFilters]="movieFilters"
-        [isDeleteModeOn]="isDeleteModeOn"
-        (searchParamsChanged)="searchMovies()"
-        (sortOptionsChanged)="handleSortOptionsChange()"
-        (movieFiltersChanged)="handleMovieFiltersChange($event)"
-        (deleteModeToggled)="toggleDeleteMode()"
-        (onDeleteMovies)="deleteMovies()"
-        (cancelDeleteMovies)="clearDeleteMovieIds()"
-        class="w-full border-b border-gray-300 shadow-sm"
-    ></app-movies-header>
-
-    <div class="flex w-full h-full page-std-padding-x py-4">
-        <app-movies-list 
-            [movies]="movies" 
-            [moviesPerRow]="userSettings?.moviesPerRow"
-            [isDeleteModeOn]="isDeleteModeOn"
-            [isLoading]="isLoading"
-            (onNewMovieId)="handleNewDeleteMovieId($event)"
-            class="w-full"
-        ></app-movies-list>
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="flex items-center justify-center py-40">
+        <div class="text-center std-shaded-text">
+            <fa-icon [icon]="faSpinner" [animation]="'spin'" size="3x"></fa-icon>
+            <p class="mt-2 text-lg font-semibold">Loading profile...</p>
+        </div>
     </div>
 
-    <app-page-selector
-        [currentPage]="searchParams.page"
-        [totalCount]="movies?.totalCount ?? 0"
-        [itemsPerPage]="searchParams.itemsPerPage"
-        (pageChanged)="handlePageChange($event)"
-        class="w-full"
-    ></app-page-selector>
+    <!-- Error State -->
+    <div *ngIf="!isLoading && (isForbidden || loadingError)" class="py-20">
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative max-w-md mx-auto" role="alert">
+            <strong class="font-bold">Error!</strong>
+            <span class="block sm:inline"> {{ loadingError }}</span>
+        </div>
+        <div class="flex items-center justify-center w-full">
+            <a
+                *ngIf="isForbidden"
+                class="mt-4 standard-write-button"
+                [routerLink]="'/search-public-users'"
+            >
+                Discover Public Profiles
+            </a>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div *ngIf="!isLoading && !isForbidden && !loadingError">
+        <app-movies-header
+            [searchParams]="searchParams"
+            [totalCount]="movies?.totalCount"
+            [movieFilters]="movieFilters"
+            [isDeleteModeOn]="isDeleteModeOn"
+            (searchParamsChanged)="searchMovies()"
+            (sortOptionsChanged)="handleSortOptionsChange()"
+            (movieFiltersChanged)="handleMovieFiltersChange($event)"
+            (deleteModeToggled)="toggleDeleteMode()"
+            (onDeleteMovies)="deleteMovies()"
+            (cancelDeleteMovies)="clearDeleteMovieIds()"
+            class="w-full border-b border-gray-300 shadow-sm"
+        ></app-movies-header>
+
+        <div class="flex w-full h-full page-std-padding-x py-4">
+            <app-movies-list 
+                [movies]="movies" 
+                [moviesPerRow]="userSettings?.moviesPerRow"
+                [isDeleteModeOn]="isDeleteModeOn"
+                [isLoading]="isLoading"
+                (onNewMovieId)="handleNewDeleteMovieId($event)"
+                class="w-full"
+            ></app-movies-list>
+        </div>
+
+        <app-page-selector
+            [currentPage]="searchParams.page"
+            [totalCount]="movies?.totalCount ?? 0"
+            [itemsPerPage]="searchParams.itemsPerPage"
+            (pageChanged)="handlePageChange($event)"
+            class="w-full"
+        ></app-page-selector>
+    </div>
 </div>

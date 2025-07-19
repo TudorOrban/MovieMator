@@ -31,7 +31,8 @@ export const routes: Routes = [
     },
     { 
         path: "movies", 
-        component: MoviesComponent 
+        component: MoviesComponent,
+        data: { isCurrentUserMoviesPage: true }
     },
     {
         path: "movies/add-movies",
@@ -50,8 +51,13 @@ export const routes: Routes = [
         component: StatisticsComponent 
     },
     {
-        path: "user-profile/:id",
+        path: "user-profile/:userId",
         component: UserProfileComponent
+    },
+    {
+        path: "user-profile/:userId/movies",
+        component: MoviesComponent,
+        data: { isCurrentUserMoviesPage: false } 
     },
     {
         path: "edit-profile",

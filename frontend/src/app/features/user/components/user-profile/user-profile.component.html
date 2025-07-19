@@ -26,6 +26,7 @@
         </div>
     </div>
 
+    <!-- Content -->
     <div *ngIf="!isLoadingProfile && profileUser && !isForbidden && !profileLoadError">
         <div class="flex flex-col items-center mb-8">
             <div class="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center text-blue-800 text-5xl font-bold border-2 border-blue-400">
@@ -101,7 +102,7 @@
 
         <div 
             class="max-w-xl mx-auto std-bg p-6 rounded-lg shadow-md space-y-4 mt-6 transition-all duration-300 ease-in-out transform hover:scale-[1.02] cursor-pointer"
-            [routerLink]="'user-profile/' + profileId + '/movies'"
+            [routerLink]="'/user-profile/' + profileId + '/movies'"
         >
             <div class="flex items-center pb-3 mb-4 space-x-8 std-border-b">
                 <h3 class="text-xl font-semibold std-shaded-text">Top Rated Movies</h3>

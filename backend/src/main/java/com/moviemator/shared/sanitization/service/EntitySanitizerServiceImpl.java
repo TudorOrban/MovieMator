@@ -4,6 +4,8 @@ import com.moviemator.core.user.dto.CreateUserDto;
 import com.moviemator.core.user.dto.UpdateUserDto;
 import com.moviemator.features.movie.dto.CreateMovieDto;
 import com.moviemator.features.movie.dto.UpdateMovieDto;
+import com.moviemator.features.ranking.dto.CreateRankingDto;
+import com.moviemator.features.ranking.dto.UpdateRankingDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,5 +51,21 @@ public class EntitySanitizerServiceImpl implements EntitySanitizerService {
         movieDto.setUserReview(sanitizationService.sanitize(movieDto.getUserReview()));
 
         return movieDto;
+    }
+
+    public CreateRankingDto sanitizeCreateRankingDto(CreateRankingDto rankingDto) {
+        rankingDto.setTitle(sanitizationService.sanitize(rankingDto.getTitle()));
+        rankingDto.setDescription(sanitizationService.sanitize(rankingDto.getDescription()));
+        // TODO: Sanitize ranking data
+
+        return rankingDto;
+    }
+
+    public UpdateRankingDto sanitizeUpdateRankingDto(UpdateRankingDto rankingDto) {
+        rankingDto.setTitle(sanitizationService.sanitize(rankingDto.getTitle()));
+        rankingDto.setDescription(sanitizationService.sanitize(rankingDto.getDescription()));
+        // TODO: Sanitize ranking data
+
+        return rankingDto;
     }
 }

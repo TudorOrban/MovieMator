@@ -10,6 +10,10 @@ import com.moviemator.features.movie.dto.CreateMovieDto;
 import com.moviemator.features.movie.dto.MovieDataDto;
 import com.moviemator.features.movie.dto.UpdateMovieDto;
 import com.moviemator.features.movie.service.MovieService;
+import com.moviemator.features.ranking.dto.CreateRankingDto;
+import com.moviemator.features.ranking.dto.RankingDataDto;
+import com.moviemator.features.ranking.dto.UpdateRankingDto;
+import com.moviemator.features.ranking.service.RankingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -22,16 +26,19 @@ public class UserSecurityExpressions {
     private final UserService userService;
     private final UserRepository userRepository;
     private final MovieService movieService;
+    private final RankingService rankingService;
 
     @Autowired
     public UserSecurityExpressions(
             UserService userService,
             UserRepository userRepository,
-            MovieService movieService
+            MovieService movieService,
+            RankingService rankingService
     ) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.movieService = movieService;
+        this.rankingService = rankingService;
     }
 
     // User
@@ -195,6 +202,114 @@ public class UserSecurityExpressions {
         try {
             UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
             return authenticatedUser != null && authenticatedUser.getId().equals(movieDto.getUserId());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    // Ranking
+    public boolean isRankingOwnerById(Long rankingId, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || rankingId == null) {
+            return false;
+        }
+        try {
+            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
+            if (authenticatedUser == null) {
+                return false;
+            }
+            RankingDataDto ranking = rankingService.getRankingById(rankingId);
+            return ranking != null && ranking.getUserId().equals(authenticatedUser.getId());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean areAllRankingsOwnedByAuthenticatedUser(List<Long> rankingIds, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || rankingIds == null || rankingIds.isEmpty()) {
+            return false;
+        }
+        try {
+            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
+            if (authenticatedUser == null) {
+                return false;
+            }
+            Long authenticatedUserId = authenticatedUser.getId();
+
+            for (Long rankingId : rankingIds) {
+                RankingDataDto ranking = rankingService.getRankingById(rankingId);
+                if (ranking == null || !ranking.getUserId().equals(authenticatedUserId)) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isSearchingOwnRankings(Long targetUserId, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || targetUserId == null) {
+            return false;
+        }
+        try {
+            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
+            return authenticatedUser != null && authenticatedUser.getId().equals(targetUserId);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isCheckingOwnRankingTitles(Long targetUserId, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || targetUserId == null) {
+            return false;
+        }
+        try {
+            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
+            return authenticatedUser != null && authenticatedUser.getId().equals(targetUserId);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isRankingOwnerForCreate(CreateRankingDto rankingDto, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || rankingDto == null || rankingDto.getUserId() == null) {
+            return false;
+        }
+        try {
+            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
+            return authenticatedUser != null && authenticatedUser.getId().equals(rankingDto.getUserId());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isRankingOwnerForCreateBulk(List<CreateRankingDto> rankingDtos, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || rankingDtos == null) {
+            return false;
+        }
+        try {
+            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
+            if (authenticatedUser == null) return false;
+            Long authUserId = authenticatedUser.getId();
+
+            for (CreateRankingDto rankingDto : rankingDtos) {
+                if (!authUserId.equals(rankingDto.getUserId())) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isRankingOwnerForUpdate(UpdateRankingDto rankingDto, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || rankingDto == null || rankingDto.getUserId() == null) {
+            return false;
+        }
+        try {
+            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
+            return authenticatedUser != null && authenticatedUser.getId().equals(rankingDto.getUserId());
         } catch (Exception e) {
             return false;
         }

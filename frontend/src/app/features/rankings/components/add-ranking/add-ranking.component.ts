@@ -12,10 +12,12 @@ import { EnumSelectorComponent } from "../../../../shared/common/components/enum
 import { FormsModule } from '@angular/forms';
 import { TagInputComponent } from "../../../../shared/common/components/tag-input/tag-input.component";
 import { TierListComponent } from "../tier-list/tier-list.component";
+import { ImportMoviesDialogComponent } from "./import-movies-dialog/import-movies-dialog.component";
+import { MovieSearchDto } from '../../../movies/models/Movie';
 
 @Component({
     selector: 'app-add-ranking',
-    imports: [CommonModule, FormsModule, EnumSelectorComponent, TagInputComponent, TierListComponent],
+    imports: [CommonModule, FormsModule, EnumSelectorComponent, TagInputComponent, TierListComponent, ImportMoviesDialogComponent],
     templateUrl: './add-ranking.component.html',
     styleUrl: './add-ranking.component.css'
 })
@@ -27,6 +29,8 @@ export class AddRankingComponent implements OnInit, OnDestroy {
         rankingData: defaultRankingData
     }
     hasBeenSubmitted = signal(false);
+
+    isImportMoviesDialogOpen = signal(false);
 
     rankingTypeOptions: { label: string, value: RankingType }[] = [
         { label: "Tier List", value: RankingType.TIER_LIST },
@@ -91,6 +95,16 @@ export class AddRankingComponent implements OnInit, OnDestroy {
 
     handleRankingDataChange(data: RankingData): void {
         this.ranking.rankingData = data;
+    }
+
+    handleImportMoviesRequest(): void {
+        this.isImportMoviesDialogOpen.set(true);
+    }
+
+    handleMoviesImported(importedMovies: MovieSearchDto[]): void {
+        if (!this.ranking.rankingData.tierListData) return;
+        this.ranking.rankingData.tierListData.availableMovies = importedMovies;
+        this.isImportMoviesDialogOpen.set(false);
     }
 
     RankingType = RankingType;

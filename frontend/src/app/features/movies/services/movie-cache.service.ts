@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { CacheEntry, MovieFilters, PaginatedResults, SearchParams } from "../../../shared/models/Search";
 import { MovieSearchDto } from "../models/Movie";
-import { SearchCacheKeyBuilder } from "./search-cache-key-builder"; // Assuming this handles movie search keys
+import { SearchCacheKeyBuilder } from "./search-cache-key-builder";
 import { UserStatistics } from "../../statistics/models/UserStatistics";
 
 @Injectable({

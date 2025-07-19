@@ -18,6 +18,7 @@ import { FiltersBarComponent } from "./filters-bar/filters-bar.component";
 })
 export class MoviesHeaderComponent {
     @Input() username?: string;
+    @Input() isTitleVisible?: boolean = true;
     @Input() searchParams!: SearchParams;
     @Input() totalCount?: number = 0;
     @Input() movieFilters: MovieFilters = {};

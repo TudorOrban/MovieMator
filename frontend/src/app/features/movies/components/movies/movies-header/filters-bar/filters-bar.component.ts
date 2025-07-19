@@ -18,7 +18,7 @@ export class FiltersBarComponent implements OnInit , OnDestroy{
     @Input() movieFilters: MovieFilters = {};
     @Input() filterOptions: FilterOption[] = [];
     @Output() movieFiltersChanged = new EventEmitter<MovieFilters>();
-    isExpanded: boolean = false;
+    @Input() isExpanded?: boolean = false;
 
     private releaseYearFromChangeSubject = new Subject<number | null>();
     private releaseYearToChangeSubject = new Subject<number | null>();

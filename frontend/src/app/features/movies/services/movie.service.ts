@@ -17,7 +17,7 @@ export class MovieService {
         private readonly movieCacheService: MovieCacheService
     ) {}
 
-    searchMovies(userId: number, searchParams: SearchParams, movieFilters: MovieFilters): Observable<PaginatedResults<MovieSearchDto>> {
+    searchMovies(userId: number, searchParams: SearchParams, movieFilters: MovieFilters, smallDtos: boolean = false): Observable<PaginatedResults<MovieSearchDto>> {
         // 1. Try to get data from cache
         const cachedData = this.movieCacheService.get(userId, searchParams, movieFilters);
         if (cachedData) {
@@ -25,7 +25,7 @@ export class MovieService {
         }
 
         // 2. If not in cache, make the HTTP request
-        const params = this.getSearchParams(searchParams, movieFilters);
+        const params = this.getSearchParams(searchParams, movieFilters, smallDtos);
 
         return this.http.get<PaginatedResults<MovieSearchDto>>(
             `${this.apiUrl}/search/user/${userId}`,
@@ -61,7 +61,6 @@ export class MovieService {
     isMovieTitleUnique(userId: number, title: string): Observable<boolean> {
         return this.http.get<boolean>(`${this.apiUrl}/movie-title/${title}/user/${userId}`);
     }
-
 
     getTopRatedMovies(userId: number, limit: number = 5): Observable<MovieSearchDto[]> {
         return this.http.get<MovieSearchDto[]>(`${this.apiUrl}/top-rated/user/${userId}`, { params: { limit: limit }});
@@ -103,7 +102,7 @@ export class MovieService {
         );
     }
 
-    private getSearchParams(searchParams: SearchParams, movieFilters: MovieFilters) {
+    private getSearchParams(searchParams: SearchParams, movieFilters: MovieFilters, smallDtos: boolean) {
         return {
             ...searchParams,
             ...(movieFilters.releaseYearFrom != null ? { releaseYearFrom: movieFilters.releaseYearFrom } : {}),
@@ -118,6 +117,7 @@ export class MovieService {
             ...(movieFilters.runtimeMinutesMoreThan != null ? { runtimeMinutesMoreThan: movieFilters.runtimeMinutesMoreThan } : {}),
             ...(movieFilters.genresIncluding?.length ? { genresIncluding: movieFilters.genresIncluding } : {}),
             ...(movieFilters.actorsIncluding?.length ? { actorsIncluding: movieFilters.actorsIncluding } : {}),
+            smallDtos
         };
     }
 }

@@ -1,0 +1,32 @@
+<div class="px-8 py-4 std-border rounded-md shadow-sm min-w-1/2">
+    <div class="text-2xl font-semibold py-4">
+        Import Movies
+    </div>
+
+    <div class="text-lg std-shaded-text pb-4">
+        Import all your movies based on the selected filters.
+    </div>
+
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full space-y-4 md:space-y-0 md:space-x-4">
+
+        <div class="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <app-search-input
+                (onSearch)="handleSearchTextChange($event)"
+            ></app-search-input>
+        </div>
+    </div>
+
+    <div class="mt-6">
+        <app-filters-bar
+            [filterOptions]="searchConfig.filterOptions"
+            [isExpanded]="true"
+            (movieFiltersChanged)="handleMovieFiltersChange($event)"
+        ></app-filters-bar>
+    </div>
+
+    <div class="flex items-center justify-center w-full py-4">
+        <button class="standard-write-button" type="button" (click)="confirmImport()">
+            Import
+        </button>
+    </div>
+</div>

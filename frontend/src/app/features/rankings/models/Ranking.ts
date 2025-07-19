@@ -1,3 +1,5 @@
+import { MovieSearchDto } from "../../movies/models/Movie";
+
 export interface RankingSearchDto {
     id: number;
     userId: number;
@@ -33,7 +35,7 @@ export interface ListData {}
 export interface TierListData {
     tiers: TierData[];
     tierMovies: Record<string, number[]>;
-    availableMovies: MovieSmallData[];
+    availableMovies: MovieSearchDto[];
 }
 
 export interface MovieSmallData {

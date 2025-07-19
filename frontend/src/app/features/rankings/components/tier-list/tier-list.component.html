@@ -21,8 +21,22 @@
             </div>
         </div>
     </div>
+</div>
 
-    <div>
+<div class="py-4">
+    <button class="standard-action-button" type="button" (click)="importMovies()">
+        Import Movies
+    </button>
 
+    <div class="flex flex-wrap">
+        <div *ngFor="let movie of rankingData?.tierListData?.availableMovies">
+            <div class="flex-shrink-0 w-24 h-full">
+                <img
+                    [src]="movie.posterUrl"
+                    alt="{{ movie.title }} Poster"
+                    class="w-full h-full object-cover rounded-l-lg"
+                >
+            </div>
+        </div>
     </div>
 </div>

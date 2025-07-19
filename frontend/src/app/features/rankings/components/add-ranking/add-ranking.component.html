@@ -1,4 +1,4 @@
-<div class="page-std-padding-x page-std-padding-y">
+<div class="relative page-std-padding-x page-std-padding-y">
     <div class="text-2xl font-semibold py-8">
         Add Ranking
     </div>
@@ -75,6 +75,7 @@
             <app-tier-list
                 [rankingData]="ranking.rankingData"
                 (onRankingDataChange)="handleRankingDataChange($event)"
+                (onImportMovies)="handleImportMoviesRequest()"
             ></app-tier-list>
         </div>
 
@@ -82,4 +83,10 @@
             <button type="submit" class="standard-write-button">Create Ranking</button>
         </div>
     </form>
+
+    <div *ngIf="isImportMoviesDialogOpen()" class="absolute inset-0 flex items-center justify-center z-40 std-bg">
+        <app-import-movies-dialog
+            (onMoviesImported)="handleMoviesImported($event)"
+        ></app-import-movies-dialog>
+    </div>
 </div>

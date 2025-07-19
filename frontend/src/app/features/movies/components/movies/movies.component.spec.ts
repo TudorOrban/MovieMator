@@ -226,7 +226,7 @@ describe("MoviesComponent", () => {
 
     it("should not call searchMovies if userId is not set", () => {
         // Arrange
-        component.userId = undefined;
+        component.userId = null;
 
         // Act
         component.searchMovies();

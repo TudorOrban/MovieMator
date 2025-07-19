@@ -12,7 +12,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     templateUrl: './movies-list.component.html',
 })
 export class MoviesListComponent implements OnInit {
-    @Input() movies?: PaginatedResults<MovieSearchDto>;
+    @Input() movies: PaginatedResults<MovieSearchDto> | null = null;
     @Input() moviesPerRow?: number = 3;
     @Input() isDeleteModeOn?: boolean = false;
     @Input() isLoading?: boolean = false;

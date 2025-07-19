@@ -7,14 +7,15 @@ import { MovieService } from '../../services/movie.service';
 import { MoviesHeaderComponent } from "./movies-header/movies-header.component";
 import { MoviesListComponent } from "./movies-list/movies-list.component";
 import { AuthService } from '../../../../core/auth/service/auth.service';
-import { combineLatest, Subscription } from 'rxjs';
+import { combineLatest, filter, Subscription } from 'rxjs';
 import { ToastManagerService } from '../../../../shared/common/services/toast-manager.service';
 import { ToastType } from '../../../../shared/models/UI';
 import { PageSelectorComponent } from "../../../../shared/common/components/page-selector/page-selector.component";
-import { UserSettings } from '../../../user/models/User';
+import { UserDataDto, UserSettings } from '../../../user/models/User';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ErrorMapperService } from '../../../user/services/error-mapper.service';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-movies',
@@ -22,11 +23,11 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
     templateUrl: './movies.component.html',
 })
 export class MoviesComponent implements OnInit, OnDestroy {
-    isCurrentUserMoviesPage?: boolean = true;
-
-    userId?: number;
-    movies?: PaginatedResults<MovieSearchDto>;
-    userSettings?: UserSettings;
+    isCurrentUserMoviesPage: boolean = true;
+    userId: number | null = null;
+    currentRouteUser: UserDataDto | null = null;
+    movies: PaginatedResults<MovieSearchDto> | null = null;
+    userSettings: UserSettings | null = null;
 
     isLoading: boolean = false;
     isForbidden: boolean = false;
@@ -44,6 +45,9 @@ export class MoviesComponent implements OnInit, OnDestroy {
     isDeleteModeOn: boolean = false;
     toBeDeletedMovieIds: number[] = [];
 
+    private previousUserId: number | null = null;
+    private previousSortBy: string | null = null;
+
     private subscription: Subscription = new Subscription();
 
     constructor(
@@ -60,34 +64,48 @@ export class MoviesComponent implements OnInit, OnDestroy {
         this.subscription.add(
             combineLatest([
                 this.route.paramMap,
-                this.authService.currentUser$
+                this.authService.currentUser$.pipe(
+                    filter(user => user !== null && user !== undefined)
+                )
             ])
             .subscribe({
                 next: ([paramMap, currentUser]) => {
                     const userIdParam = paramMap.get("userId");
-                    this.userSettings = currentUser?.userSettings;
+                    this.userSettings = currentUser?.userSettings ?? null;
+
+                    let newResolvedUserId: number | null = null;
 
                     if (userIdParam) {
-                        // Is on /user-profile/:userId/movies route
                         this.isCurrentUserMoviesPage = false;
-                        this.userId = +userIdParam;
+                        newResolvedUserId = +userIdParam;
                     } else {
-                        // Is on /movies route (current user)
                         this.isCurrentUserMoviesPage = true;
-                        this.userId = currentUser?.id;
+                        newResolvedUserId = currentUser?.id ?? null;
+                    }
+
+                    if (this.userId !== newResolvedUserId) {
+                        this.userId = newResolvedUserId;
                     }
 
                     if (this.userSettings) {
                         this.applyUserSettings();
                     }
 
-                    this.searchMovies();
+                    // Trigger searchMovies ONLY AFTER userId and userSettings
+                    this.fetchInitialMovies();
                 },
-                error: (error) => {
-                    console.error("Error combining route data and current user:", error);
-                }
+                error: (error) => this.handleAPIError(error)
             })
         );
+    }
+
+    private handleAPIError(error: HttpErrorResponse) {
+        this.isLoading = false;
+        console.error("Error searching movies: ", error);
+
+        const { message, isForbidden } = this.errorMapperService.mapProfileError(error);
+        this.loadingError = message;
+        this.isForbidden = isForbidden;
     }
 
     ngOnDestroy(): void {
@@ -96,9 +114,34 @@ export class MoviesComponent implements OnInit, OnDestroy {
 
     private applyUserSettings(): void {
         if (!this?.userSettings) return;
-        if (this.userSettings?.defaultMovieSortBy) {
+        if (this.userSettings?.defaultMovieSortBy &&
+            this.searchParams.sortBy !== this.userSettings.defaultMovieSortBy) {
             this.searchParams.sortBy = this.userSettings.defaultMovieSortBy;
-        } 
+        }
+    }
+
+    fetchInitialMovies(): void {
+        if (!this.userId) {
+            this.isLoading = false;
+            return;
+        }
+
+        if (this.userId === this.previousUserId && this.searchParams.sortBy === this.previousSortBy) {
+            this.isLoading = false;
+            return;
+        }
+        this.previousUserId = this.userId;
+        this.previousSortBy = this.searchParams.sortBy;
+
+        this.isLoading = true;
+
+        this.movieService.searchMovies(this.userId, this.searchParams, this.movieFilters).subscribe({
+            next: (data) => {
+                this.movies = data;
+                this.isLoading = false;
+            },
+            error: (error) => this.handleAPIError(error)
+        });
     }
 
     searchMovies(): void {
@@ -111,14 +154,7 @@ export class MoviesComponent implements OnInit, OnDestroy {
                 this.movies = data;
                 this.isLoading = false;
             },
-            error: (error) => {
-                this.isLoading = false;
-                console.error("Error searching movies: ", error);
-
-                const { message, isForbidden } = this.errorMapperService.mapProfileError(error);
-                this.loadingError = message;
-                this.isForbidden = isForbidden;
-            }
+            error: (error) => this.handleAPIError(error)
         });
     }
 

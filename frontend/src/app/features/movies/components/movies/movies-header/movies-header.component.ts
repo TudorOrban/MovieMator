@@ -17,6 +17,7 @@ import { FiltersBarComponent } from "./filters-bar/filters-bar.component";
     styleUrl: './movies-header.component.css'
 })
 export class MoviesHeaderComponent {
+    @Input() username?: string;
     @Input() searchParams!: SearchParams;
     @Input() totalCount?: number = 0;
     @Input() movieFilters: MovieFilters = {};

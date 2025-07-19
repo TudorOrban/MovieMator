@@ -27,6 +27,7 @@
     <!-- Content -->
     <div *ngIf="!isLoading && !isForbidden && !loadingError">
         <app-movies-header
+            [username]="isCurrentUserMoviesPage ? undefined : undefined"
             [searchParams]="searchParams"
             [totalCount]="movies?.totalCount"
             [movieFilters]="movieFilters"

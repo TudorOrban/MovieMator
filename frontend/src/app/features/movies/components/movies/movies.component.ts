@@ -16,10 +16,13 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ErrorMapperService } from '../../../user/services/error-mapper.service';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { HttpErrorResponse } from '@angular/common/http';
+import { FallbackState, initialFallbackState } from '../../../../shared/fallback/models/Fallback';
+import { LoadingFallbackComponent } from "../../../../shared/fallback/components/loading-fallback/loading-fallback.component";
+import { ErrorFallbackComponent } from "../../../../shared/fallback/components/error-fallback/error-fallback.component";
 
 @Component({
     selector: 'app-movies',
-    imports: [CommonModule, FontAwesomeModule, RouterModule, MoviesHeaderComponent, MoviesListComponent, PageSelectorComponent],
+    imports: [CommonModule, FontAwesomeModule, RouterModule, MoviesHeaderComponent, MoviesListComponent, PageSelectorComponent, LoadingFallbackComponent, ErrorFallbackComponent],
     templateUrl: './movies.component.html',
 })
 export class MoviesComponent implements OnInit, OnDestroy {
@@ -29,9 +32,7 @@ export class MoviesComponent implements OnInit, OnDestroy {
     movies: PaginatedResults<MovieSearchDto> | null = null;
     userSettings: UserSettings | null = null;
 
-    isLoading: boolean = false;
-    isForbidden: boolean = false;
-    loadingError: string | null = null;
+    fallbackState: FallbackState = initialFallbackState;
 
     searchParams: SearchParams = {
         searchText: "",
@@ -59,7 +60,7 @@ export class MoviesComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
-        this.isLoading = true;
+        this.fallbackState.isLoading = true;
 
         this.subscription.add(
             combineLatest([
@@ -99,15 +100,6 @@ export class MoviesComponent implements OnInit, OnDestroy {
         );
     }
 
-    private handleAPIError(error: HttpErrorResponse) {
-        this.isLoading = false;
-        console.error("Error searching movies: ", error);
-
-        const { message, isForbidden } = this.errorMapperService.mapProfileError(error);
-        this.loadingError = message;
-        this.isForbidden = isForbidden;
-    }
-
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
     }
@@ -122,23 +114,23 @@ export class MoviesComponent implements OnInit, OnDestroy {
 
     fetchInitialMovies(): void {
         if (!this.userId) {
-            this.isLoading = false;
+            this.fallbackState.isLoading = false;
             return;
         }
 
         if (this.userId === this.previousUserId && this.searchParams.sortBy === this.previousSortBy) {
-            this.isLoading = false;
+            this.fallbackState.isLoading = false;
             return;
         }
         this.previousUserId = this.userId;
         this.previousSortBy = this.searchParams.sortBy;
 
-        this.isLoading = true;
+        this.fallbackState.isLoading = true;
 
         this.movieService.searchMovies(this.userId, this.searchParams, this.movieFilters).subscribe({
             next: (data) => {
                 this.movies = data;
-                this.isLoading = false;
+                this.fallbackState.isLoading = false;
             },
             error: (error) => this.handleAPIError(error)
         });
@@ -147,15 +139,21 @@ export class MoviesComponent implements OnInit, OnDestroy {
     searchMovies(): void {
         if (!this.userId) return;
 
-        this.isLoading = true;
+        this.fallbackState.isLoading = true;
 
         this.movieService.searchMovies(this.userId, this.searchParams, this.movieFilters).subscribe({
             next: (data) => {
                 this.movies = data;
-                this.isLoading = false;
+                this.fallbackState.isLoading = false;
             },
             error: (error) => this.handleAPIError(error)
         });
+    }
+
+    private handleAPIError(error: HttpErrorResponse) {
+        console.error("Error searching movies: ", error);
+        const { message, isForbidden } = this.errorMapperService.mapProfileError(error);
+        this.fallbackState = { isLoading: false, errorMessage: message, isForbidden: isForbidden };
     }
 
     handleSortOptionsChange(): void {
@@ -194,7 +192,7 @@ export class MoviesComponent implements OnInit, OnDestroy {
     deleteMovies(): void {
         if (!this.isDeleteModeOn || this.toBeDeletedMovieIds.length === 0) return;
 
-        this.isLoading = true;
+        this.fallbackState.isLoading = true;
 
         this.movieService.deleteMovies(this.toBeDeletedMovieIds).subscribe({
             next: () => {
@@ -205,7 +203,7 @@ export class MoviesComponent implements OnInit, OnDestroy {
                 this.searchMovies();
             },
             error: (error) => {
-                this.isLoading = false;
+                this.fallbackState.isLoading = false;
                 this.toastService.addToast({ title: "Error", details: "An error occurred deleting the movies.", type: ToastType.ERROR });
                 console.error("Error deleting movies: ", error);
             }

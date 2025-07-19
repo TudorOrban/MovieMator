@@ -1,0 +1,15 @@
+<div *ngIf="!fallbackState.isLoading && (fallbackState.isForbidden || fallbackState.errorMessage)" class="py-20">
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative max-w-md mx-auto" role="alert">
+        <strong class="font-bold">Error!</strong>
+        <span class="block sm:inline"> {{ fallbackState.errorMessage }}</span>
+    </div>
+    <div class="flex items-center justify-center w-full">
+        <a
+            *ngIf="fallbackState.isForbidden"
+            class="mt-4 standard-write-button"
+            [routerLink]="'/search-public-users'"
+        >
+            Discover Public Profiles
+        </a>
+    </div>
+</div>

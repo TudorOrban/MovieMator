@@ -13,10 +13,13 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HeatmapComponent } from "./heatmap/heatmap.component";
 import { ErrorMapperService } from '../../services/error-mapper.service';
 import { MovieSearchDto } from '../../../movies/models/Movie';
+import { ErrorFallbackComponent } from "../../../../shared/fallback/components/error-fallback/error-fallback.component";
+import { FallbackState, initialFallbackState } from '../../../../shared/fallback/models/Fallback';
+import { LoadingFallbackComponent } from "../../../../shared/fallback/components/loading-fallback/loading-fallback.component";
 
 @Component({
     selector: 'app-user-profile',
-    imports: [CommonModule, RouterModule, FontAwesomeModule, HeatmapComponent],
+    imports: [CommonModule, RouterModule, FontAwesomeModule, HeatmapComponent, ErrorFallbackComponent, LoadingFallbackComponent],
     templateUrl: './user-profile.component.html',
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
@@ -27,10 +30,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     currentUser: UserDataDto | null = null;
     isEditModeOn: boolean = false;
     currentTheme: string = "light";
-
-    isLoadingProfile: boolean = true;
-    isForbidden: boolean = false;
-    profileLoadError: string | null = null;
+    
+    fallbackState: FallbackState = initialFallbackState;
 
     subscription: Subscription = new Subscription();
 
@@ -50,9 +51,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
             this.route.paramMap.subscribe((params) => {
                 this.profileId = Number(params.get("userId"));
                 this.profileUser = null;
-                this.isForbidden = false;
-                this.profileLoadError = null;
-                this.isLoadingProfile = true;
+                this.fallbackState = { isLoading: true, errorMessage: null, isForbidden: false };
                 this.loadUserData();
             })
         )
@@ -92,20 +91,22 @@ export class UserProfileComponent implements OnInit, OnDestroy {
             this.userService.getUserById(this.profileId).subscribe({
                 next: (data) => {
                     this.profileUser = data;
-                    this.isLoadingProfile = false;
+                    this.fallbackState.isLoading = false;
+
+                    var userIdToFetchDates;
                     if (this.currentUser && this.profileId === this.currentUser.id) {
-                        this.fetchAllWatchedDates(this.currentUser.id);
+                        userIdToFetchDates = this.currentUser.id;
                     } else if (this.profileUser.isProfilePublic && this.profileId) {
-                        this.fetchAllWatchedDates(this.profileId);
+                        userIdToFetchDates = this.profileId;
+                    } else {
+                        return;
                     }
+                    this.fetchAllWatchedDates(userIdToFetchDates);
                 },
                 error: (error) => {
-                    this.isLoadingProfile = false;
                     console.error("Error loading profile user: ", error);
-
                     const { message, isForbidden } = this.errorMapperService.mapProfileError(error);
-                    this.profileLoadError = message;
-                    this.isForbidden = isForbidden;
+                    this.fallbackState = { isLoading: false, errorMessage: message, isForbidden: isForbidden };
                 }
             })
         );

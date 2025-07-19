@@ -18,7 +18,9 @@ public class UserDataDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // New
     private UserSettings userSettings;
+    
+    // New
     private Boolean isProfilePublic;
+    private String contactInfo;
 }

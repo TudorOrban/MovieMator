@@ -1,9 +1,6 @@
 package com.moviemator.core.user.controller;
 
-import com.moviemator.core.user.dto.CreateUserDto;
-import com.moviemator.core.user.dto.UpdateUserDto;
-import com.moviemator.core.user.dto.UserDataDto;
-import com.moviemator.core.user.dto.UserSearchDto;
+import com.moviemator.core.user.dto.*;
 import com.moviemator.core.user.service.UserService;
 import com.moviemator.shared.search.models.PaginatedResults;
 import com.moviemator.shared.search.models.SearchParams;
@@ -26,9 +23,16 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isUserOrAdmin(#id, authentication) or @userSecurity.isProfilePublic(#id)")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isUserOrAdmin(#id, authentication)")
     public ResponseEntity<UserDataDto> getUserById(@PathVariable Long id, Authentication authentication) {
         UserDataDto user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/public/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isProfilePublic(#id)")
+    public ResponseEntity<PublicUserDataDto> getPublicUserById(@PathVariable Long id, Authentication authentication) {
+        PublicUserDataDto user = userService.getPublicUserById(id);
         return ResponseEntity.ok(user);
     }
 

@@ -37,6 +37,13 @@ public class UserServiceImpl implements UserService {
         return UserDtoMapper.INSTANCE.userToUserDataDto(user);
     }
 
+    public PublicUserDataDto getPublicUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id.toString(), ResourceType.USER, ResourceIdentifierType.ID));
+
+        return UserDtoMapper.INSTANCE.userToPublicUserDataDto(user);
+    }
+
     public UserDataDto getUserByCognitoUserId(String cognitoUserId) {
         User user = userRepository.findByCognitoUserId(cognitoUserId)
                 .orElseThrow(() -> new ResourceNotFoundException(cognitoUserId, ResourceType.USER, ResourceIdentifierType.ID));
@@ -74,6 +81,7 @@ public class UserServiceImpl implements UserService {
         existingUser.setDisplayName(sanitizedDto.getDisplayName());
         existingUser.setUserSettings(sanitizedDto.getUserSettings());
         existingUser.setIsProfilePublic(sanitizedDto.getIsProfilePublic());
+        existingUser.setContactInfo(sanitizedDto.getContactInfo());
 
         User updatedUser = userRepository.save(existingUser);
 

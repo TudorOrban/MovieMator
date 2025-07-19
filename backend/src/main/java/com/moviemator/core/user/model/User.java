@@ -42,6 +42,9 @@ public class User {
     @Column(name = "is_profile_public", nullable = false)
     private Boolean isProfilePublic;
 
+    @Column(name = "contact_info")
+    private String contactInfo;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

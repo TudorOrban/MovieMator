@@ -107,8 +107,7 @@ public class MovieControllerIntegrationTest {
                 "Test User 1",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                null,
-                null
+                null, null, null
         );
 
         testOtherUserDataDto = new UserDataDto(
@@ -118,8 +117,7 @@ public class MovieControllerIntegrationTest {
                 "Test User 2",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                null,
-                null
+                null, null, null
         );
 
         testMovieDataDto = new MovieDataDto(

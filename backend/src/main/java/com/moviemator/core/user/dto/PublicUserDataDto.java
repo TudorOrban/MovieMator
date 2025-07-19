@@ -10,11 +10,15 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateUserDto {
+public class PublicUserDataDto {
     private Long id;
+    private String cognitoUserId;
     private String displayName;
-    private UserSettings userSettings;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
+    private UserSettings userSettings;
+    
     // New
     private Boolean isProfilePublic;
     private String contactInfo;

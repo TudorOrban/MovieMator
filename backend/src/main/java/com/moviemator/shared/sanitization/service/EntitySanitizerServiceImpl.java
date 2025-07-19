@@ -26,6 +26,7 @@ public class EntitySanitizerServiceImpl implements EntitySanitizerService {
 
     public UpdateUserDto sanitizeUpdateUserDto(UpdateUserDto userDto) {
         userDto.setDisplayName(sanitizationService.sanitize(userDto.getDisplayName()));
+        userDto.setContactInfo(sanitizationService.sanitize(userDto.getContactInfo()));
 
         return userDto;
     }

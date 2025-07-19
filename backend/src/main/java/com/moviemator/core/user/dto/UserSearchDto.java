@@ -12,11 +12,11 @@ import java.time.LocalDateTime;
 public class UserSearchDto {
     private Long id;
     private String cognitoUserId;
-    private String email;
     private String displayName;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     // New
     private Boolean isProfilePublic;
+    private String contactInfo;
 }

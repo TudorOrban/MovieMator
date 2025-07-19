@@ -85,8 +85,7 @@ public class UserControllerIntegrationTest {
                 "Test User",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                null,
-                null
+                null, null, null
         );
 
         testUserDataDto2 = new UserDataDto(
@@ -96,13 +95,12 @@ public class UserControllerIntegrationTest {
                 "Other User",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                null,
-                null
+                null, null, null
         );
 
         testCreateUserDto = new CreateUserDto("new-cognito-id", "new@example.com");
 
-        testUpdateUserDto = new UpdateUserDto(1L, "Updated User Display Name", new UserSettings(), null);
+        testUpdateUserDto = new UpdateUserDto(1L, "Updated User Display Name", null, null, null);
 
         reset(userService, movieService);
 
@@ -117,8 +115,7 @@ public class UserControllerIntegrationTest {
                 "New User",
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                null,
-                null
+                null, null, null
         ));
         when(userService.getUserByCognitoUserId("other-user")).thenReturn(testUserDataDto2);
 

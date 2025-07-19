@@ -1,0 +1,10 @@
+<div class="switch-container">
+    <input type="checkbox" [id]="id" [checked]="checked" [disabled]="disabled" class="switch-input">
+    <label [for]="id"
+        class="switch-label"
+        [class.switch-checked]="checked"
+        [class.switch-disabled]="disabled"
+    >
+        <span class="switch-slider"></span>
+    </label>
+</div>

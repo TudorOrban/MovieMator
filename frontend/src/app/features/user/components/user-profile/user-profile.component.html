@@ -25,8 +25,9 @@
             <h2 class="mt-4 text-2xl font-semibold">
                 {{ profileUser.displayName ?? 'New User' }}
             </h2>
-            <p class="text-sm text-gray-500">
-                {{ profileUser.email }} </p>
+            <p class="text-sm std-shaded-text">
+                {{ profileUser.email }} 
+            </p>
         </div>
 
         <div 
@@ -49,6 +50,15 @@
                 </div>
                 <div class="flex-grow">
                     {{ profileUser.email }}
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-2 text-lg">
+                <div class="font-semibold w-36 flex-shrink-0">
+                    Public Profile:
+                </div>
+                <div class="flex-grow">
+                    {{ profileUser.isProfilePublic ? 'Yes' : 'No' }}
                 </div>
             </div>
         </div>

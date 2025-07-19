@@ -31,7 +31,7 @@ export interface UpdateUserDto {
     id: number;
     displayName?: string;
     userSettings?: UserSettings;
-    isProfilePublic?: boolean;
+    isProfilePublic: boolean;
 }
 
 export interface UserSettings {

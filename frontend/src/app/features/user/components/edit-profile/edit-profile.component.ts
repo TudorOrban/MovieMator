@@ -8,10 +8,11 @@ import { UpdateUserDto } from '../../models/User';
 import { Subscription } from 'rxjs';
 import { UserService } from '../../services/user.service';
 import { ToastType } from '../../../../shared/models/UI';
+import { SwitchComponent } from '../../../../shared/common/components/switch/switch.component';
 
 @Component({
     selector: 'app-edit-profile',
-    imports: [CommonModule, FormsModule, RouterModule],
+    imports: [CommonModule, FormsModule, RouterModule, SwitchComponent],
     templateUrl: './edit-profile.component.html',
     styleUrl: './edit-profile.component.css'
 })
@@ -70,7 +71,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
             next: (data) => {
                 this.toastService.addToast({ title: "Success", details: "Profile edited successfully.", type: ToastType.SUCCESS });
                 this.authService.setCurrentUser(data);
-                this.router.navigate(["/user-profile"]);
+                this.router.navigate(["/user-profile/" + data?.id]);
             },
             error: (error) => {
                 this.toastService.addToast({ title: "Error", details: "An error occurred editing the profile. Please try again later.", type: ToastType.ERROR });

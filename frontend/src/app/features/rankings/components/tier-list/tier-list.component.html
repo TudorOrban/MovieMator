@@ -1,0 +1,28 @@
+<div class="std-border">
+    <div *ngFor="let tier of rankingData?.tierListData?.tiers; let i = index" class="flex items-center justify-between w-full h-24 std-shaded-bg std-border-b">
+        <div
+            [style.background-color]="tier.color" 
+            class="flex items-center justify-center min-w-20 h-full text-lg font-semibold"
+        >
+            {{ tier.name }}
+        </div>
+
+        <div class="flex items-center space-x-4 std-bg h-24 px-4 std-shaded-text text-3xl">
+            <button (click)="openTierSettings(i)" type="button" class="cursor-pointer">
+                <fa-icon [icon]="faGear" />
+            </button>
+            <div class="flex flex-col">
+                <button (click)="moveTierUp(i)" type="button" class="cursor-pointer">
+                    <fa-icon [icon]="faCaretUp" />
+                </button>
+                <button (click)="moveTierDown(i)" type="button" class="cursor-pointer">
+                    <fa-icon [icon]="faCaretDown" />
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div>
+
+    </div>
+</div>

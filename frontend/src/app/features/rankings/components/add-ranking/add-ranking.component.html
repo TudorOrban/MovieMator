@@ -70,6 +70,14 @@
             ></app-tag-input>
         </div>
 
+        <div *ngIf="ranking.rankingType === RankingType.TIER_LIST" class="space-y-2 mt-4">
+            <label for="rankingData" class="form-label">Tier List</label>
+            <app-tier-list
+                [rankingData]="ranking.rankingData"
+                (onRankingDataChange)="handleRankingDataChange($event)"
+            ></app-tier-list>
+        </div>
+
         <div class="flex items-center justify-end w-full mt-8">
             <button type="submit" class="standard-write-button">Create Ranking</button>
         </div>

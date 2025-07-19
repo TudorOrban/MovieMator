@@ -24,7 +24,43 @@ export interface RankingDataDto {
 }
 
 export interface RankingData {
-    smth?: number;
+    listData?: ListData;
+    tierListData?: TierListData;
+}
+
+export interface ListData {}
+
+export interface TierListData {
+    tiers: TierData[];
+    tierMovies: Record<string, number[]>;
+    availableMovies: MovieSmallData[];
+}
+
+export interface MovieSmallData {
+    id: number;
+    title: string;
+    posterUrl: string;
+}
+
+export interface TierData {
+    name: string;
+    color: string;
+}
+
+export const defaultRankingData: RankingData = {
+    listData: {},
+    tierListData: {
+        tiers: [
+            { name: "S", color: "#4A90E2"}, 
+            { name: "A", color: "#50E3C2" }, 
+            { name: "B", color: "#F5A623"},
+            { name: "C", color: "#BD10E0"},
+            { name: "D", color: "#9013FE"},
+            { name: "E", color: "#417505"},
+        ],
+        tierMovies: { "S": [], "B": [], "C": [], "D": [], "E": [] },
+        availableMovies: []
+    }
 }
 
 export enum RankingType {

@@ -4,17 +4,18 @@ import { UserDataDto } from '../../../user/models/User';
 import { Subscription } from 'rxjs';
 import { RankingService } from '../../services/ranking.service';
 import { AuthService } from '../../../../core/auth/service/auth.service';
-import { CreateRankingDto, RankingType } from '../../models/Ranking';
+import { CreateRankingDto, defaultRankingData, RankingData, RankingType } from '../../models/Ranking';
 import { ToastType } from '../../../../shared/models/UI';
 import { ToastManagerService } from '../../../../shared/common/services/toast-manager.service';
 import { Router } from '@angular/router';
 import { EnumSelectorComponent } from "../../../../shared/common/components/enum-selector/enum-selector.component";
 import { FormsModule } from '@angular/forms';
 import { TagInputComponent } from "../../../../shared/common/components/tag-input/tag-input.component";
+import { TierListComponent } from "../tier-list/tier-list.component";
 
 @Component({
     selector: 'app-add-ranking',
-    imports: [CommonModule, FormsModule, EnumSelectorComponent, TagInputComponent],
+    imports: [CommonModule, FormsModule, EnumSelectorComponent, TagInputComponent, TierListComponent],
     templateUrl: './add-ranking.component.html',
     styleUrl: './add-ranking.component.css'
 })
@@ -23,7 +24,7 @@ export class AddRankingComponent implements OnInit, OnDestroy {
         userId: -1,
         title: "",
         rankingType: RankingType.TIER_LIST,
-        rankingData: {}
+        rankingData: defaultRankingData
     }
     hasBeenSubmitted = signal(false);
 
@@ -87,4 +88,10 @@ export class AddRankingComponent implements OnInit, OnDestroy {
     handleTagsChange(tags: string[] | undefined): void {
         this.ranking.tags = tags;
     }
+
+    handleRankingDataChange(data: RankingData): void {
+        this.ranking.rankingData = data;
+    }
+
+    RankingType = RankingType;
 }

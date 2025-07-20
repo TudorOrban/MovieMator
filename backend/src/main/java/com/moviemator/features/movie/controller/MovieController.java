@@ -99,7 +99,7 @@ public class MovieController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isMovieOwnerById(#id, authentication)")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isMovieOwnerById(#id, authentication) or @userSecurity.canAccessPublicProfileMovie(#id, authentication)")
     public ResponseEntity<MovieDataDto> getMovieById(@PathVariable Long id) {
         MovieDataDto movie = movieService.getMovieById(id);
         return ResponseEntity.ok(movie);

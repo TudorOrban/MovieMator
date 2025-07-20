@@ -1,14 +1,20 @@
-<div class="px-8 py-4 std-border rounded-md shadow-sm min-w-1/2">
-    <div class="text-2xl font-semibold py-4">
-        Import Movies
+<div class="px-8 py-4 std-bg std-border rounded-md shadow-sm min-w-1/2">
+    <div class="flex items-center justify-between w-full">
+        <div class="text-2xl font-semibold py-4">
+            Import Movies
+        </div>
+
+        <button class="std-shaded-text cursor-pointer" (click)="closeDialog()">
+            <fa-icon [icon]="faXmark" />
+        </button>
     </div>
 
-    <div class="text-lg std-shaded-text pb-4">
-        Import all your movies based on the selected filters.
+    <div class="text-lg std-shaded-text pb-6">
+        Import all your movies with selected filters and sort order.
     </div>
 
     <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full space-y-4 md:space-y-0 md:space-x-4">
-        <div class="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between sm:w-full space-y-4 sm:space-y-0 sm:space-x-4">
             <app-search-input
                 (onSearch)="handleSearchTextChange($event)"
             ></app-search-input>
@@ -29,6 +35,10 @@
                     </button>
                 </div>
             </div>
+
+            <button class="standard-write-button" type="button" (click)="confirmImport()">
+                Import
+            </button>
         </div>
     </div>
 
@@ -38,11 +48,5 @@
             [isExpanded]="true"
             (movieFiltersChanged)="handleMovieFiltersChange($event)"
         ></app-filters-bar>
-    </div>
-
-    <div class="flex items-center justify-center w-full py-4">
-        <button class="standard-write-button" type="button" (click)="confirmImport()">
-            Import
-        </button>
     </div>
 </div>

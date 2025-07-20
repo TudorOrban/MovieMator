@@ -16,10 +16,13 @@ import { MovieSearchDto } from '../../../movies/models/Movie';
 import { ErrorFallbackComponent } from "../../../../shared/fallback/components/error-fallback/error-fallback.component";
 import { FallbackState, initialFallbackState } from '../../../../shared/fallback/models/Fallback';
 import { LoadingFallbackComponent } from "../../../../shared/fallback/components/loading-fallback/loading-fallback.component";
+import { RankingSearchDto, RankingType } from '../../../rankings/models/Ranking';
+import { RankingService } from '../../../rankings/services/ranking.service';
+import { FormatRankingTypePipe } from "../../../../shared/common/pipes/format-ranking-type";
 
 @Component({
     selector: 'app-user-profile',
-    imports: [CommonModule, RouterModule, FontAwesomeModule, HeatmapComponent, ErrorFallbackComponent, LoadingFallbackComponent],
+    imports: [CommonModule, RouterModule, FontAwesomeModule, HeatmapComponent, ErrorFallbackComponent, LoadingFallbackComponent, FormatRankingTypePipe],
     templateUrl: './user-profile.component.html',
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
@@ -27,6 +30,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     userId: number | null = null;
     profileUser: UserDataDto | PublicUserDataDto | null = null;
     profileMovies: MovieSearchDto[] | null = null;
+    profileRankings: RankingSearchDto[] | null = null;
 
     currentUser: UserDataDto | null = null;
     isEditModeOn: boolean = false;
@@ -42,6 +46,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         private readonly userService: UserService,
         private readonly authService: AuthService,
         private readonly movieService: MovieService,
+        private readonly rankingService: RankingService,
         private readonly themeService: ThemeService,
         private readonly errorMapperService: ErrorMapperService, 
         private readonly route: ActivatedRoute,
@@ -88,6 +93,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
         this.loadMainData();
         this.loadTopRatedMovies();
+        this.loadRankings();
         this.fetchAllWatchedDates();
     }
 
@@ -117,6 +123,16 @@ export class UserProfileComponent implements OnInit, OnDestroy {
             this.movieService.getTopRatedMovies(this.userId!, 5).subscribe({
                 next: (data) => {
                     this.profileMovies = data;
+                }
+            })
+        );
+    }
+
+    loadRankings(): void {
+        this.subscription.add(
+            this.rankingService.searchRankings(this.userId!, { searchText: "", sortBy: "createdAt", isAscending: true, page: 1, itemsPerPage: 20 }).subscribe({
+                next: (data) => {
+                    this.profileRankings = data.results;
                 }
             })
         );
@@ -166,4 +182,5 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     }
 
     faSpinner = faSpinner;
+    RankingType = RankingType;
 }

@@ -52,6 +52,10 @@ public class RankingServiceImpl implements RankingService {
         return RankingDtoMapper.INSTANCE.rankingToRankingDataDto(ranking);
     }
 
+    public boolean isRankingTitleUnique(Long userId, String title) {
+        return !this.rankingRepository.hasNonUniqueTitle(userId, title);
+    }
+
     @Transactional
     public RankingDataDto createRanking(CreateRankingDto rankingDto) {
         CreateRankingDto sanitizedDto = sanitizerService.sanitizeCreateRankingDto(rankingDto);

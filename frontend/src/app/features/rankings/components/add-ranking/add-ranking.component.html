@@ -4,7 +4,6 @@
     </div>
 
     <form (ngSubmit)="onSubmit()">
-        <!-- Title -->
         <div class="space-y-2 relative">
             <label for="title" class="form-label">Title</label>
             <input
@@ -16,7 +15,6 @@
                 minlength="3"
                 class="form-input"
                 #rankingTitleInput="ngModel"
-                autocomplete="off"
             >
             <div
                 *ngIf="hasBeenSubmitted() && rankingTitleInput.invalid"
@@ -27,21 +25,20 @@
             </div>
         </div>
 
-        <!-- Description -->
         <div class="space-y-2 mt-4">
             <label for="description" class="form-label">Description</label>
-            <textarea 
-                id="description" 
-                name="description" 
+            <textarea
+                id="description"
+                name="description"
                 [(ngModel)]="ranking.description"
                 class="form-input"
-                rows="3" 
+                rows="3"
                 minlength="5"
                 maxlength="500"
                 #descriptionInput="ngModel"
             ></textarea>
-            <div 
-                *ngIf="hasBeenSubmitted() && descriptionInput.invalid" 
+            <div
+                *ngIf="hasBeenSubmitted() && descriptionInput.invalid"
                 class="form-error"
             >
                 <div *ngIf="descriptionInput.errors?.['minlength']">Description must be at least 5 characters.</div>
@@ -49,7 +46,6 @@
             </div>
         </div>
 
-        <!-- Ranking Type -->
         <div class="space-y-2 mt-4">
             <label for="status" class="form-label">Ranking Type</label>
             <app-enum-selector
@@ -60,7 +56,6 @@
             ></app-enum-selector>
         </div>
 
-        <!-- Tags -->
         <div class="space-y-2 mt-4">
             <app-tag-input
                 label="Tags"
@@ -85,9 +80,15 @@
         </div>
     </form>
 
-    <div *ngIf="isImportMoviesDialogOpen()" class="absolute inset-0 flex items-center justify-center z-40 std-bg">
-        <app-import-movies-dialog
-            (onMoviesImported)="handleMoviesImported($event)"
-        ></app-import-movies-dialog>
+    <div
+        *ngIf="isImportMoviesDialogOpen()"
+        class="fixed inset-0 flex items-center justify-center z-40 transparent-overlay"
+    >
+        <div class="relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <app-import-movies-dialog
+                (onMoviesImported)="handleMoviesImported($event)"
+                (onCancelMoviesImport)="closeImportMoviesDialog()"
+            ></app-import-movies-dialog>
+        </div>
     </div>
 </div>

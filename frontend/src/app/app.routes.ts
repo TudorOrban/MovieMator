@@ -101,6 +101,12 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
+        path: "user-profile/:userId/rankings",
+        component: RankingsComponent,
+        data: { isCurrentUserRankingsPage: false } ,
+        canActivate: [AuthGuard]
+    },
+    {
         path: "edit-profile",
         component: EditProfileComponent,
         canActivate: [AuthGuard]

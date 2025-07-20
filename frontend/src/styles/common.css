@@ -87,7 +87,11 @@
 }
 
 .std-element-two {
-    background-color: var(--background-color);
+    background-color: var(--shaded-bg-color-sm);
     color: var(--text-color);
     border: 1px solid var(--border-color);
+}
+
+.std-element-two:hover {
+    background-color: var(--background-color);
 }

@@ -104,6 +104,27 @@ public class UserSecurityExpressions {
         }
     }
 
+    public boolean canAccessPublicProfileMovie(Long movieId, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || movieId == null) {
+            return false;
+        }
+        try {
+            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
+            if (authenticatedUser == null) {
+                return false;
+            }
+            MovieDataDto movie = movieService.getMovieById(movieId);
+            if (movie == null) {
+                return false;
+            }
+
+            User movieUser = userRepository.findById(movie.getUserId()).orElseThrow(RuntimeException::new);
+            return movieUser.getIsProfilePublic();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public boolean areAllMoviesOwnedByAuthenticatedUser(List<Long> movieIds, Authentication authentication) {
         if (authentication == null || authentication.getName() == null || movieIds == null || movieIds.isEmpty()) {
             return false;
@@ -219,6 +240,27 @@ public class UserSecurityExpressions {
             }
             RankingDataDto ranking = rankingService.getRankingById(rankingId);
             return ranking != null && ranking.getUserId().equals(authenticatedUser.getId());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean canAccessPublicProfileRanking(Long rankingId, Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || rankingId == null) {
+            return false;
+        }
+        try {
+            UserDataDto authenticatedUser = userService.getUserByCognitoUserId(authentication.getName());
+            if (authenticatedUser == null) {
+                return false;
+            }
+            RankingDataDto ranking = rankingService.getRankingById(rankingId);
+            if (ranking == null) {
+                return false;
+            }
+
+            User rankingUser = userRepository.findById(ranking.getUserId()).orElseThrow(RuntimeException::new);
+            return rankingUser.getIsProfilePublic();
         } catch (Exception e) {
             return false;
         }

@@ -13,7 +13,7 @@ public class UserSettings {
     private Boolean confirmDeletions = true;
 
     private String defaultMovieSortBy = "watchedDate";
-    private Integer moviesPerRow = 4; // For big screens
+    private Integer moviesPerRow = 3; // For big screens
 
     private StatsTimePeriodOption defaultStatsTimePeriod = StatsTimePeriodOption.LAST_YEAR;
 }

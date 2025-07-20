@@ -10,10 +10,10 @@
     </div>
 
     <div class="flex items-center space-x-4 py-4">
-        <button 
+        <button
             type="button"
-            *ngFor="let option of tierColorOptions; let i = index" 
-            class="w-8 h-8 rounded-full cursor-pointer" 
+            *ngFor="let option of tierColorOptions; let i = index"
+            class="w-8 h-8 rounded-full cursor-pointer"
             [style.background-color]="option"
             [class.border-2]="option === selectedColor"
             [class.border-blue-500]="option === selectedColor"
@@ -21,7 +21,6 @@
         ></button>
     </div>
 
-    <!-- Name -->
     <div class="space-y-2 relative">
         <label for="title" class="form-label">Tier Name</label>
         <input
@@ -33,7 +32,8 @@
             class="form-input"
             #rankingTitleInput="ngModel"
             autocomplete="off"
-        >
+            (keydown.enter)="confirmSettings()" 
+        />
         <div
             *ngIf="hasBeenSubmitted() && rankingTitleInput.invalid"
             class="form-error"
@@ -58,7 +58,11 @@
     </div>
 
     <div class="flex items-center justify-end w-full mt-8">
-        <button type="button" class="standard-write-button space-x-2" (click)="confirmSettings()">
+        <button
+            type="button" 
+            class="standard-write-button space-x-2"
+            (click)="confirmSettings()"
+        >
             <fa-icon [icon]="faSave" />
             <span>Save</span>
         </button>

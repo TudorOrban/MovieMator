@@ -46,18 +46,18 @@ public class RankingController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isRankingOwnerById(#id, authentication)")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isRankingOwnerById(#id, authentication) or @userSecurity.canAccessPublicProfileRanking(#id, authentication)")
     public ResponseEntity<RankingDataDto> getRankingById(@PathVariable Long id) {
         RankingDataDto ranking = rankingService.getRankingById(id);
         return ResponseEntity.ok(ranking);
     }
 
-//    @GetMapping("/ranking-title/{rankingTitle}/user/{userId}")
-//    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isCheckingOwnRankingTitles(#userId, authentication)")
-//    public ResponseEntity<Boolean> isRankingTitleUnique(@PathVariable Long userId, @PathVariable String rankingTitle) {
-//        Boolean isRankingTitleUnique = rankingService.isRankingTitleUnique(userId, rankingTitle);
-//        return ResponseEntity.ok(isRankingTitleUnique);
-//    }
+    @GetMapping("/ranking-title/{rankingTitle}/user/{userId}")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isCheckingOwnRankingTitles(#userId, authentication)")
+    public ResponseEntity<Boolean> isRankingTitleUnique(@PathVariable Long userId, @PathVariable String rankingTitle) {
+        Boolean isRankingTitleUnique = rankingService.isRankingTitleUnique(userId, rankingTitle);
+        return ResponseEntity.ok(isRankingTitleUnique);
+    }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN') or @userSecurity.isRankingOwnerForCreate(#rankingDto, authentication)")

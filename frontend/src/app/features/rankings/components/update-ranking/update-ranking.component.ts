@@ -138,6 +138,10 @@ export class UpdateRankingComponent implements OnInit, OnDestroy {
         this.isImportMoviesDialogOpen.set(false);
     }
 
+    closeImportMoviesDialog(): void {
+        this.isImportMoviesDialogOpen.set(false);
+    }
+
     faSave = faSave;
     RankingType = RankingType;
 }

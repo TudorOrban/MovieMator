@@ -13,6 +13,7 @@ public interface RankingService {
 
     PaginatedResults<RankingSearchDto> searchRankings(Long userId, SearchParams searchParams);
     RankingDataDto getRankingById(Long id);
+    boolean isRankingTitleUnique(Long userId, String title);
     RankingDataDto createRanking(CreateRankingDto rankingDto);
     List<RankingDataDto> createRankingsBulk(List<CreateRankingDto> rankingDtos);
     RankingDataDto updateRanking(UpdateRankingDto rankingDto);

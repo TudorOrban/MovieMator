@@ -88,9 +88,15 @@
         </div>
     </form>
 
-    <div *ngIf="isImportMoviesDialogOpen()" class="absolute inset-0 flex items-center justify-center z-40 std-bg">
-        <app-import-movies-dialog
-            (onMoviesImported)="handleMoviesImported($event)"
-        ></app-import-movies-dialog>
+    <div
+        *ngIf="isImportMoviesDialogOpen()"
+        class="fixed inset-0 flex items-center justify-center z-40 transparent-overlay"
+    >
+        <div class="relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <app-import-movies-dialog
+                (onMoviesImported)="handleMoviesImported($event)"
+                (onCancelMoviesImport)="closeImportMoviesDialog()"
+            ></app-import-movies-dialog>
+        </div>
     </div>
 </div>

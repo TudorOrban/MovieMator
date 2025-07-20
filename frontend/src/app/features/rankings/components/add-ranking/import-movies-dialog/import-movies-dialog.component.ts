@@ -8,7 +8,7 @@ import { SearchInputComponent } from "../../../../../shared/common/components/se
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { FiltersBarComponent } from "../../../../movies/components/movies/movies-header/filters-bar/filters-bar.component";
 import { pagesSearchConfiguration } from '../../../../../core/main/config/pagesStandardConfig';
-import { faArrowDownShortWide, faArrowUpWideShort } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDownShortWide, faArrowUpWideShort, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { ToastManagerService } from '../../../../../shared/common/services/toast-manager.service';
 import { FallbackState, initialFallbackState } from '../../../../../shared/fallback/models/Fallback';
 import { MovieSmallDto } from '../../../../movies/models/Movie';
@@ -23,6 +23,7 @@ import { SelectorComponent } from "../../../../../shared/common/components/selec
 })
 export class ImportMoviesDialogComponent implements OnInit, OnDestroy {
     @Output() onMoviesImported = new EventEmitter<MovieSmallDto[]>();
+    @Output() onCancelMoviesImport = new EventEmitter<void>();
 
     userId: number | null = null;
     searchParams: SearchParams = {
@@ -96,6 +97,11 @@ export class ImportMoviesDialogComponent implements OnInit, OnDestroy {
         )
     }
 
+    closeDialog(): void {
+        this.onCancelMoviesImport.emit();
+    }
+
     faArrowUpWideShort = faArrowUpWideShort;
     faArrowDownShortWide = faArrowDownShortWide;
+    faXmark = faXmark;
 }

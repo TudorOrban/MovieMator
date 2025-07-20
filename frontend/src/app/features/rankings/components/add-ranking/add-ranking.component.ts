@@ -108,5 +108,9 @@ export class AddRankingComponent implements OnInit, OnDestroy {
         this.isImportMoviesDialogOpen.set(false);
     }
 
+    closeImportMoviesDialog(): void {
+        this.isImportMoviesDialogOpen.set(false);
+    }
+
     RankingType = RankingType;
 }

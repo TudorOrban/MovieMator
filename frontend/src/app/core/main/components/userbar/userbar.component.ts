@@ -5,7 +5,7 @@ import { faMoon, faUser } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../../auth/service/auth.service';
 import { UserDataDto } from '../../../../features/user/models/User';
 import { Subscription } from 'rxjs';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { ThemeService } from '../../../../shared/common/services/theme.service';
 
 @Component({
@@ -55,6 +55,7 @@ export class UserbarComponent implements OnInit, OnDestroy {
 
     logOut(): void {
         this.authService.logout();
+        this.router.navigate(["/"]);
     }
 
     faUser = faUser;

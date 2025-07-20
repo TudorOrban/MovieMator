@@ -1,4 +1,4 @@
-<div class="w-full page-std-padding-x page-std-padding-y std-border-b shadow-sm">
+<div class="w-full page-std-padding-x page-std-padding-y std-shaded-bg std-border-b shadow-sm">
     <div class="flex items-center justify-between mb-6 space-x-4">
         <h2 class="page-title">Rankings ({{ totalCount }})</h2>
         <div *ngIf="username">• {{ username }}</div>
@@ -24,7 +24,7 @@
                 </div>
 
                 <div>
-                    <button class="standard-action-button shadow-sm w-12" (click)="handleToggleIsAscending()">
+                    <button class="standard-action-button-two shadow-sm w-12" (click)="handleToggleIsAscending()">
                         <fa-icon [icon]="searchParams.isAscending ? faArrowUpWideShort : faArrowDownShortWide"></fa-icon>
                     </button>
                 </div>
@@ -33,7 +33,7 @@
 
         <div class="flex items-center space-x-2">
             <ng-container *ngIf="!isDeleteModeOn; else confirmDeleteButton">
-                <button class="standard-action-button shadow-sm w-12" (click)="handleToggleDeleteMode()">
+                <button class="standard-action-button-two shadow-sm w-12" (click)="handleToggleDeleteMode()">
                     <fa-icon
                         [icon]="faTrash"
                         class="hover:text-red-700"
@@ -41,10 +41,10 @@
                 </button>
             </ng-container>
             <ng-template #confirmDeleteButton>
-                <button class="standard-action-button shadow-sm hover:text-red-700" (click)="deleteRankings()">
+                <button class="standard-action-button-two shadow-sm hover:text-red-700" (click)="deleteRankings()">
                     Confirm
                 </button>
-                <button class="standard-action-button shadow-sm" (click)="handleCancelDeleteRankings()">
+                <button class="standard-action-button-two shadow-sm" (click)="handleCancelDeleteRankings()">
                     Cancel
                 </button>
             </ng-template>

@@ -15,6 +15,7 @@ import { MovieSmallDto } from '../../../movies/models/Movie';
     styleUrl: './tier-list.component.css'
 })
 export class TierListComponent {
+    @Input() isEditable: boolean = false;
     @Input() rankingData: RankingData = defaultRankingData;
     @Output() onRankingDataChange = new EventEmitter<RankingData>();
     @Output() onImportMovies = new EventEmitter<void>();
@@ -42,7 +43,7 @@ export class TierListComponent {
     }
 
     drop(event: CdkDragDrop<MovieSmallDto[]>): void {
-        if (!this.rankingData?.tierListData) return;
+        if (!this.isEditable || !this.rankingData?.tierListData) return;
 
         const previousContainerId = event.previousContainer.id;
         const currentContainerId = event.container.id;
@@ -83,6 +84,7 @@ export class TierListComponent {
     }
 
     openTierSettings(index: number): void {
+        if (!this.isEditable) return;
         this.openedSettingsTierIndex = index;
     }
 

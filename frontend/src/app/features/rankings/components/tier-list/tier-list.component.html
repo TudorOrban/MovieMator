@@ -2,7 +2,7 @@
 
     <div class="std-border">
         <div *ngFor="let tier of rankingData?.tierListData?.tiers; let i = index"
-            class="flex items-start justify-between w-full min-h-32 std-shaded-bg std-border-b"
+            class="flex items-start justify-between w-full min-h-32 bg-gray-900 std-border-b"
         >
             <div
                 [style.background-color]="tier.color"
@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <div class="flex items-center justify-center space-x-4 std-bg px-4 std-shaded-text text-3xl self-stretch flex-shrink-0">
+            <div class="flex items-center justify-center space-x-4 bg-gray-800 px-4 text-gray-300 text-3xl self-stretch flex-shrink-0">
                 <button (click)="openTierSettings(i)" type="button" class="cursor-pointer">
                     <fa-icon [icon]="faGear" />
                 </button>
@@ -77,7 +77,7 @@
             [cdkDropListData]="rankingData!.tierListData!.availableMovies"
             (cdkDropListDropped)="drop($event)"
             id="available-movies"
-            class="flex flex-wrap my-4 gap-2 std-border p-4 rounded-md min-h-32 relative z-0" [cdkDropListOrientation]="'mixed'"
+            class="flex flex-wrap my-4 gap-2 bg-gray-900 text-gray-300 std-border p-4 rounded-md min-h-32 relative z-0" [cdkDropListOrientation]="'mixed'"
         >
             <div *ngFor="let movie of rankingData?.tierListData?.availableMovies"
                 cdkDrag
@@ -93,12 +93,12 @@
                 </div>
                 <div *cdkDragPlaceholder class="w-20 h-32 bg-gray-300 opacity-50 rounded-md"></div>
             </div>
-            <div *ngIf="!rankingData?.tierListData?.availableMovies?.length" class="text-gray-500 text-sm w-full text-center italic p-2">
+            <div *ngIf="!rankingData?.tierListData?.availableMovies?.length" class="text-sm w-full text-center italic p-2">
                 No movies available. Import some!
             </div>
         </div>
 
-        <button class="standard-action-button" type="button" (click)="importMovies()">
+        <button *ngIf="isEditable" class="standard-action-button" type="button" (click)="importMovies()">
             Import Movies
         </button>
     </div>

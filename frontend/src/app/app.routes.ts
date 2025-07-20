@@ -18,6 +18,7 @@ import { SearchPublicUsersComponent } from './features/user/components/search-pu
 import { AuthGuard } from './core/auth/guards/auth.guard';
 import { RankingsComponent } from './features/rankings/components/rankings/rankings.component';
 import { AddRankingComponent } from './features/rankings/components/add-ranking/add-ranking.component';
+import { RankingComponent } from './features/rankings/components/ranking/ranking.component';
 
 export const routes: Routes = [
     {
@@ -70,6 +71,11 @@ export const routes: Routes = [
     {
         path: "rankings/add-ranking",
         component: AddRankingComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: "rankings/:rankingId",
+        component: RankingComponent,
         canActivate: [AuthGuard]
     },
     { 

@@ -1,0 +1,50 @@
+<div class="relative page-std-padding-x page-std-padding-y">
+    <div class="flex items-center justify-between w-full">
+        <div class="text-2xl font-semibold py-8">
+            Title: {{ ranking?.title }}
+        </div>
+
+        <button type="submit" class="standard-write-button std-shaded-text space-x-2">
+            <fa-icon [icon]="faEdit" />
+            <div>Edit</div>
+        </button>
+    </div>
+
+    <div class="space-y-4">
+        <div class="space-y-2">
+            <div class="text-lg font-semibold">Description</div>
+            <p class="std-shaded-text">{{ ranking?.description }}</p>
+        </div>
+
+        <div class="space-y-2">
+            <div class="text-lg font-semibold">Ranking Type</div>
+            <span 
+                *ngIf="ranking?.rankingType"
+                class="inline-block px-2 py-0.5 rounded-full text-sm font-medium"
+                [ngClass]="{
+                'bg-green-100 text-green-800': ranking?.rankingType === 'LIST',
+                'bg-blue-100 text-blue-800': ranking?.rankingType === 'TIER_LIST'
+                }"
+            >
+                {{ ranking?.rankingType | formatRankingType }}
+            </span>
+        </div>
+        
+        <div class="space-y-2">
+            <div class="text-lg font-semibold">Tags</div>
+            <div *ngFor="let tag of ranking?.tags ?? []" class="std-shaded-text">
+                {{ tag }}, 
+            </div>
+            <div *ngIf="(ranking?.tags?.length ?? 0) === 0">
+                None.
+            </div>
+        </div>
+
+        <div *ngIf="ranking && ranking.rankingType === RankingType.TIER_LIST" class="space-y-2">
+            <label for="rankingData" class="form-label text-xl py-4">Tier List</label>
+            <app-tier-list
+                [rankingData]="ranking.rankingData"
+            ></app-tier-list>
+        </div>
+    </div>
+</div>

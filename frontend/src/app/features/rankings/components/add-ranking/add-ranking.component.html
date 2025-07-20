@@ -6,7 +6,7 @@
     <form (ngSubmit)="onSubmit()">
         <!-- Title -->
         <div class="space-y-2 relative">
-            <label for="title" class="form-label">Ranking Name</label>
+            <label for="title" class="form-label">Title</label>
             <input
                 type="text"
                 id="title"
@@ -64,7 +64,7 @@
         <div class="space-y-2 mt-4">
             <app-tag-input
                 label="Tags"
-                placeholder="e.g., Tom Hanks, Emma Stone"
+                placeholder="e.g., drama, Al Pacino"
                 [currentTags]="ranking.tags"
                 (tagsChange)="handleTagsChange($event)"
             ></app-tag-input>
@@ -73,6 +73,7 @@
         <div *ngIf="ranking.rankingType === RankingType.TIER_LIST" class="space-y-2 mt-4">
             <label for="rankingData" class="form-label text-xl py-4">Tier List</label>
             <app-tier-list
+                [isEditable]="true"
                 [rankingData]="ranking.rankingData"
                 (onRankingDataChange)="handleRankingDataChange($event)"
                 (onImportMovies)="handleImportMoviesRequest()"

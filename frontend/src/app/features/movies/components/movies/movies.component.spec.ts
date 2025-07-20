@@ -129,7 +129,7 @@ describe("MoviesComponent", () => {
             component.movieFilters
         );
         expect(component.movies).toEqual(mockPaginatedMovies);
-        expect(component.isLoading).toBeFalse();
+        expect(component.fallbackState.isLoading).toBeFalse();
     }));
 
     it("should not call searchMovies if userId is null on ngOnInit", fakeAsync(() => {
@@ -189,7 +189,7 @@ describe("MoviesComponent", () => {
 
         // Act
         component.searchMovies();
-        expect(component.isLoading).toBeTrue(); 
+        expect(component.fallbackState.isLoading).toBeTrue(); 
         
         tick(); 
         
@@ -200,7 +200,7 @@ describe("MoviesComponent", () => {
             component.movieFilters
         );
         expect(component.movies).toEqual(mockPaginatedMovies);
-        expect(component.isLoading).toBeFalse();
+        expect(component.fallbackState.isLoading).toBeFalse();
     }));
 
     it("should handle error during movie search", fakeAsync(() => {
@@ -213,14 +213,14 @@ describe("MoviesComponent", () => {
         // Act
         component.searchMovies();
         // Assert
-        expect(component.isLoading).toBeTrue(); 
+        expect(component.fallbackState.isLoading).toBeTrue(); 
 
         tick();
         
         // Assert after async operation
         expect(mockMovieService.searchMovies).toHaveBeenCalled();
         expect(console.error).toHaveBeenCalledWith("Error searching movies: ", errorResponse);
-        expect(component.isLoading).toBeFalse();
+        expect(component.fallbackState.isLoading).toBeFalse();
         expect(component.movies).toBeUndefined();
     }));
 
@@ -233,7 +233,7 @@ describe("MoviesComponent", () => {
 
         // Assert
         expect(mockMovieService.searchMovies).not.toHaveBeenCalled();
-        expect(component.isLoading).toBeFalse(); 
+        expect(component.fallbackState.isLoading).toBeFalse(); 
     });
 
 
@@ -346,7 +346,7 @@ describe("MoviesComponent", () => {
         component.deleteMovies();
         
         // Assert
-        expect(component.isLoading).toBeTrue(); 
+        expect(component.fallbackState.isLoading).toBeTrue(); 
 
         tick();
         expect(component.isDeleteModeOn).toBeFalse();
@@ -360,7 +360,7 @@ describe("MoviesComponent", () => {
         expect(mockMovieService.searchMovies).toHaveBeenCalledTimes(1);
         
         tick();
-        expect(component.isLoading).toBeFalse();
+        expect(component.fallbackState.isLoading).toBeFalse();
     }));
 
     it("should handle error during deleteMovies and show error toast", fakeAsync(() => {
@@ -374,7 +374,7 @@ describe("MoviesComponent", () => {
 
         // Act
         component.deleteMovies();
-        expect(component.isLoading).toBeTrue(); 
+        expect(component.fallbackState.isLoading).toBeTrue(); 
 
         tick(); 
         
@@ -387,7 +387,7 @@ describe("MoviesComponent", () => {
         });
         expect(console.error).toHaveBeenCalledWith("Error deleting movies: ", errorResponse);
         expect(mockMovieService.searchMovies).not.toHaveBeenCalled();
-        expect(component.isLoading).toBeFalse();
+        expect(component.fallbackState.isLoading).toBeFalse();
     }));
 
     it("should not call deleteMovies if delete mode is off or no movies are selected", () => {
@@ -399,7 +399,7 @@ describe("MoviesComponent", () => {
         component.deleteMovies();
         // Assert
         expect(mockMovieService.deleteMovies).not.toHaveBeenCalled();
-        expect(component.isLoading).toBeFalse();
+        expect(component.fallbackState.isLoading).toBeFalse();
 
         // Case 2: No movies selected
         // Arrange
@@ -409,7 +409,7 @@ describe("MoviesComponent", () => {
         component.deleteMovies();
         // Assert
         expect(mockMovieService.deleteMovies).not.toHaveBeenCalled();
-        expect(component.isLoading).toBeFalse();
+        expect(component.fallbackState.isLoading).toBeFalse();
     });
 
     it("should unsubscribe on ngOnDestroy", () => {

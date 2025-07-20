@@ -1,6 +1,12 @@
 import { Subject, Subscription } from "rxjs";
 import { TmdbMovieResult } from "./Tmdb";
 
+export interface MovieSmallDto {
+    id: number;
+    title: string;
+    posterUrl?: string;
+}
+
 export interface MovieSearchDto {
     id: number;
     userId: number;

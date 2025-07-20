@@ -10,6 +10,11 @@ public interface MovieDtoMapper {
     MovieDtoMapper INSTANCE = Mappers.getMapper(MovieDtoMapper.class);
 
     @Mapping(source = "movie.id", target = "id")
+    @Mapping(source = "movie.title", target = "title")
+    @Mapping(source = "movie.posterUrl", target = "posterUrl")
+    MovieSmallDto movieToMovieSmallDto(Movie movie);
+
+    @Mapping(source = "movie.id", target = "id")
     @Mapping(source = "movie.userId", target = "userId")
     @Mapping(source = "movie.tmdbId", target = "tmdbId")
     @Mapping(source = "movie.title", target = "title")

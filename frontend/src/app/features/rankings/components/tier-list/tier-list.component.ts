@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { defaultRankingData, RankingData, TierData, TierListData } from '../../models/Ranking';
+import { RankingData, TierData, TierListData } from '../../models/Ranking';
+import { defaultRankingData } from "../../models/defaultRankingData";
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCaretDown, faCaretUp, faGear } from '@fortawesome/free-solid-svg-icons';
 import { CdkDragDrop, CdkDrag, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { TierSettingsDialogComponent } from "./tier-settings-dialog/tier-settings-dialog.component";
-import { MovieSearchDto } from '../../../movies/models/Movie';
+import { MovieSmallDto } from '../../../movies/models/Movie';
 
 @Component({
     selector: 'app-tier-list',
@@ -40,7 +41,7 @@ export class TierListComponent {
         this.onRankingDataChange.emit(this.rankingData);
     }
 
-    drop(event: CdkDragDrop<MovieSearchDto[]>): void {
+    drop(event: CdkDragDrop<MovieSmallDto[]>): void {
         if (!this.rankingData?.tierListData) return;
 
         const previousContainerId = event.previousContainer.id;

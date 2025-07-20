@@ -11,7 +11,7 @@ import { pagesSearchConfiguration } from '../../../../../core/main/config/pagesS
 import { faArrowDownShortWide, faArrowUpWideShort } from '@fortawesome/free-solid-svg-icons';
 import { ToastManagerService } from '../../../../../shared/common/services/toast-manager.service';
 import { FallbackState, initialFallbackState } from '../../../../../shared/fallback/models/Fallback';
-import { MovieSearchDto } from '../../../../movies/models/Movie';
+import { MovieSmallDto } from '../../../../movies/models/Movie';
 import { ToastType, UIItem } from '../../../../../shared/models/UI';
 import { SelectorComponent } from "../../../../../shared/common/components/selector/selector.component";
 
@@ -22,7 +22,7 @@ import { SelectorComponent } from "../../../../../shared/common/components/selec
     styleUrl: './import-movies-dialog.component.css'
 })
 export class ImportMoviesDialogComponent implements OnInit, OnDestroy {
-    @Output() onMoviesImported = new EventEmitter<MovieSearchDto[]>();
+    @Output() onMoviesImported = new EventEmitter<MovieSmallDto[]>();
 
     userId: number | null = null;
     searchParams: SearchParams = {
@@ -83,7 +83,7 @@ export class ImportMoviesDialogComponent implements OnInit, OnDestroy {
         this.fallbackState.isLoading = true;
 
         this.subscription.add(
-            this.movieService.searchMovies(this.userId, this.searchParams, this.movieFilters).subscribe({
+            this.movieService.searchSmallMovies(this.userId, this.searchParams, this.movieFilters).subscribe({
                 next: (data) => {
                     this.onMoviesImported.emit(data.results);
                     this.toastService.addToast({ title: "Success", details: "Movies imported successfully.", type: ToastType.SUCCESS });

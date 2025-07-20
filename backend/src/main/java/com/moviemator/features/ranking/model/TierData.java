@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RankingData {
-    private ListData listData;
-    private TierListData tierListData;
+public class TierData {
+    private String name;
+    private String color;
 }

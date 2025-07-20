@@ -51,6 +51,15 @@ public class MovieServiceImpl implements MovieService {
         );
     }
 
+    public PaginatedResults<MovieSmallDto> searchSmallMovies(Long userId, SearchParams searchParams, MovieFilters movieFilters) {
+        PaginatedResults<Movie> results = movieRepository.searchMovies(userId, searchParams, movieFilters);
+
+        return new PaginatedResults<>(
+                results.getResults().stream().map(MovieDtoMapper.INSTANCE::movieToMovieSmallDto).toList(),
+                results.getTotalCount()
+        );
+    }
+
     public MovieDataDto getMovieById(Long id) {
         Movie foundMovie = movieRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id.toString(), ResourceType.MOVIE, ResourceIdentifierType.ID));

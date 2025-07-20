@@ -4,7 +4,8 @@ import { UserDataDto } from '../../../user/models/User';
 import { Subscription } from 'rxjs';
 import { RankingService } from '../../services/ranking.service';
 import { AuthService } from '../../../../core/auth/service/auth.service';
-import { CreateRankingDto, defaultRankingData, RankingData, RankingType } from '../../models/Ranking';
+import { CreateRankingDto, RankingData, RankingType } from '../../models/Ranking';
+import { defaultRankingData } from "../../models/defaultRankingData";
 import { ToastType } from '../../../../shared/models/UI';
 import { ToastManagerService } from '../../../../shared/common/services/toast-manager.service';
 import { Router } from '@angular/router';
@@ -13,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { TagInputComponent } from "../../../../shared/common/components/tag-input/tag-input.component";
 import { TierListComponent } from "../tier-list/tier-list.component";
 import { ImportMoviesDialogComponent } from "./import-movies-dialog/import-movies-dialog.component";
-import { MovieSearchDto } from '../../../movies/models/Movie';
+import { MovieSmallDto } from '../../../movies/models/Movie';
 
 @Component({
     selector: 'app-add-ranking',
@@ -101,7 +102,7 @@ export class AddRankingComponent implements OnInit, OnDestroy {
         this.isImportMoviesDialogOpen.set(true);
     }
 
-    handleMoviesImported(importedMovies: MovieSearchDto[]): void {
+    handleMoviesImported(importedMovies: MovieSmallDto[]): void {
         if (!this.ranking.rankingData.tierListData) return;
         this.ranking.rankingData.tierListData.availableMovies = importedMovies;
         this.isImportMoviesDialogOpen.set(false);

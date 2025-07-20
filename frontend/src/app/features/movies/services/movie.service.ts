@@ -3,7 +3,7 @@ import { environment } from "../../../../environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { MovieFilters, PaginatedResults, SearchParams } from "../../../shared/models/Search";
 import { Observable, of, tap } from "rxjs";
-import { CreateMovieDto, MovieDataDto, MovieSearchDto, UpdateMovieDto } from "../models/Movie";
+import { CreateMovieDto, MovieDataDto, MovieSearchDto, MovieSmallDto, UpdateMovieDto } from "../models/Movie";
 import { MovieCacheService } from "./movie-cache.service";
 
 @Injectable({
@@ -17,7 +17,7 @@ export class MovieService {
         private readonly movieCacheService: MovieCacheService
     ) {}
 
-    searchMovies(userId: number, searchParams: SearchParams, movieFilters: MovieFilters, smallDtos: boolean = false): Observable<PaginatedResults<MovieSearchDto>> {
+    searchMovies(userId: number, searchParams: SearchParams, movieFilters: MovieFilters): Observable<PaginatedResults<MovieSearchDto>> {
         // 1. Try to get data from cache
         const cachedData = this.movieCacheService.get(userId, searchParams, movieFilters);
         if (cachedData) {
@@ -25,7 +25,7 @@ export class MovieService {
         }
 
         // 2. If not in cache, make the HTTP request
-        const params = this.getSearchParams(searchParams, movieFilters, smallDtos);
+        const params = this.getSearchParams(searchParams, movieFilters);
 
         return this.http.get<PaginatedResults<MovieSearchDto>>(
             `${this.apiUrl}/search/user/${userId}`,
@@ -36,6 +36,11 @@ export class MovieService {
                 this.movieCacheService.set(userId, searchParams, movieFilters, data);
             })
         );
+    }
+
+    searchSmallMovies(userId: number, searchParams: SearchParams, movieFilters: MovieFilters): Observable<PaginatedResults<MovieSmallDto>> {
+        const params = this.getSearchParams(searchParams, movieFilters);
+        return this.http.get<PaginatedResults<MovieSearchDto>>(`${this.apiUrl}/search/user/${userId}/small`, { params: params });
     }
 
     getMovieById(id: number): Observable<MovieDataDto> {
@@ -102,7 +107,7 @@ export class MovieService {
         );
     }
 
-    private getSearchParams(searchParams: SearchParams, movieFilters: MovieFilters, smallDtos: boolean) {
+    private getSearchParams(searchParams: SearchParams, movieFilters: MovieFilters) {
         return {
             ...searchParams,
             ...(movieFilters.releaseYearFrom != null ? { releaseYearFrom: movieFilters.releaseYearFrom } : {}),
@@ -117,7 +122,6 @@ export class MovieService {
             ...(movieFilters.runtimeMinutesMoreThan != null ? { runtimeMinutesMoreThan: movieFilters.runtimeMinutesMoreThan } : {}),
             ...(movieFilters.genresIncluding?.length ? { genresIncluding: movieFilters.genresIncluding } : {}),
             ...(movieFilters.actorsIncluding?.length ? { actorsIncluding: movieFilters.actorsIncluding } : {}),
-            smallDtos
         };
     }
 }

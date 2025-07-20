@@ -16,9 +16,9 @@ export class TierListComponent {
     @Input() rankingData: RankingData = defaultRankingData;
     @Output() onRankingDataChange = new EventEmitter<RankingData>();
     @Output() onImportMovies = new EventEmitter<void>();
-
+    
     public static readonly TIER_COLOR_OPTIONS: string[] = [
-        "#4A90E2", "#50E3C2", "#F5A623", "#BD10E0", "#9013FE", "#417505", "#F8E71C", "#D0021B", "#8B572A", "#000000", "#9B9B9B", "#4A4A4A", "#7ED321", "#5C7C8A", "#E91E63"
+        "#C62828", "#E64A19", "#FF8A65", "#FDD835", "#81C784", "#2E7D32", "#64B5F6", "#1565C0", "#8E24AA", "#D81B60", "#6D4C41", "#616161", "#333333", "#F5F5F5", "#90A4AE"
     ];
 
     // Main drop handler

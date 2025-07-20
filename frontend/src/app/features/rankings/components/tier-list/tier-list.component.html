@@ -16,25 +16,22 @@
                 [cdkDropListData]="rankingData.tierListData!.tierMovies[tier.name]!"
                 (cdkDropListDropped)="drop($event)"
                 [id]="tier.name"
-                class="flex flex-grow flex-wrap items-start space-x-0.5 space-y-0.5 overflow-hidden tier-movies-container"
+                class="flex flex-grow flex-wrap items-start gap-0.5 overflow-hidden min-h-32 p-1" 
+                style="flex-basis: 0;"
+                [cdkDropListOrientation]="'horizontal'"    
             >
                 <div
                     *ngFor="let movie of rankingData.tierListData!.tierMovies[tier.name]!"
                     cdkDrag
                     [cdkDragData]="movie"
-                    class="flex-shrink-0 w-20 h-32 cursor-grab movie-item"
+                    class="flex-shrink-0 w-20 h-32 cursor-grab movie-item mr-0.5"
                 >
                     <img
                         [src]="movie.posterUrl"
                         alt="{{ movie.title }} Poster"
                         class="w-full h-full object-cover rounded-md shadow-md"
                     >
-                    <div *cdkDragPreview class="w-32 h-full opacity-75">
-                        <img [src]="movie.posterUrl" class="w-full h-full object-cover rounded-md">
-                    </div>
-                </div>
-                <div *ngIf="!rankingData.tierListData!.tierMovies[tier.name]?.length" class="ml-2 text-gray-500 text-sm italic p-2 self-center">
-                    Drag movies here
+                    <div *cdkDragPlaceholder class="w-20 h-32 bg-gray-300 opacity-50 rounded-md"></div>
                 </div>
             </div>
 
@@ -61,33 +58,37 @@
     </div>
 
     <div class="py-4">
-        <button class="standard-action-button" type="button" (click)="importMovies()">
-            Import Movies
-        </button>
-
         <div
             cdkDropList
             [cdkDropListData]="rankingData!.tierListData!.availableMovies"
             (cdkDropListDropped)="drop($event)"
-            id="available-movies" class="flex flex-wrap pt-4 gap-2 border border-dashed border-gray-400 p-4 rounded-md min-h-32 available-movies-container"
+            id="available-movies" 
+            class="flex flex-wrap my-4 gap-2 std-border p-4 rounded-md min-h-32"
+            style="flex-basis: 0;"
+            [cdkDropListOrientation]="'horizontal'"    
         >
             <div *ngFor="let movie of rankingData?.tierListData?.availableMovies"
                 cdkDrag
-                [cdkDragData]="movie" class="flex-shrink-0 w-20 h-32 cursor-grab movie-item"
+                [cdkDragData]="movie" class="flex-shrink-0 w-20 h-32 cursor-grab movie-item mr-0.5"
             >
                 <img
                     [src]="movie.posterUrl"
                     alt="{{ movie.title }} Poster"
                     class="w-full h-full object-cover rounded-md shadow-md"
                 >
-                <div *cdkDragPreview class="w-20 h-32 opacity-75">
-                    <img [src]="movie.posterUrl" class="w-full h-full object-cover rounded-md">
+                <div *cdkDragPreview class="w-20 h-32">
+                    <img [src]="movie.posterUrl" class="w-full h-full object-cover rounded-md opacity-10">
                 </div>
+                <div *cdkDragPlaceholder class="w-20 h-32 bg-gray-300 opacity-50 rounded-md"></div>
             </div>
             <div *ngIf="!rankingData?.tierListData?.availableMovies?.length" class="text-gray-500 text-sm w-full text-center italic p-2">
                 No movies available. Import some!
             </div>
         </div>
+
+        <button class="standard-action-button" type="button" (click)="importMovies()">
+            Import Movies
+        </button>
     </div>
 
 </div>

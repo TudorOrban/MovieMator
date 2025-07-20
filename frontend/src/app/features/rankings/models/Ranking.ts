@@ -53,14 +53,14 @@ export const defaultRankingData: RankingData = {
     listData: {},
     tierListData: {
         tiers: [
-            { name: "S", color: "#4A90E2"}, 
-            { name: "A", color: "#50E3C2" }, 
-            { name: "B", color: "#F5A623"},
-            { name: "C", color: "#BD10E0"},
-            { name: "D", color: "#9013FE"},
-            { name: "E", color: "#417505"},
+            { name: "S", color: "#C62828"}, 
+            { name: "A", color: "#FF8A65" }, 
+            { name: "B", color: "#FDD835"},
+            { name: "C", color: "#81C784"},
+            { name: "D", color: "#64B5F6"},
+            { name: "E", color: "#8E24AA"},
         ],
-        tierMovies: { "S": [], "B": [], "C": [], "D": [], "E": [] },
+        tierMovies: { "S": [], "A": [], "B": [], "C": [], "D": [], "E": [] },
         availableMovies: []
     }
 }

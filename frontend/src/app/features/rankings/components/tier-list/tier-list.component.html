@@ -79,9 +79,12 @@
             id="available-movies"
             class="flex flex-wrap my-4 gap-2 bg-gray-900 text-gray-300 std-border p-4 rounded-md min-h-32 relative z-0" [cdkDropListOrientation]="'mixed'"
         >
-            <div *ngFor="let movie of rankingData?.tierListData?.availableMovies"
+            <div 
+                *ngFor="let movie of rankingData?.tierListData?.availableMovies"
                 cdkDrag
-                [cdkDragData]="movie" class="flex-shrink-0 w-20 h-32 cursor-grab movie-item mr-0.5"
+                [cdkDragData]="movie"
+                class="flex-shrink-0 w-20 h-32 cursor-grab movie-item mr-0.5 relative"
+                [ngClass]="{'border-4 border-red-500': isDeleteModeOn && toBeRemovedMovieIds.includes(movie.id)}"
             >
                 <img
                     [src]="movie.posterUrl"
@@ -92,14 +95,34 @@
                     <img [src]="movie.posterUrl" class="w-full h-full object-cover rounded-md opacity-50">
                 </div>
                 <div *cdkDragPlaceholder class="w-20 h-32 bg-gray-300 opacity-50 rounded-md"></div>
+
+                <div 
+                    *ngIf="isDeleteModeOn"
+                    class="absolute inset-0 bg-opacity-50 flex items-center justify-center cursor-pointer"
+                    (click)="handleNewRemoveMovieId(movie.id)"
+                ></div>
             </div>
-            <div *ngIf="!rankingData?.tierListData?.availableMovies?.length" class="text-sm w-full text-center italic p-2">
+            <div *ngIf="!rankingData?.tierListData?.availableMovies?.length && isEditable" class="text-sm w-full text-center italic p-2">
                 No movies available. Import some!
             </div>
         </div>
 
-        <button *ngIf="isEditable" class="standard-action-button" type="button" (click)="importMovies()">
-            Import Movies
-        </button>
+        <div *ngIf="isEditable" class="flex gap-2">
+            <button class="standard-action-button" type="button" (click)="importMovies()">
+                Import Movies
+            </button>
+            <button
+                class="standard-action-button"
+                [ngClass]="{'bg-red-700 hover:bg-red-800': isDeleteModeOn, 'bg-gray-700 hover:bg-gray-800': !isDeleteModeOn}"
+                type="button"
+                (click)="toggleDeleteMode()"
+            >
+                {{ isDeleteModeOn ? 'Cancel' : 'Remove Movies' }}
+            </button>
+
+            <button *ngIf="isDeleteModeOn" class="standard-action-button bg-red-500 hover:bg-red-600" type="button" (click)="removeAvailableMovies()">
+                Remove ({{ toBeRemovedMovieIds.length }})
+            </button>
+        </div>
     </div>
 </div>

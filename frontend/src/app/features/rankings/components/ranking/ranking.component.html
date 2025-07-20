@@ -32,8 +32,10 @@
         
         <div class="space-y-2">
             <div class="text-lg font-semibold">Tags</div>
-            <div *ngFor="let tag of ranking?.tags ?? []" class="std-shaded-text">
-                {{ tag }}, 
+            <div class="flex items-center space-x-2">
+                <div *ngFor="let tag of ranking?.tags ?? []; let i = index" class="p-1 bg-blue-600 text-white font-semibold text-sm std-border rounded-xl shadow-sm">
+                    {{ tag }}
+                </div>
             </div>
             <div *ngIf="(ranking?.tags?.length ?? 0) === 0">
                 None.

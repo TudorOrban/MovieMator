@@ -22,6 +22,9 @@ export class TierListComponent {
 
     openedSettingsTierIndex: number | null = null;
     
+    isDeleteModeOn: boolean = false;
+    toBeRemovedMovieIds: number[] = [];
+
     readonly TIER_COLOR_OPTIONS: string[] = [
         "#C62828", "#E64A19", "#FF8A65", "#FDD835", "#81C784", "#2E7D32", "#64B5F6", "#1565C0", "#8E24AA", "#D81B60", "#6D4C41", "#616161", "#333333", "#F5F5F5", "#90A4AE"
     ];
@@ -250,6 +253,59 @@ export class TierListComponent {
         };
 
         this.updateAndEmitRankingData(updatedTierListData);
+    }
+
+    toggleDeleteMode(): void {
+        this.isDeleteModeOn = !this.isDeleteModeOn;
+        this.toBeRemovedMovieIds = []; 
+    }
+
+    handleNewRemoveMovieId(id: number): void {
+        if (this.toBeRemovedMovieIds.includes(id)) {
+            this.toBeRemovedMovieIds = this.toBeRemovedMovieIds.filter(movieId => movieId !== id);
+        } else {
+            this.toBeRemovedMovieIds.push(id);
+        }
+    }
+
+    clearRemoveMovieIds(): void {
+        this.toBeRemovedMovieIds = [];
+        this.isDeleteModeOn = false;
+    }
+
+    removeAvailableMovies(): void {
+        if (!this.isEditable || !this.isDeleteModeOn || this.toBeRemovedMovieIds.length === 0) return;
+
+        const tierListData = this.rankingData.tierListData;
+        if (!tierListData) return;
+
+        // Create new objects/arrays for immutable updates
+        let newAvailableMovies = [...(tierListData.availableMovies || [])];
+        let newTierMovies = { ...tierListData.tierMovies };
+
+        // 1. Filter movies from availableMovies
+        newAvailableMovies = newAvailableMovies.filter(movie => 
+            !this.toBeRemovedMovieIds.includes(movie.id)
+        );
+
+        // 2. Filter movies from each tierMovies list
+        for (const tierName in newTierMovies) {
+            if (newTierMovies.hasOwnProperty(tierName)) {
+                const currentMoviesInTier = newTierMovies[tierName] || [];
+                newTierMovies[tierName] = currentMoviesInTier.filter(movie => 
+                    !this.toBeRemovedMovieIds.includes(movie.id)
+                );
+            }
+        }
+
+        const updatedTierListData: TierListData = {
+            ...tierListData,
+            tierMovies: newTierMovies,
+            availableMovies: newAvailableMovies
+        };
+
+        this.updateAndEmitRankingData(updatedTierListData);
+        this.clearRemoveMovieIds();
     }
 
     faGear = faGear;

@@ -1,14 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PaginatedResults } from '../../../../../shared/models/Search';
-import { RankingSearchDto } from '../../../models/Ranking';
+import { RankingSearchDto, RankingType } from '../../../models/Ranking';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { faSpinner, faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FormatRankingTypePipe } from "../../../../../shared/common/pipes/format-ranking-type";
 
 @Component({
     selector: 'app-rankings-list',
-    imports: [CommonModule, RouterModule, FontAwesomeModule],
+    imports: [CommonModule, RouterModule, FontAwesomeModule, FormatRankingTypePipe],
     templateUrl: './rankings-list.component.html',
 })
 export class RankingsListComponent implements OnInit {
@@ -57,4 +58,5 @@ export class RankingsListComponent implements OnInit {
 
     faSpinner = faSpinner;
     faStar = faStar;
+    RankingType = RankingType;
 }

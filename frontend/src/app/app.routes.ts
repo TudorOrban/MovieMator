@@ -19,6 +19,7 @@ import { AuthGuard } from './core/auth/guards/auth.guard';
 import { RankingsComponent } from './features/rankings/components/rankings/rankings.component';
 import { AddRankingComponent } from './features/rankings/components/add-ranking/add-ranking.component';
 import { RankingComponent } from './features/rankings/components/ranking/ranking.component';
+import { UpdateRankingComponent } from './features/rankings/components/update-ranking/update-ranking.component';
 
 export const routes: Routes = [
     {
@@ -76,6 +77,11 @@ export const routes: Routes = [
     {
         path: "rankings/:rankingId",
         component: RankingComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: "rankings/update-ranking/:rankingId",
+        component: UpdateRankingComponent,
         canActivate: [AuthGuard]
     },
     { 

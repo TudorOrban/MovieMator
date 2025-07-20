@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RankingDataDto, RankingType } from '../../models/Ranking';
 import { Subscription } from 'rxjs';
 import { RankingService } from '../../services/ranking.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { faEdit, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -11,7 +11,7 @@ import { FormatRankingTypePipe } from "../../../../shared/common/pipes/format-ra
 
 @Component({
     selector: 'app-ranking',
-    imports: [CommonModule, FontAwesomeModule, TierListComponent, FormatRankingTypePipe],
+    imports: [CommonModule, FontAwesomeModule, RouterModule, TierListComponent, FormatRankingTypePipe],
     templateUrl: './ranking.component.html',
     styleUrl: './ranking.component.css'
 })

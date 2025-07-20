@@ -4,10 +4,10 @@
             Title: {{ ranking?.title }}
         </div>
 
-        <button type="submit" class="standard-write-button std-shaded-text space-x-2">
+        <a [routerLink]="'/rankings/update-ranking/' + ranking?.id" type="button" class="standard-write-button std-shaded-text space-x-4">
             <fa-icon [icon]="faEdit" />
             <div>Edit</div>
-        </button>
+        </a>
     </div>
 
     <div class="space-y-4">

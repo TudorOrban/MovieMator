@@ -1,0 +1,96 @@
+<div class="relative page-std-padding-x page-std-padding-y">
+    <div class="text-2xl font-semibold py-8">
+        Update Ranking
+    </div>
+
+    <form (ngSubmit)="onSubmit()">
+        <!-- Title -->
+        <div class="space-y-2 relative">
+            <label for="title" class="form-label">Title</label>
+            <input
+                type="text"
+                id="title"
+                name="name"
+                [(ngModel)]="ranking.title"
+                required
+                minlength="3"
+                class="form-input"
+                #rankingTitleInput="ngModel"
+                autocomplete="off"
+            >
+            <div
+                *ngIf="hasBeenSubmitted() && rankingTitleInput.invalid"
+                class="form-error"
+            >
+                <div *ngIf="rankingTitleInput.errors?.['required']">Ranking title is required.</div>
+                <div *ngIf="rankingTitleInput.errors?.['minlength']">Ranking title must be at least 3 characters.</div>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="space-y-2 mt-4">
+            <label for="description" class="form-label">Description</label>
+            <textarea 
+                id="description" 
+                name="description" 
+                [(ngModel)]="ranking.description"
+                class="form-input"
+                rows="3" 
+                minlength="5"
+                maxlength="500"
+                #descriptionInput="ngModel"
+            ></textarea>
+            <div 
+                *ngIf="hasBeenSubmitted() && descriptionInput.invalid" 
+                class="form-error"
+            >
+                <div *ngIf="descriptionInput.errors?.['minlength']">Description must be at least 5 characters.</div>
+                <div *ngIf="descriptionInput.errors?.['maxlength']">Description cannot exceed 500 characters.</div>
+            </div>
+        </div>
+
+        <!-- Ranking Type -->
+        <div class="space-y-2 mt-4">
+            <label for="status" class="form-label">Ranking Type</label>
+            <app-enum-selector
+                [selectedValue]="ranking.rankingType"
+                [options]="rankingTypeOptions"
+                placeholder="Select Ranking Type"
+                (valueChange)="handleRankingTypeChange($event)"
+            ></app-enum-selector>
+        </div>
+
+        <!-- Tags -->
+        <div class="space-y-2 mt-4">
+            <app-tag-input
+                label="Tags"
+                placeholder="e.g., drama, Al Pacino"
+                [currentTags]="ranking.tags"
+                (tagsChange)="handleTagsChange($event)"
+            ></app-tag-input>
+        </div>
+
+        <div *ngIf="ranking.rankingType === RankingType.TIER_LIST" class="space-y-2 mt-4">
+            <label for="rankingData" class="form-label text-xl py-4">Tier List</label>
+            <app-tier-list
+                [isEditable]="true"
+                [rankingData]="ranking.rankingData"
+                (onRankingDataChange)="handleRankingDataChange($event)"
+                (onImportMovies)="handleImportMoviesRequest()"
+            ></app-tier-list>
+        </div>
+
+        <div class="flex items-center justify-end w-full mt-8">
+            <button type="submit" class="standard-write-button space-x-4">
+                <fa-icon [icon]="faSave"/>
+                <div>Save</div>
+            </button>
+        </div>
+    </form>
+
+    <div *ngIf="isImportMoviesDialogOpen()" class="absolute inset-0 flex items-center justify-center z-40 std-bg">
+        <app-import-movies-dialog
+            (onMoviesImported)="handleMoviesImported($event)"
+        ></app-import-movies-dialog>
+    </div>
+</div>

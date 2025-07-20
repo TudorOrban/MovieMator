@@ -5,10 +5,17 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCaretDown, faCaretUp, faGear } from '@fortawesome/free-solid-svg-icons';
 import { MovieSearchDto } from '../../../movies/models/Movie';
 import { CdkDragDrop, CdkDrag, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { TierSettingsDialogComponent } from "./tier-settings-dialog/tier-settings-dialog.component";
+
+interface SlotData {
+    tierName: string; // The ID of the tier or 'available-movies'
+    index: number;    // The index of the slot within that tier
+    movie: MovieSearchDto | null; // The movie in this slot (or null if empty)
+}
 
 @Component({
     selector: 'app-tier-list',
-    imports: [CommonModule, FontAwesomeModule, CdkDropList, CdkDrag, CdkDropListGroup],
+    imports: [CommonModule, FontAwesomeModule, CdkDropList, CdkDrag, CdkDropListGroup, TierSettingsDialogComponent],
     templateUrl: './tier-list.component.html',
     styleUrl: './tier-list.component.css'
 })
@@ -16,8 +23,10 @@ export class TierListComponent {
     @Input() rankingData: RankingData = defaultRankingData;
     @Output() onRankingDataChange = new EventEmitter<RankingData>();
     @Output() onImportMovies = new EventEmitter<void>();
+
+    openedSettingsTierIndex: number | null = null;
     
-    public static readonly TIER_COLOR_OPTIONS: string[] = [
+    readonly TIER_COLOR_OPTIONS: string[] = [
         "#C62828", "#E64A19", "#FF8A65", "#FDD835", "#81C784", "#2E7D32", "#64B5F6", "#1565C0", "#8E24AA", "#D81B60", "#6D4C41", "#616161", "#333333", "#F5F5F5", "#90A4AE"
     ];
 
@@ -78,7 +87,7 @@ export class TierListComponent {
     }
 
     openTierSettings(index: number) {
-        console.log("Open settings", index);
+        this.openedSettingsTierIndex = index;
     }
 
     moveTierUp(index: number): void {

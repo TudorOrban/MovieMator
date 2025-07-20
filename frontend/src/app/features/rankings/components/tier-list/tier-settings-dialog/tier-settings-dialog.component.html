@@ -1,0 +1,49 @@
+<div class="std-shaded-bg p-8 space-y-4 std-border rounded-md shadow-sm">
+    <div class="flex items-center justify-between w-full pb-4">
+        <div class="text-lg font-semibold">
+            Edit Tier
+        </div>
+
+        <button type="button" class="std-shaded-text">
+            <fa-icon [icon]="faXmark" class="hover:text-red-700 cursor-pointer"/>
+        </button>
+    </div>
+
+    <div class="flex items-center space-x-4 py-4">
+        <button 
+            type="button"
+            *ngFor="let option of tierColorOptions; let i = index" 
+            class="w-8 h-8 rounded-full cursor-pointer" 
+            [style.background-color]="option"
+            [class.border-2]="option === selectedColor"
+            [class.border-blue-500]="option === selectedColor"
+            (click)="selectColor(i)"
+        ></button>
+    </div>
+
+    <div>
+
+    </div>
+
+    <div class="flex items-center justify-center w-full space-x-4 py-4">
+        <button type="button" class="standard-action-button">
+            Delete Tier
+        </button>
+        <button type="button" class="standard-action-button">
+            Clear Tier Images
+        </button>
+        <button type="button" class="standard-action-button">
+            Add a Row Above
+        </button>
+        <button type="button" class="standard-action-button">
+            Add a Row Below
+        </button>
+    </div>
+
+    <div class="flex items-center justify-end w-full mt-8">
+        <button type="button" class="standard-write-button space-x-2">
+            <fa-icon [icon]="faSave" />
+            <span>Save</span>
+        </button>
+    </div>
+</div>

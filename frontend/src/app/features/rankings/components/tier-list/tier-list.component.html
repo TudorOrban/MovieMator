@@ -16,9 +16,7 @@
                 [cdkDropListData]="rankingData.tierListData!.tierMovies[tier.name]!"
                 (cdkDropListDropped)="drop($event)"
                 [id]="tier.name"
-                class="flex flex-grow flex-wrap items-start gap-0.5 overflow-hidden min-h-32 p-1" 
-                style="flex-basis: 0;"
-                [cdkDropListOrientation]="'horizontal'"    
+                class="flex flex-grow flex-wrap items-start gap-0.5 overflow-hidden min-h-32 p-1 relative z-0" style="transform: translateZ(0);" [cdkDropListOrientation]="'mixed'"
             >
                 <div
                     *ngFor="let movie of rankingData.tierListData!.tierMovies[tier.name]!"
@@ -31,6 +29,9 @@
                         alt="{{ movie.title }} Poster"
                         class="w-full h-full object-cover rounded-md shadow-md"
                     >
+                    <div *cdkDragPreview class="w-20 h-32">
+                        <img [src]="movie.posterUrl" class="w-full h-full object-cover rounded-md opacity-50">
+                    </div>
                     <div *cdkDragPlaceholder class="w-20 h-32 bg-gray-300 opacity-50 rounded-md"></div>
                 </div>
             </div>
@@ -62,10 +63,8 @@
             cdkDropList
             [cdkDropListData]="rankingData!.tierListData!.availableMovies"
             (cdkDropListDropped)="drop($event)"
-            id="available-movies" 
-            class="flex flex-wrap my-4 gap-2 std-border p-4 rounded-md min-h-32"
-            style="flex-basis: 0;"
-            [cdkDropListOrientation]="'horizontal'"    
+            id="available-movies"
+            class="flex flex-wrap my-4 gap-2 std-border p-4 rounded-md min-h-32 relative z-0" [cdkDropListOrientation]="'mixed'"
         >
             <div *ngFor="let movie of rankingData?.tierListData?.availableMovies"
                 cdkDrag
@@ -77,7 +76,7 @@
                     class="w-full h-full object-cover rounded-md shadow-md"
                 >
                 <div *cdkDragPreview class="w-20 h-32">
-                    <img [src]="movie.posterUrl" class="w-full h-full object-cover rounded-md opacity-10">
+                    <img [src]="movie.posterUrl" class="w-full h-full object-cover rounded-md opacity-50">
                 </div>
                 <div *cdkDragPlaceholder class="w-20 h-32 bg-gray-300 opacity-50 rounded-md"></div>
             </div>
@@ -91,4 +90,9 @@
         </button>
     </div>
 
+    <div *ngIf="!!openedSettingsTierIndex" class="absolute inset-0 flex items-center justify-center z-40 std-bg">
+        <app-tier-settings-dialog
+            [tierColorOptions]="TIER_COLOR_OPTIONS"
+        ></app-tier-settings-dialog>
+    </div>
 </div>

@@ -55,6 +55,19 @@
                     </button>
                 </div>
             </div>
+
+            <div *ngIf="openedSettingsTierIndex === i" class="absolute inset-0 flex items-center justify-center z-40 std-bg">
+                <app-tier-settings-dialog
+                    [tierColorOptions]="TIER_COLOR_OPTIONS"
+                    [tierName]="tier.name"
+                    [selectedColor]="tier.color"
+                    (requestConfirm)="confirmTierSettings($event, i)"
+                    (requestClose)="closeTierSettings()"
+                    (requestDeleteTier)="deleteTier()"
+                    (requestClearImages)="clearTierImages()"
+                    (requestAddRowAbove)="addTierRow($event)"
+                ></app-tier-settings-dialog>
+            </div>
         </div>
     </div>
 
@@ -88,11 +101,5 @@
         <button class="standard-action-button" type="button" (click)="importMovies()">
             Import Movies
         </button>
-    </div>
-
-    <div *ngIf="!!openedSettingsTierIndex" class="absolute inset-0 flex items-center justify-center z-40 std-bg">
-        <app-tier-settings-dialog
-            [tierColorOptions]="TIER_COLOR_OPTIONS"
-        ></app-tier-settings-dialog>
     </div>
 </div>

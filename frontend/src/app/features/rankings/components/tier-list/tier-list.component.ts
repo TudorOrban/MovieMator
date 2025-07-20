@@ -1,17 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { defaultRankingData, RankingData } from '../../models/Ranking';
+import { defaultRankingData, RankingData, TierData, TierListData } from '../../models/Ranking';
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCaretDown, faCaretUp, faGear } from '@fortawesome/free-solid-svg-icons';
-import { MovieSearchDto } from '../../../movies/models/Movie';
 import { CdkDragDrop, CdkDrag, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { TierSettingsDialogComponent } from "./tier-settings-dialog/tier-settings-dialog.component";
-
-interface SlotData {
-    tierName: string; // The ID of the tier or 'available-movies'
-    index: number;    // The index of the slot within that tier
-    movie: MovieSearchDto | null; // The movie in this slot (or null if empty)
-}
+import { MovieSearchDto } from '../../../movies/models/Movie';
 
 @Component({
     selector: 'app-tier-list',
@@ -30,71 +24,179 @@ export class TierListComponent {
         "#C62828", "#E64A19", "#FF8A65", "#FDD835", "#81C784", "#2E7D32", "#64B5F6", "#1565C0", "#8E24AA", "#D81B60", "#6D4C41", "#616161", "#333333", "#F5F5F5", "#90A4AE"
     ];
 
-    // Main drop handler
+    /**
+     * Helper to update rankingData immutably and emit changes.
+     */
+    private updateAndEmitRankingData(newTierListData: TierListData): void {
+        const consistentTierListData: TierListData = {
+            ...newTierListData,
+            availableMovies: newTierListData.availableMovies || []
+        };
+
+        this.rankingData = {
+            ...this.rankingData,
+            tierListData: consistentTierListData
+        };
+        this.onRankingDataChange.emit(this.rankingData);
+    }
+
     drop(event: CdkDragDrop<MovieSearchDto[]>): void {
         if (!this.rankingData?.tierListData) return;
 
         const previousContainerId = event.previousContainer.id;
         const currentContainerId = event.container.id;
 
-        // Get direct references to the source and target arrays
-        const sourceArray = previousContainerId === "available-movies"
-            ? this.rankingData.tierListData.availableMovies
-            : this.rankingData.tierListData.tierMovies[previousContainerId];
+        const newTierMovies = { ...this.rankingData.tierListData.tierMovies };
+        const newAvailableMovies = [...(this.rankingData.tierListData.availableMovies || [])];
 
-        const targetArray = currentContainerId === "available-movies"
-            ? this.rankingData.tierListData.availableMovies
-            : this.rankingData.tierListData.tierMovies[currentContainerId];
+        const sourceList = previousContainerId === "available-movies"
+            ? newAvailableMovies
+            : newTierMovies[previousContainerId];
+
+        const targetList = currentContainerId === "available-movies"
+            ? newAvailableMovies
+            : newTierMovies[currentContainerId];
 
         if (event.previousContainer === event.container) {
-            // Item moved within the same list
-            moveItemInArray(sourceArray, event.previousIndex, event.currentIndex);
+            moveItemInArray(sourceList, event.previousIndex, event.currentIndex);
         } else {
-            // Item moved to a different list
             transferArrayItem(
-                sourceArray,
-                targetArray,
+                sourceList,
+                targetList,
                 event.previousIndex,
                 event.currentIndex
             );
         }
 
-        this.emitRankingDataChange();
+        const updatedTierListData: TierListData = {
+            ...this.rankingData.tierListData,
+            tierMovies: newTierMovies,
+            availableMovies: newAvailableMovies
+        };
+
+        this.updateAndEmitRankingData(updatedTierListData);
     }
 
-    // Emits the updated ranking data
-    private emitRankingDataChange(): void {
-        const newTierMovies: Record<string, MovieSearchDto[]> = {};
-        for (const tierName in this.rankingData.tierListData!.tierMovies) {
-            newTierMovies[tierName] = [...(this.rankingData.tierListData!.tierMovies[tierName] || [])];
-        }
-
-        const newAvailableMovies = [...(this.rankingData.tierListData!.availableMovies || [])];
-
-        this.onRankingDataChange.emit({
-            ...this.rankingData,
-            tierListData: {
-                ...this.rankingData.tierListData!,
-                tierMovies: newTierMovies,
-                availableMovies: newAvailableMovies
-            }
-        });
-    }
-
-    // --- Action Button Handlers ---
     importMovies(): void {
         this.onImportMovies.emit();
     }
 
-    openTierSettings(index: number) {
+    openTierSettings(index: number): void {
         this.openedSettingsTierIndex = index;
+    }
+
+    confirmTierSettings(tierData: TierData, index: number): void {
+        const tierListData = this.rankingData.tierListData;
+        if (!tierListData || !tierListData.tiers || !tierListData.tiers[index]) {
+            console.warn("Attempted to confirm settings for a non-existent tier or invalid index.");
+            return;
+        }
+
+        const newTiers = [...tierListData.tiers];
+        newTiers[index] = tierData;
+
+        const updatedTierListData: TierListData = {
+            ...tierListData,
+            tiers: newTiers,
+            availableMovies: tierListData.availableMovies || []
+        };
+
+        this.updateAndEmitRankingData(updatedTierListData);
+        this.openedSettingsTierIndex = null;
+    }
+
+    closeTierSettings(): void {
+        this.openedSettingsTierIndex = null;
+    }
+    
+    deleteTier(): void {
+        const tierListData = this.rankingData.tierListData;
+        if (this.openedSettingsTierIndex === null || !tierListData?.tiers?.[this.openedSettingsTierIndex]) {
+            console.warn("No tier selected to clear images from.");
+            return;
+        }
+        if (!tierListData || !tierListData.tiers || !tierListData.tiers[this.openedSettingsTierIndex]) {
+            console.warn("Attempted to delete a non-existent tier.");
+            return;
+        }
+
+        const tierToDeleteName = tierListData.tiers[this.openedSettingsTierIndex].name;
+        const newTiers = [...tierListData.tiers];
+        newTiers.splice(this.openedSettingsTierIndex, 1);
+        const newTierMovies = { ...tierListData.tierMovies };
+        delete newTierMovies[tierToDeleteName];
+        
+        const updatedTierListData: TierListData = {
+            ...tierListData,
+            tiers: newTiers,
+            tierMovies: newTierMovies,
+            availableMovies: tierListData.availableMovies || []
+        };
+
+        this.updateAndEmitRankingData(updatedTierListData);
+        this.openedSettingsTierIndex = null;
+    }
+
+    clearTierImages(): void {
+        const tierListData = this.rankingData.tierListData;
+        if (this.openedSettingsTierIndex === null || !tierListData?.tiers?.[this.openedSettingsTierIndex]) {
+            console.warn("No tier selected to clear images from.");
+            return;
+        }
+
+        const tierToClearName = tierListData.tiers[this.openedSettingsTierIndex].name;
+        const moviesToReturnToAvailable = tierListData.tierMovies[tierToClearName] || [];
+
+        const newTierMovies = {
+            ...tierListData.tierMovies,
+            [tierToClearName]: [] 
+        };
+
+        const updatedTierListData: TierListData = {
+            ...tierListData,
+            tierMovies: newTierMovies,
+            availableMovies: [...(tierListData.availableMovies || []), ...moviesToReturnToAvailable]
+        };
+
+        this.updateAndEmitRankingData(updatedTierListData);
+        this.openedSettingsTierIndex = null;
+    }
+
+
+    addTierRow(addAbove: boolean): void {
+        const tierListData = this.rankingData.tierListData;
+        const currentTiers = tierListData?.tiers || [];
+        const currentTierMovies = tierListData?.tierMovies || {};
+        const currentAvailableMovies = tierListData?.availableMovies || [];
+
+        const newTierName = `New Tier ${currentTiers.length + 1}`;
+        const newTierColor = this.TIER_COLOR_OPTIONS[Math.floor(Math.random() * this.TIER_COLOR_OPTIONS.length)];
+        const newTier: TierData = { name: newTierName, color: newTierColor };
+
+        const newTiers = [...currentTiers];
+        const newTierMovies = { ...currentTierMovies };
+
+        const insertIndex = this.openedSettingsTierIndex !== null ?
+                           (addAbove ? this.openedSettingsTierIndex : this.openedSettingsTierIndex + 1) :
+                           newTiers.length;
+
+        newTiers.splice(insertIndex, 0, newTier);
+        newTierMovies[newTierName] = [];
+
+        const updatedTierListData: TierListData = {
+            tiers: newTiers,
+            tierMovies: newTierMovies,
+            availableMovies: currentAvailableMovies
+        };
+
+        this.updateAndEmitRankingData(updatedTierListData);
+        this.openedSettingsTierIndex = null;
     }
 
     moveTierUp(index: number): void {
         const tierListData = this.rankingData.tierListData;
         if (!tierListData || !tierListData.tiers || index <= 0) return;
 
-        // Swap tiers and update their corresponding movie lists
         const newTiers = [...tierListData.tiers];
         const newTierMovies = { ...tierListData.tierMovies };
 
@@ -109,18 +211,20 @@ export class TierListComponent {
         newTierMovies[prevTierName] = newTierMovies[currentTierName];
         newTierMovies[currentTierName] = tempContent;
 
-        // Update the rankingData object with new references
-        this.rankingData.tierListData!.tiers = newTiers;
-        this.rankingData.tierListData!.tierMovies = newTierMovies;
+        const updatedTierListData: TierListData = {
+            ...tierListData,
+            tiers: newTiers,
+            tierMovies: newTierMovies,
+            availableMovies: tierListData.availableMovies || []
+        };
 
-        this.emitRankingDataChange();
+        this.updateAndEmitRankingData(updatedTierListData);
     }
 
     moveTierDown(index: number): void {
         const tierListData = this.rankingData.tierListData;
         if (!tierListData || !tierListData.tiers || index >= tierListData.tiers.length - 1) return;
 
-        // Swap tiers and update their corresponding movie lists
         const newTiers = [...tierListData.tiers];
         const newTierMovies = { ...tierListData.tierMovies };
 
@@ -135,11 +239,14 @@ export class TierListComponent {
         newTierMovies[nextTierName] = newTierMovies[currentTierName];
         newTierMovies[currentTierName] = tempContent;
 
-        // Update the rankingData object with new references
-        this.rankingData.tierListData!.tiers = newTiers;
-        this.rankingData.tierListData!.tierMovies = newTierMovies;
+        const updatedTierListData: TierListData = {
+            ...tierListData,
+            tiers: newTiers,
+            tierMovies: newTierMovies,
+            availableMovies: tierListData.availableMovies || []
+        };
 
-        this.emitRankingDataChange();
+        this.updateAndEmitRankingData(updatedTierListData);
     }
 
     faGear = faGear;

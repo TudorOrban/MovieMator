@@ -29,7 +29,6 @@
                     name="name-{{i}}"
                     [(ngModel)]="movie.title"
                     required
-                    minlength="1"
                     class="form-input"
                     #movieTitleInput="ngModel"
                     (input)="onTitleInput(i, $event)"
@@ -40,7 +39,6 @@
                     class="form-error"
                 >
                     <div *ngIf="movieTitleInput.errors?.['required']">Movie title is required.</div>
-                    <div *ngIf="movieTitleInput.errors?.['minlength']">Movie title must be at least 3 characters.</div>
                 </div>
                 <div
                     *ngIf="hasBeenSubmitted() && movie.isTitleUnique === false"

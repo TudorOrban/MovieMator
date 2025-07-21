@@ -3,7 +3,7 @@ import { RankingData, TierData, TierListData } from '../../models/Ranking';
 import { defaultRankingData } from "../../models/defaultRankingData";
 import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCaretDown, faCaretUp, faGear } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown, faCaretUp, faDownload, faGear } from '@fortawesome/free-solid-svg-icons';
 import { CdkDragDrop, CdkDrag, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { TierSettingsDialogComponent } from "./tier-settings-dialog/tier-settings-dialog.component";
 import { MovieSmallDto } from '../../../movies/models/Movie';
@@ -311,4 +311,5 @@ export class TierListComponent {
     faGear = faGear;
     faCaretUp = faCaretUp;
     faCaretDown = faCaretDown;
+    faDownload = faDownload;
 }

@@ -104,11 +104,11 @@ export class UpdateRankingComponent implements OnInit, OnDestroy {
         
         this.rankingService.updateRanking(this.ranking).subscribe({
             next: (data) => {
-                this.toastService.addToast({ title: "Success", details: "Ranking created successfully.", type: ToastType.SUCCESS });
+                this.toastService.addToast({ title: "Success", details: "Ranking updated successfully.", type: ToastType.SUCCESS });
             },
             error: (error) => {
-                console.error("Failed to create ranking:", error);
-                this.toastService.addToast({ title: "Error", details: "An error occurred creating ranking.", type: ToastType.ERROR });
+                console.error("Failed to update ranking:", error);
+                this.toastService.addToast({ title: "Error", details: "An error occurred updating ranking.", type: ToastType.ERROR });
             }
         });
     }

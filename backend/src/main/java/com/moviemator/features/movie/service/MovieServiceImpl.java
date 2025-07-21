@@ -135,9 +135,9 @@ public class MovieServiceImpl implements MovieService {
         Movie existingMovie = movieRepository.findById(movieDto.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(movieDto.getId().toString(), ResourceType.MOVIE, ResourceIdentifierType.ID));
 
-        Movie movieToBeUpdated = this.setUpdateMovieDtoToMovie(existingMovie, sanitizedDto);
+        MovieDtoMapper.INSTANCE.updateMovieFromUpdateMovieDto(sanitizedDto, existingMovie);
 
-        Movie updatedMovie = movieRepository.save(movieToBeUpdated);
+        Movie updatedMovie = movieRepository.save(existingMovie);
 
         return MovieDtoMapper.INSTANCE.movieToMovieDataDto(updatedMovie);
     }

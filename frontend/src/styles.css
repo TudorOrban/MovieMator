@@ -91,3 +91,6 @@ custom-scrollbar::-webkit-scrollbar {
 .transparent-overlay {
     background-color: rgba(0, 0, 0, 0.5);
 }
+
+
+body { font-family: Roboto, "Helvetica Neue", sans-serif; }

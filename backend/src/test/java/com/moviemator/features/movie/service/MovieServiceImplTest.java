@@ -23,10 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -90,13 +87,13 @@ public class MovieServiceImplTest {
         testMovie.setUserRating(8.5f);
         testMovie.setUserReview("Great movie!");
         testMovie.setWatchedDate(LocalDate.of(2023, 1, 15));
-        testMovie.setWatchedDates(Arrays.asList(LocalDate.of(2023, 1, 15), LocalDate.of(2024, 5, 20)));
+        testMovie.setWatchedDates(new ArrayList<>(Arrays.asList(LocalDate.of(2023, 1, 15), LocalDate.of(2024, 5, 20))));
         testMovie.setCreatedAt(LocalDateTime.now());
         testMovie.setUpdatedAt(LocalDateTime.now());
         testMovie.setStatus(MovieStatus.WATCHED);
         testMovie.setRuntimeMinutes(120);
-        testMovie.setGenres(Arrays.asList("Action", "Sci-Fi"));
-        testMovie.setActors(Arrays.asList("Actor X", "Actor Y"));
+        testMovie.setGenres(new ArrayList<>(Arrays.asList("Action", "Sci-Fi")));
+        testMovie.setActors(new ArrayList<>(Arrays.asList("Actor X", "Actor Y")));
 
         otherUserMovie = new Movie();
         otherUserMovie.setId(102L);
@@ -110,13 +107,14 @@ public class MovieServiceImplTest {
         otherUserMovie.setUserRating(7.0f);
         otherUserMovie.setUserReview("Decent");
         otherUserMovie.setWatchedDate(LocalDate.of(2024, 2, 20));
-        otherUserMovie.setWatchedDates(Collections.singletonList(LocalDate.of(2024, 2, 20)));
+        otherUserMovie.setWatchedDates(new ArrayList<>(Collections.singletonList(LocalDate.of(2024, 2, 20))));
         otherUserMovie.setCreatedAt(LocalDateTime.now());
         otherUserMovie.setUpdatedAt(LocalDateTime.now());
         otherUserMovie.setStatus(MovieStatus.WATCHLIST);
         otherUserMovie.setRuntimeMinutes(90);
-        otherUserMovie.setGenres(Collections.singletonList("Drama"));
-        otherUserMovie.setActors(Collections.singletonList("Actor Z"));
+        otherUserMovie.setGenres(new ArrayList<>(Collections.singletonList("Drama")));
+        otherUserMovie.setActors(new ArrayList<>(Collections.singletonList("Actor Z")));
+
 
         testMovieDataDto = MovieDtoMapper.INSTANCE.movieToMovieDataDto(testMovie);
         testMovieSearchDto = MovieDtoMapper.INSTANCE.movieToMovieSearchDto(testMovie);
@@ -134,8 +132,8 @@ public class MovieServiceImplTest {
                 "New Director",
                 "New plot",
                 100,
-                List.of("Comedy"),
-                List.of("New Actor"),
+                Arrays.asList("Comedy"),
+                Arrays.asList("New Actor"),
                 Arrays.asList(LocalDate.of(2024, 7, 1), LocalDate.of(2025, 1, 10))
         );
 
@@ -447,8 +445,8 @@ public class MovieServiceImplTest {
                 "New Director",
                 "New plot",
                 100,
-                List.of("Comedy"),
-                List.of("New Actor"),
+                Arrays.asList("Comedy"),
+                Arrays.asList("New Actor"),
                 null
         );
 

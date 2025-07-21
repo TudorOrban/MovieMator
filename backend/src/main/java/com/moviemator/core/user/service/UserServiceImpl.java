@@ -78,10 +78,7 @@ public class UserServiceImpl implements UserService {
         User existingUser = userRepository.findById(userDto.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(userDto.getId().toString(), ResourceType.USER, ResourceIdentifierType.ID));
 
-        existingUser.setDisplayName(sanitizedDto.getDisplayName());
-        existingUser.setUserSettings(sanitizedDto.getUserSettings());
-        existingUser.setIsProfilePublic(sanitizedDto.getIsProfilePublic());
-        existingUser.setContactInfo(sanitizedDto.getContactInfo());
+        UserDtoMapper.INSTANCE.updateUserFromUpdateUserDto(sanitizedDto, existingUser);
 
         User updatedUser = userRepository.save(existingUser);
 

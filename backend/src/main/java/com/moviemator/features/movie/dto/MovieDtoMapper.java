@@ -1,11 +1,10 @@
 package com.moviemator.features.movie.dto;
 
 import com.moviemator.features.movie.model.Movie;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
 public interface MovieDtoMapper {
     MovieDtoMapper INSTANCE = Mappers.getMapper(MovieDtoMapper.class);
 
@@ -73,4 +72,11 @@ public interface MovieDtoMapper {
     // New
     @Mapping(source = "watchedDates", target = "watchedDates")
     Movie createMovieDtoToMovie(CreateMovieDto movieDto);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "userId", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    void updateMovieFromUpdateMovieDto(UpdateMovieDto movieDto, @MappingTarget Movie movie);
 }

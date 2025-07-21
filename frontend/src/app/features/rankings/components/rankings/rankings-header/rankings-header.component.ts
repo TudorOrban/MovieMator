@@ -16,6 +16,7 @@ import { SelectorComponent } from "../../../../../shared/common/components/selec
     styleUrl: './rankings-header.component.css'
 })
 export class RankingsHeaderComponent {
+    @Input() isCurrentUserPage: boolean = false;
     @Input() username?: string;
     @Input() searchParams!: SearchParams;
     @Input() totalCount?: number = 0;

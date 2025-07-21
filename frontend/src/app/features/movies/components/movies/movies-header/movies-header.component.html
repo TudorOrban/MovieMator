@@ -30,7 +30,7 @@
             </div>
         </div>
 
-        <div class="flex items-center space-x-2">
+        <div *ngIf="isCurrentUserPage" class="flex items-center space-x-2">
             <ng-container *ngIf="!isDeleteModeOn; else confirmDeleteButton">
                 <button class="standard-action-button-two shadow-sm w-12" (click)="handleToggleDeleteMode()">
                     <fa-icon

@@ -120,7 +120,7 @@
                     <img
                         [src]="movie.posterUrl ?? 'assets/images/PlaceholderMoviePoster.png'"
                         alt="{{ movie.title }} Poster"
-                        class="w-full h-full object-cover rounded-l-lg"
+                        class="w-full h-full object-cover rounded-l-lg max-h-40"
                     >
                 </div>
                 <div *ngIf="profileMovies?.length === 0" class="flex items-center justify-center w-full h-full py-4 text-lg font-semibold">

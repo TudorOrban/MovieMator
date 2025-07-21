@@ -5,6 +5,7 @@
 
     <div *ngIf="!fallbackState.isForbidden && !fallbackState.errorMessage">
         <app-rankings-header
+            [isCurrentUserPage]="isCurrentUserRankingsPage"
             [username]="isCurrentUserRankingsPage ? undefined : undefined"
             [searchParams]="searchParams"
             [totalCount]="rankings?.totalCount"

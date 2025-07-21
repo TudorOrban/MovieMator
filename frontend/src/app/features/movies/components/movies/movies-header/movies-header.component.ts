@@ -17,6 +17,7 @@ import { FiltersBarComponent } from "./filters-bar/filters-bar.component";
     styleUrl: './movies-header.component.css'
 })
 export class MoviesHeaderComponent {
+    @Input() isCurrentUserPage: boolean = false;
     @Input() username?: string;
     @Input() isTitleVisible?: boolean = true;
     @Input() searchParams!: SearchParams;

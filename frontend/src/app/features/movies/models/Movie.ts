@@ -116,3 +116,7 @@ export interface CreateMovieDtoUi extends CreateMovieDto {
     searchSubscription?: Subscription;
     isTitleUnique?: boolean;
 }
+
+export interface MovieSmallDtoUi extends MovieSmallDto {
+    isSelected?: boolean;
+}

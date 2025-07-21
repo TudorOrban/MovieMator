@@ -10,7 +10,7 @@
     </div>
 
     <div class="text-lg std-shaded-text pb-6">
-        Import all your movies with selected filters and sort order.
+        Select movies to import.
     </div>
 
     <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full space-y-4 md:space-y-0 md:space-x-4">
@@ -45,8 +45,55 @@
     <div class="mt-6">
         <app-filters-bar
             [filterOptions]="searchConfig.filterOptions"
-            [isExpanded]="true"
+            [isExpanded]="false"
             (movieFiltersChanged)="handleMovieFiltersChange($event)"
         ></app-filters-bar>
+    </div>
+
+    <div class="flex items-center space-x-4">
+        <button
+            (click)="selectAll()"
+            class="standard-action-button"
+        >
+            Select All
+        </button>
+        <button
+            (click)="deselectAll()"
+            class="standard-action-button"
+        >
+            Deselect All
+        </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 py-4">
+        <div
+            *ngFor="let movie of (movies?.results ?? [])"
+            class="movie-small-card max-w-80 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-[1.02] flex flex-col relative"
+        >
+            <div class="flex items-center justify-between w-full px-4 flex-grow overflow-hidden">
+                <div class="flex items-center space-x-2 flex-grow min-w-0"> 
+                    <img
+                        [src]="movie.posterUrl ?? 'assets/images/PlaceholderMoviePoster.png'"
+                        alt="{{ movie.title }} Poster"
+                        class="w-12 h-full object-cover rounded-l-lg"
+                    >
+
+                    <div class="flex-grow min-w-0"> 
+                        <h3 class="text-lg font-semibold movie-title pl-4 truncate" title="{{movie.title}}">
+                            {{ movie.title }}
+                        </h3>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0 ml-4">
+                    <input
+                        type="checkbox"
+                        [checked]="movie.isSelected"
+                        (change)="handleCheckboxChange(movie.id)"
+                        class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                    />
+                </div>
+            </div>
+        </div>
     </div>
 </div>

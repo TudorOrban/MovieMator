@@ -2,11 +2,24 @@ import { MovieFilters, SearchParams } from "../../../shared/models/Search";
 
 export class SearchCacheKeyBuilder {
 
+    static buildUserSearchKey(userId: number, searchParams: SearchParams): string {
+        const normalizedSearchObject = {
+            userId: userId,
+            searchText: searchParams.searchText || "",
+            sortBy: searchParams.sortBy || "createdAt",
+            isAscending: searchParams.isAscending ?? true,
+            page: searchParams.page ?? 1,
+            itemsPerPage: searchParams.itemsPerPage ?? 20,
+        };
+
+        return JSON.stringify(normalizedSearchObject);
+    }
+
     static buildMovieSearchKey(userId: number, searchParams: SearchParams, movieFilters: MovieFilters): string {
         const normalizedSearchObject = {
             userId: userId,
-            searchText: searchParams.searchText || '',
-            sortBy: searchParams.sortBy || 'createdAt',
+            searchText: searchParams.searchText || "",
+            sortBy: searchParams.sortBy || "createdAt",
             isAscending: searchParams.isAscending ?? true,
             page: searchParams.page ?? 1,
             itemsPerPage: searchParams.itemsPerPage ?? 20,

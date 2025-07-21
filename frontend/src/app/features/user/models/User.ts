@@ -1,17 +1,4 @@
 
-export interface UserDataDto {
-    id: number;
-    cognitoUserId: string;
-    email: string;
-    displayName?: string;
-    createdAt?: Date;
-    updatedAt?: Date;
-
-    userSettings: UserSettings;
-    isProfilePublic: boolean;
-    contactInfo?: string;
-}
-
 export interface PublicUserDataDto {
     id: number;
     cognitoUserId: string;
@@ -22,6 +9,10 @@ export interface PublicUserDataDto {
     userSettings: UserSettings;
     isProfilePublic: boolean;
     contactInfo?: string;
+}
+
+export interface UserDataDto extends PublicUserDataDto {
+    email: string;
 }
 
 export interface UserSearchDto {

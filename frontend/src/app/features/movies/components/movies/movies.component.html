@@ -6,7 +6,7 @@
     <div *ngIf="!fallbackState.isForbidden && !fallbackState.errorMessage">
         <app-movies-header
             [isCurrentUserPage]="isCurrentUserMoviesPage"
-            [username]="isCurrentUserMoviesPage ? undefined : undefined"
+            [currentRouteUser]="currentRouteUser"
             [searchParams]="searchParams"
             [totalCount]="movies?.totalCount"
             [movieFilters]="movieFilters"

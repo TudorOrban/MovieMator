@@ -9,6 +9,7 @@ import { UIItem } from '../../../../../shared/models/UI';
 import { RouterModule } from '@angular/router';
 import { SelectorComponent } from "../../../../../shared/common/components/selector/selector.component";
 import { FiltersBarComponent } from "./filters-bar/filters-bar.component";
+import { PublicUserDataDto } from '../../../../user/models/User';
 
 @Component({
     selector: 'app-movies-header',
@@ -18,7 +19,7 @@ import { FiltersBarComponent } from "./filters-bar/filters-bar.component";
 })
 export class MoviesHeaderComponent {
     @Input() isCurrentUserPage: boolean = false;
-    @Input() username?: string;
+    @Input() currentRouteUser: PublicUserDataDto | null = null;
     @Input() isTitleVisible?: boolean = true;
     @Input() searchParams!: SearchParams;
     @Input() totalCount?: number = 0;

@@ -162,6 +162,6 @@ export class MovieCacheService {
     }
 
     getCacheSize(): number {
-        return this.cache.size + this.watchedDatesCache.size;
+        return this.cache.size + this.watchedDatesCache.size + this.statisticsCache.size;
     }
 }

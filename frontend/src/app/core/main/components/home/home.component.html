@@ -1,4 +1,4 @@
-<div class="w-full min-h-screen flex flex-col items-center justify-center py-16 px-4 sm:px-6 lg:px-8 home-container">
+<div class="w-full min-h-screen flex flex-col items-center justify-center py-16 sm:px-6 lg:px-8 home-container overflow-x-hidden">
     <div class="text-center space-y-8 max-w-4xl mx-auto p-8 sm:p-10 std-bg rounded-xl shadow-lg std-border">
 
         <h1 class="text-6xl font-extrabold text-indigo-700 leading-tight">
@@ -9,31 +9,30 @@
         </p>
 
         <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-            <div class="bg-indigo-50 p-6 rounded-lg shadow-sm">
+            <a [routerLink]="'movies/add-movies'" class="bg-indigo-50 p-6 rounded-lg shadow-sm transition-all duration-300 ease-in-out transform hover:scale-[1.05] cursor-pointer">
                 <h3 class="text-xl font-bold text-indigo-800 mb-2">🎬 Track Your Watches</h3>
                 <p class="text-gray-700">
-                    Easily record the films you've watched, keeping a detailed log of your viewing history.
+                    Easily record the films you've watched and give them ratings and reviews.
                 </p>
-            </div>
-
-            <div class="bg-blue-50 p-6 rounded-lg shadow-sm">
-                <h3 class="text-xl font-bold text-blue-800 mb-2">⭐ Rate & Review</h3>
-                <p class="text-gray-700">
-                    Give films a personal rating and add your unique reviews and notes.
-                </p>
-            </div>
-            <div class="bg-purple-50 p-6 rounded-lg shadow-sm">
+            </a>
+            <a [routerLink]="'movies'" class="bg-purple-50 p-6 rounded-lg shadow-sm transition-all duration-300 ease-in-out transform hover:scale-[1.05] cursor-pointer">
                 <h3 class="text-xl font-bold text-purple-800 mb-2">🔍 Explore & Organize</h3>
                 <p class="text-gray-700">
                     Search and filter your movie collection with ease by director, genre, release year, and more.
                 </p>
-            </div>
-            <div class="bg-green-50 p-6 rounded-lg shadow-sm">
+            </a>
+            <a [routerLink]="'rankings/add-ranking'" class="bg-blue-50 p-6 rounded-lg shadow-sm transition-all duration-300 ease-in-out transform hover:scale-[1.05] cursor-pointer">
+                <h3 class="text-xl font-bold text-blue-800 mb-2">🏆 Create Tier Lists</h3>
+                <p class="text-gray-700">
+                    Rank your favorite movies with our custom Tier List maker.
+                </p>
+            </a>
+            <a [routerLink]="'statistics'" class="bg-green-50 p-6 rounded-lg shadow-sm transition-all duration-300 ease-in-out transform hover:scale-[1.05] cursor-pointer">
                 <h3 class="text-xl font-bold text-green-800 mb-2">📊 Gain Insights</h3>
                 <p class="text-gray-700">
                     Discover fascinating statistics about your movie watching habits and trends.
                 </p>
-            </div>
+            </a>
         </div>
 
         <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-12">

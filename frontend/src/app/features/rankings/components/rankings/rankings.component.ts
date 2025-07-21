@@ -9,8 +9,8 @@ import { combineLatest, filter, Subscription } from 'rxjs';
 import { ToastManagerService } from '../../../../shared/common/services/toast-manager.service';
 import { ToastType } from '../../../../shared/models/UI';
 import { PageSelectorComponent } from "../../../../shared/common/components/page-selector/page-selector.component";
-import { UserDataDto, UserSettings } from '../../../user/models/User';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { PublicUserDataDto, UserDataDto, UserSettings } from '../../../user/models/User';
+import { ActivatedRoute, Data, ParamMap, RouterModule } from '@angular/router';
 import { ErrorMapperService } from '../../../user/services/error-mapper.service';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -19,6 +19,7 @@ import { LoadingFallbackComponent } from "../../../../shared/fallback/components
 import { ErrorFallbackComponent } from "../../../../shared/fallback/components/error-fallback/error-fallback.component";
 import { RankingsHeaderComponent } from './rankings-header/rankings-header.component';
 import { RankingsListComponent } from './rankings-list/rankings-list.component';
+import { UserService } from '../../../user/services/user.service';
 
 @Component({
     selector: 'app-rankings',
@@ -28,7 +29,7 @@ import { RankingsListComponent } from './rankings-list/rankings-list.component';
 export class RankingsComponent implements OnInit, OnDestroy {
     isCurrentUserRankingsPage: boolean = true;
     userId: number | null = null;
-    currentRouteUser: UserDataDto | null = null;
+    currentRouteUser: PublicUserDataDto | null = null;
     rankings: PaginatedResults<RankingSearchDto> | null = null;
     userSettings: UserSettings | null = null;
 
@@ -53,6 +54,7 @@ export class RankingsComponent implements OnInit, OnDestroy {
     constructor(
         private readonly rankingService: RankingService,
         private readonly authService: AuthService,
+        private readonly userService: UserService,
         private readonly toastService: ToastManagerService,
         private readonly errorMapperService: ErrorMapperService,
         private readonly route: ActivatedRoute
@@ -61,39 +63,17 @@ export class RankingsComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.fallbackState.isLoading = true;
 
+        // Get route userId, current authenticated user and finally search rankings
         this.subscription.add(
             combineLatest([
                 this.route.paramMap,
+                this.route.data,
                 this.authService.currentUser$.pipe(
                     filter(user => user !== null && user !== undefined)
                 )
             ])
             .subscribe({
-                next: ([paramMap, currentUser]) => {
-                    const userIdParam = paramMap.get("userId");
-                    this.userSettings = currentUser?.userSettings ?? null;
-
-                    let newResolvedUserId: number | null = null;
-
-                    if (userIdParam) {
-                        this.isCurrentUserRankingsPage = false;
-                        newResolvedUserId = +userIdParam;
-                    } else {
-                        this.isCurrentUserRankingsPage = true;
-                        newResolvedUserId = currentUser?.id ?? null;
-                    }
-
-                    if (this.userId !== newResolvedUserId) {
-                        this.userId = newResolvedUserId;
-                    }
-
-                    if (this.userSettings) {
-                        this.applyUserSettings();
-                    }
-
-                    // Trigger searchRankings ONLY AFTER userId and userSettings
-                    this.fetchInitialRankings();
-                },
+                next: ([paramMap, routeData, currentUser]) => this.handleRouteAndCurrentUserEvent(paramMap, routeData, currentUser),
                 error: (error) => this.handleAPIError(error)
             })
         );
@@ -101,6 +81,43 @@ export class RankingsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+    }
+
+    private handleRouteAndCurrentUserEvent(paramMap: ParamMap, routeData: Data, currentUser: UserDataDto): void {
+        this.isCurrentUserRankingsPage = routeData["isCurrentUserRankingsPage"];
+        const userIdParam = paramMap.get("userId");
+        
+        if (!this.isCurrentUserRankingsPage) {
+            if (!userIdParam) {
+                console.error("Couldn't determine userId from route");
+                return;
+            }
+            this.userId = Number(userIdParam);
+
+            this.fetchRouteUser();
+        } else {
+            this.userId = currentUser?.id;
+        }
+
+        this.userSettings = currentUser?.userSettings ?? null;
+        if (this.userSettings) {
+            this.applyUserSettings();
+        }
+
+        // Trigger searchRankings ONLY AFTER userId, route data and currentUser are loaded
+        this.fetchInitialRankings();
+    }
+
+    private fetchRouteUser(): void {
+        if (!this.userId) return;
+
+        this.subscription.add(
+            this.userService.getPublicUserById(this.userId).subscribe({
+                next: (data: PublicUserDataDto) => {
+                    this.currentRouteUser = data;
+                }
+            })
+        )
     }
 
     private applyUserSettings(): void {

@@ -47,19 +47,15 @@ export class HeatmapComponent implements OnChanges {
     getHeatmapColor(count: number): string {
         const emptyColor = this.currentTheme === "light" ? "bg-gray-200" : "bg-gray-700";
 
-        if (count === 0) return emptyColor;
-
-        if (this.maxDailyWatchCount === 0) {
-            return "bg-green-100";
-        }
+        if (count === 0 || this.maxDailyWatchCount === 0) return emptyColor;
 
         const level = Math.ceil((count / this.maxDailyWatchCount) * 4);
 
         switch (level) {
-            case 1: return "bg-green-100";
-            case 2: return "bg-green-300";
-            case 3: return "bg-green-500";
-            case 4: return "bg-green-700";
+            case 1: return "bg-green-600";
+            case 2: return "bg-green-500";
+            case 3: return "bg-green-400";
+            case 4: return "bg-green-300";
             default: return emptyColor; 
         }
     }

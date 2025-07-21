@@ -74,7 +74,7 @@
 
             <div class="grid grid-cols-1 gap-6 mt-6"> 
                 <div class="col-span-1 md:col-span-2 lg:col-span-3"> 
-                    <h3 class="text-xl font-semibold mb-3">Watched Movies over time</h3>
+                    <h3 class="text-xl font-semibold mb-3">Movies by Watch Date</h3>
                     <div 
                         *ngIf="statistics?.movieCountByWatchedMonthAndYear && (statistics.movieCountByWatchedMonthAndYear | keyvalue).length > 0; else noWatchedMonthYearChart"
                         class="chart-container relative h-64 md:h-80 lg:h-96"

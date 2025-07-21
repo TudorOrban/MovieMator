@@ -8,6 +8,7 @@ import { UIItem } from '../../../../../shared/models/UI';
 import { RouterModule } from '@angular/router';
 import { SearchInputComponent } from "../../../../../shared/common/components/search-input/search-input.component";
 import { SelectorComponent } from "../../../../../shared/common/components/selector/selector.component";
+import { PublicUserDataDto } from '../../../../user/models/User';
 
 @Component({
     selector: 'app-rankings-header',
@@ -17,7 +18,7 @@ import { SelectorComponent } from "../../../../../shared/common/components/selec
 })
 export class RankingsHeaderComponent {
     @Input() isCurrentUserPage: boolean = false;
-    @Input() username?: string;
+    @Input() currentRouteUser: PublicUserDataDto | null = null;
     @Input() searchParams!: SearchParams;
     @Input() totalCount?: number = 0;
     @Input() isDeleteModeOn: boolean = false;

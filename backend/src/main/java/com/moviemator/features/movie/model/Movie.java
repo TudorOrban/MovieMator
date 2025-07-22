@@ -75,7 +75,6 @@ public class Movie {
     @Column(name = "actors")
     private List<String> actors;
 
-    // New
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "watched_dates")
     private List<LocalDate> watchedDates;

@@ -6,12 +6,10 @@ import com.moviemator.shared.search.models.PaginatedResults;
 import com.moviemator.shared.search.models.SearchParams;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,10 +28,26 @@ public class MovieSearchRepositoryImpl implements MovieSearchRepository {
         query.where(conditions);
 
         if (searchParams.getSortBy() != null && !searchParams.getSortBy().isEmpty()) {
-            if (searchParams.getIsAscending() != null && searchParams.getIsAscending()) {
-                query.orderBy(builder.asc(root.get(searchParams.getSortBy())));
+            if ("watchedDates".equals(searchParams.getSortBy())) {
+                // Use the custom PostgreSQL function for sorting by the most recent watched date
+                Expression<LocalDate> maxWatchedDate = builder.function(
+                        "get_max_watched_date", // Name of your PostgreSQL function
+                        LocalDate.class,         // Expected return type from the function
+                        root.get("watchedDates") // The column to pass to the function
+                );
+
+                if (searchParams.getIsAscending() != null && searchParams.getIsAscending()) {
+                    query.orderBy(builder.asc(maxWatchedDate));
+                } else {
+                    query.orderBy(builder.desc(maxWatchedDate));
+                }
             } else {
-                query.orderBy(builder.desc(root.get(searchParams.getSortBy())));
+                // Existing sorting logic for other fields
+                if (searchParams.getIsAscending() != null && searchParams.getIsAscending()) {
+                    query.orderBy(builder.asc(root.get(searchParams.getSortBy())));
+                } else {
+                    query.orderBy(builder.desc(root.get(searchParams.getSortBy())));
+                }
             }
         } else {
             query.orderBy(builder.desc(root.get("createdAt")));

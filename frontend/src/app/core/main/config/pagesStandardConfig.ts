@@ -14,7 +14,7 @@ export const movieSortOptions: UIItem[] = [
     { label: "Title", value: "title" },
     { label: "Director", value: "director" },
     { label: "Runtime", value: "runtimeMinutes" },
-    { label: "Watched Date", value: "watchedDate" },
+    { label: "Watched Date", value: "watchedDates" },
     { label: "Rating", value: "userRating" },
     { label: "Release Year", value: "releaseYear" },
 ];

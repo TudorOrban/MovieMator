@@ -139,11 +139,13 @@ public class UserSecurityExpressions {
             for (Long movieId : movieIds) {
                 MovieDataDto movie = movieService.getMovieById(movieId);
                 if (movie == null || !movie.getUserId().equals(authenticatedUserId)) {
+                    System.out.println("Mo" + movie.getId());
                     return false;
                 }
             }
             return true;
         } catch (Exception e) {
+            System.out.println("Error in areAllMoviesOwnedByAuthenticatedUser: " + e.getMessage());
             return false;
         }
     }

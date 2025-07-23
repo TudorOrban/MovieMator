@@ -146,6 +146,7 @@ export class MoviesComponent implements OnInit, OnDestroy {
 
         this.movieService.searchMovies(this.userId, this.searchParams, this.movieFilters).subscribe({
             next: (data) => {
+                console.log("Data", data)
                 this.movies = data;
                 this.fallbackState.isLoading = false;
             },

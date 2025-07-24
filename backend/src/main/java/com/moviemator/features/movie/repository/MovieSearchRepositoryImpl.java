@@ -29,11 +29,10 @@ public class MovieSearchRepositoryImpl implements MovieSearchRepository {
 
         if (searchParams.getSortBy() != null && !searchParams.getSortBy().isEmpty()) {
             if ("watchedDates".equals(searchParams.getSortBy())) {
-                // Use the custom PostgreSQL function for sorting by the most recent watched date
                 Expression<LocalDate> maxWatchedDate = builder.function(
-                        "get_max_watched_date", // Name of your PostgreSQL function
-                        LocalDate.class,         // Expected return type from the function
-                        root.get("watchedDates") // The column to pass to the function
+                        "get_max_watched_date",
+                        LocalDate.class,
+                        root.get("watchedDates")
                 );
 
                 if (searchParams.getIsAscending() != null && searchParams.getIsAscending()) {

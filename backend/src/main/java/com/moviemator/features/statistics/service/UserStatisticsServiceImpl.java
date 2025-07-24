@@ -91,21 +91,26 @@ public class UserStatisticsServiceImpl implements UserStatisticsService {
             }
 
             List<LocalDate> watchedDatesAsLocalDates = convertStringsToLocalDates(movie.getWatchedDates());
-            if (watchedDatesAsLocalDates != null && !watchedDatesAsLocalDates.isEmpty()) {
-                for (LocalDate watchedDate : watchedDatesAsLocalDates) {
-                    if (watchedDate != null && !watchedDate.isBefore(startDate) && !watchedDate.isAfter(endDate)) {
-                        statistics.setTotalWatchTimeMinutes(
-                                statistics.getTotalWatchTimeMinutes() + (movie.getRuntimeMinutes() != null ? movie.getRuntimeMinutes() : 0L)
-                        );
+            if (watchedDatesAsLocalDates == null || watchedDatesAsLocalDates.isEmpty()) {
+                continue;
+            }
 
-                        uniqueWatchedDaysOverall.add(watchedDate);
-
-                        String monthYear = watchedDate.format(MONTH_YEAR_FORMATTER);
-                        statistics.getMovieCountByWatchedMonthAndYear().put(monthYear, statistics.getMovieCountByWatchedMonthAndYear().getOrDefault(monthYear, 0L) + 1);
-
-                        allWatchedEvents.add(watchedDate);
-                    }
+            for (LocalDate watchedDate : watchedDatesAsLocalDates) {
+                boolean shouldCount = watchedDate != null && !watchedDate.isBefore(startDate) && !watchedDate.isAfter(endDate);
+                if (!shouldCount) {
+                    continue;
                 }
+
+                statistics.setTotalWatchTimeMinutes(
+                        statistics.getTotalWatchTimeMinutes() + (movie.getRuntimeMinutes() != null ? movie.getRuntimeMinutes() : 0L)
+                );
+
+                uniqueWatchedDaysOverall.add(watchedDate);
+
+                String monthYear = watchedDate.format(MONTH_YEAR_FORMATTER);
+                statistics.getMovieCountByWatchedMonthAndYear().put(monthYear, statistics.getMovieCountByWatchedMonthAndYear().getOrDefault(monthYear, 0L) + 1);
+
+                allWatchedEvents.add(watchedDate);
             }
         }
 
@@ -144,19 +149,18 @@ public class UserStatisticsServiceImpl implements UserStatisticsService {
 
     private List<LocalDate> convertStringsToLocalDates(List<String> dateStrings) {
         if (dateStrings == null) {
-            return new ArrayList<>(); // Return empty list to avoid NullPointerException
+            return new ArrayList<>();
         }
         return dateStrings.stream()
                 .map(dateString -> {
                     try {
                         return LocalDate.parse(dateString, DB_DATE_FORMATTER);
                     } catch (java.time.format.DateTimeParseException e) {
-                        // Log the error or handle invalid date strings gracefully
                         System.err.println("Error parsing date string: " + dateString + " - " + e.getMessage());
-                        return null; // Return null for unparseable dates
+                        return null;
                     }
                 })
-                .filter(java.util.Objects::nonNull) // Filter out any nulls from parsing errors
-                .toList(); // For Java 16+ or .collect(Collectors.toList()) for older
+                .filter(java.util.Objects::nonNull)
+                .toList();
     }
 }

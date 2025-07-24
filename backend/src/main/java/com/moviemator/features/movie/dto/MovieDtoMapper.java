@@ -36,7 +36,6 @@ public interface MovieDtoMapper {
     @Mapping(source = "movie.runtimeMinutes", target = "runtimeMinutes")
     @Mapping(source = "movie.genres", target = "genres")
     @Mapping(source = "movie.actors", target = "actors")
-    // New
     @Mapping(source = "movie.watchedDates", target = "watchedDates")
     MovieSearchDto movieToMovieSearchDto(Movie movie);
 
@@ -57,7 +56,6 @@ public interface MovieDtoMapper {
     @Mapping(source = "movie.runtimeMinutes", target = "runtimeMinutes")
     @Mapping(source = "movie.genres", target = "genres")
     @Mapping(source = "movie.actors", target = "actors")
-    // New
     @Mapping(source = "movie.watchedDates", target = "watchedDates")
     MovieDataDto movieToMovieDataDto(Movie movie);
 
@@ -75,7 +73,6 @@ public interface MovieDtoMapper {
     @Mapping(source = "runtimeMinutes", target = "runtimeMinutes")
     @Mapping(source = "genres", target = "genres")
     @Mapping(source = "actors", target = "actors")
-    // New
     @Mapping(target = "watchedDates", expression = "java(mapLocalDateListToStringList(movieDto.getWatchedDates()))")
     Movie createMovieDtoToMovie(CreateMovieDto movieDto);
 
@@ -92,7 +89,7 @@ public interface MovieDtoMapper {
         }
         return localDates.stream()
                 .map(date -> date.format(DATE_FORMATTER))
-                .toList(); // or .collect(Collectors.toList())
+                .toList();
     }
 
     default List<LocalDate> mapStringListToLocalDateList(List<String> dateStrings) {
@@ -101,6 +98,6 @@ public interface MovieDtoMapper {
         }
         return dateStrings.stream()
                 .map(dateString -> LocalDate.parse(dateString, DATE_FORMATTER))
-                .toList(); // or .collect(Collectors.toList())
+                .toList();
     }
 }

@@ -129,7 +129,6 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
 
         let allFormsValid = true;
         for (const movie of this.movies) {
-            console.log("SA", movie.watchedDates);
             if (!movie.userId || !movie.title || !movie.isTitleUnique) {
                 allFormsValid = false;
                 this.toastService.addToast({ title: "Validation Error", details: `Please ensure all required fields for movie "${movie.title || 'untitled'}" are filled correctly.`, type: ToastType.ERROR });

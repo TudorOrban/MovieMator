@@ -87,7 +87,7 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
         const year = today.getFullYear();
         const month = (today.getMonth() + 1).toString().padStart(2, "0");
         const day = today.getDate().toString().padStart(2, "0");
-        newMovie.watchedDates!.push(new Date(`${year}-${month}-${day}`));
+        newMovie.watchedDates!.push(`${year}-${month}-${day}`);
 
         // Search movies on TMDB
         newMovie.searchSubscription = newMovie.searchTerms.pipe(
@@ -129,6 +129,7 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
 
         let allFormsValid = true;
         for (const movie of this.movies) {
+            console.log("SA", movie.watchedDates);
             if (!movie.userId || !movie.title || !movie.isTitleUnique) {
                 allFormsValid = false;
                 this.toastService.addToast({ title: "Validation Error", details: `Please ensure all required fields for movie "${movie.title || 'untitled'}" are filled correctly.`, type: ToastType.ERROR });
@@ -174,7 +175,7 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
         const year = today.getFullYear();
         const month = (today.getMonth() + 1).toString().padStart(2, "0");
         const day = today.getDate().toString().padStart(2, "0");
-        this.movies[movieIndex].watchedDates!.push(new Date(`${year}-${month}-${day}`));
+        this.movies[movieIndex].watchedDates!.push(`${year}-${month}-${day}`);
     }
 
     removeWatchedDate(movieIndex: number, dateIndex: number): void {
@@ -182,7 +183,7 @@ export class AddMoviesComponent implements OnInit, OnDestroy {
     }
 
     onWatchedDateChange(movieIndex: number, dateIndex: number, newValue: string): void {
-        this.movies[movieIndex].watchedDates![dateIndex] = new Date(newValue);
+        this.movies[movieIndex].watchedDates![dateIndex] = newValue;
     }
 
     handleGenresChange(index: number, genres: string[] | undefined): void {

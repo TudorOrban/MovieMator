@@ -81,7 +81,7 @@ export interface CreateMovieDto {
     actors?: string[];
 
     // New
-    watchedDates?: Date[];
+    watchedDates?: string[];
 }
 
 export interface UpdateMovieDto {

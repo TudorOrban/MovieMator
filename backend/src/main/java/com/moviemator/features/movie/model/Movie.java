@@ -77,7 +77,7 @@ public class Movie {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "watched_dates")
-    private List<LocalDate> watchedDates;
+    private List<String> watchedDates;
 
     @PrePersist
     protected void onCreate() {
@@ -98,14 +98,14 @@ public class Movie {
         }
         Collections.sort(watchedDates);
     }
-
-    public void addWatchedDate(LocalDate date) {
-        if (this.watchedDates == null) {
-            this.watchedDates = new ArrayList<>();
-        }
-        if (!this.watchedDates.contains(date)) {
-            this.watchedDates.add(date);
-            Collections.sort(this.watchedDates);
-        }
-    }
+//
+//    public void addWatchedDate(String date) {
+//        if (this.watchedDates == null) {
+//            this.watchedDates = new ArrayList<>();
+//        }
+//        if (!this.watchedDates.contains(date)) {
+//            this.watchedDates.add(date);
+//            Collections.sort(this.watchedDates);
+//        }
+//    }
 }

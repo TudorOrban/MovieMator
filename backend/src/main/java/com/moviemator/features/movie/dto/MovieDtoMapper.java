@@ -4,9 +4,15 @@ import com.moviemator.features.movie.model.Movie;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 @Mapper(collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED)
 public interface MovieDtoMapper {
     MovieDtoMapper INSTANCE = Mappers.getMapper(MovieDtoMapper.class);
+
+    DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Mapping(source = "movie.id", target = "id")
     @Mapping(source = "movie.title", target = "title")
@@ -70,7 +76,7 @@ public interface MovieDtoMapper {
     @Mapping(source = "genres", target = "genres")
     @Mapping(source = "actors", target = "actors")
     // New
-    @Mapping(source = "watchedDates", target = "watchedDates")
+    @Mapping(target = "watchedDates", expression = "java(mapLocalDateListToStringList(movieDto.getWatchedDates()))")
     Movie createMovieDtoToMovie(CreateMovieDto movieDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -79,4 +85,22 @@ public interface MovieDtoMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     void updateMovieFromUpdateMovieDto(UpdateMovieDto movieDto, @MappingTarget Movie movie);
+
+    default List<String> mapLocalDateListToStringList(List<LocalDate> localDates) {
+        if (localDates == null) {
+            return null;
+        }
+        return localDates.stream()
+                .map(date -> date.format(DATE_FORMATTER))
+                .toList(); // or .collect(Collectors.toList())
+    }
+
+    default List<LocalDate> mapStringListToLocalDateList(List<String> dateStrings) {
+        if (dateStrings == null) {
+            return null;
+        }
+        return dateStrings.stream()
+                .map(dateString -> LocalDate.parse(dateString, DATE_FORMATTER))
+                .toList(); // or .collect(Collectors.toList())
+    }
 }

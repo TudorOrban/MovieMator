@@ -23,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,6 +58,8 @@ public class MovieServiceImplTest {
     private CreateMovieDto testCreateMovieDto;
     private UpdateMovieDto testUpdateMovieDto;
 
+    private static final DateTimeFormatter DB_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     @BeforeEach
     void setUp() {
         testUser = new User();
@@ -87,7 +90,10 @@ public class MovieServiceImplTest {
         testMovie.setUserRating(8.5f);
         testMovie.setUserReview("Great movie!");
         testMovie.setWatchedDate(LocalDate.of(2023, 1, 15));
-        testMovie.setWatchedDates(new ArrayList<>(Arrays.asList(LocalDate.of(2023, 1, 15), LocalDate.of(2024, 5, 20))));
+        testMovie.setWatchedDates(new ArrayList<>(Arrays.asList(
+                LocalDate.of(2023, 1, 15).format(DB_DATE_FORMATTER),
+                LocalDate.of(2024, 5, 20).format(DB_DATE_FORMATTER)
+        )));
         testMovie.setCreatedAt(LocalDateTime.now());
         testMovie.setUpdatedAt(LocalDateTime.now());
         testMovie.setStatus(MovieStatus.WATCHED);
@@ -107,7 +113,9 @@ public class MovieServiceImplTest {
         otherUserMovie.setUserRating(7.0f);
         otherUserMovie.setUserReview("Decent");
         otherUserMovie.setWatchedDate(LocalDate.of(2024, 2, 20));
-        otherUserMovie.setWatchedDates(new ArrayList<>(Collections.singletonList(LocalDate.of(2024, 2, 20))));
+        otherUserMovie.setWatchedDates(new ArrayList<>(Collections.singletonList(
+                LocalDate.of(2024, 2, 20).format(DB_DATE_FORMATTER)
+        )));
         otherUserMovie.setCreatedAt(LocalDateTime.now());
         otherUserMovie.setUpdatedAt(LocalDateTime.now());
         otherUserMovie.setStatus(MovieStatus.WATCHLIST);

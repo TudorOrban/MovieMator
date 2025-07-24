@@ -36,6 +36,7 @@ public class UserStatisticsServiceImpl implements UserStatisticsService {
     private final MovieRepository movieRepository;
 
     private static final DateTimeFormatter MONTH_YEAR_FORMATTER = DateTimeFormatter.ofPattern("MMM yyyy");
+    private static final DateTimeFormatter DB_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Autowired
     public UserStatisticsServiceImpl(MovieRepository movieRepository) {
@@ -89,8 +90,9 @@ public class UserStatisticsServiceImpl implements UserStatisticsService {
                 statistics.getMovieCountByReleaseYear().put(releaseYear, statistics.getMovieCountByReleaseYear().getOrDefault(releaseYear, 0L) + 1);
             }
 
-            if (movie.getWatchedDates() != null && !movie.getWatchedDates().isEmpty()) {
-                for (LocalDate watchedDate : movie.getWatchedDates()) {
+            List<LocalDate> watchedDatesAsLocalDates = convertStringsToLocalDates(movie.getWatchedDates());
+            if (watchedDatesAsLocalDates != null && !watchedDatesAsLocalDates.isEmpty()) {
+                for (LocalDate watchedDate : watchedDatesAsLocalDates) {
                     if (watchedDate != null && !watchedDate.isBefore(startDate) && !watchedDate.isAfter(endDate)) {
                         statistics.setTotalWatchTimeMinutes(
                                 statistics.getTotalWatchTimeMinutes() + (movie.getRuntimeMinutes() != null ? movie.getRuntimeMinutes() : 0L)
@@ -138,5 +140,23 @@ public class UserStatisticsServiceImpl implements UserStatisticsService {
         }
 
         return granularRatingBd.toPlainString();
+    }
+
+    private List<LocalDate> convertStringsToLocalDates(List<String> dateStrings) {
+        if (dateStrings == null) {
+            return new ArrayList<>(); // Return empty list to avoid NullPointerException
+        }
+        return dateStrings.stream()
+                .map(dateString -> {
+                    try {
+                        return LocalDate.parse(dateString, DB_DATE_FORMATTER);
+                    } catch (java.time.format.DateTimeParseException e) {
+                        // Log the error or handle invalid date strings gracefully
+                        System.err.println("Error parsing date string: " + dateString + " - " + e.getMessage());
+                        return null; // Return null for unparseable dates
+                    }
+                })
+                .filter(java.util.Objects::nonNull) // Filter out any nulls from parsing errors
+                .toList(); // For Java 16+ or .collect(Collectors.toList()) for older
     }
 }

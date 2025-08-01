@@ -52,6 +52,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
         { label: "4 Movies", value: 4 },
         { label: "5 Movies", value: 5 },
     ];
+    rankingsPerRowOptions = [
+        { label: "1 Ranking", value: 1 },
+        { label: "2 Rankings", value: 2 },
+        { label: "3 Rankings", value: 3 },
+        { label: "4 Rankings", value: 4 },
+        { label: "5 Rankings", value: 5 },
+    ];
 
     statsTimePeriodOptions = [
         { label: "One Year", value: StatsTimePeriodOption.LAST_YEAR },
@@ -76,6 +83,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
             defaultMovieSortBy: ["watchedDate", Validators.required], 
             moviesPerRow: [3, [Validators.required, Validators.min(1)]],
             defaultStatsTimePeriod: [StatsTimePeriodOption.LAST_YEAR, Validators.required],
+            defaultRankingSortBy: ["createdAt", Validators.required], 
+            rankingsPerRow: [3, [Validators.required, Validators.min(1)]],
         });
     }
 

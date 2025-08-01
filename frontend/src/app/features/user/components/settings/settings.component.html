@@ -85,6 +85,34 @@
             </div>
         </div> -->
 
+        <div class="space-y-2 mb-6">
+            <label for="defaultRankingSortBy" class="form-label">Default Ranking List Sort Order</label>
+            <select
+                id="defaultRankingSortBy"
+                formControlName="defaultRankingSortBy"
+                class="form-select"
+            >
+                <option *ngFor="let option of sortByOptions" [value]="option.value">{{ option.label }}</option>
+            </select>
+            <div *ngIf="settingsForm.get('defaultRankingSortBy')?.invalid && settingsForm.get('defaultRankingSortBy')?.touched" class="form-error">
+                Default sort order is required.
+            </div>
+        </div>
+
+        <div class="space-y-2 mb-6">
+            <label for="rankingsPerRow" class="form-label">Rankings Displayed Per Row (Grid View)</label>
+            <select
+                id="rankingsPerRow"
+                formControlName="rankingsPerRow"
+                class="form-select"
+            >
+                <option *ngFor="let option of rankingsPerRowOptions" [value]="option.value">{{ option.label }}</option>
+            </select>
+            <div *ngIf="settingsForm.get('rankingsPerRow')?.invalid && settingsForm.get('rankingsPerRow')?.touched" class="form-error">
+                Rankings per row is required and must be a positive number.
+            </div>
+        </div>
+
         <div class="flex justify-end space-x-4 mt-8">
             <button
                 type="button"

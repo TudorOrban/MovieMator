@@ -28,6 +28,8 @@ export class StatisticsComponent implements OnInit, OnDestroy {
 
     directorDisplayLimit: number = 20;
     showAllDirectors: boolean = false;
+    genreDisplayLimit: number = 20;
+    showAllGenres: boolean = false;
     actorDisplayLimit: number = 20;
     showAllActors: boolean = false;
 
@@ -229,6 +231,10 @@ export class StatisticsComponent implements OnInit, OnDestroy {
 
     toggleShowAllDirectors(): void {
         this.showAllDirectors = !this.showAllDirectors;
+    }
+
+    toggleShowAllGenres(): void {
+        this.showAllGenres = !this.showAllGenres;
     }
 
     toggleShowAllActors(): void {

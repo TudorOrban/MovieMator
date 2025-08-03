@@ -95,6 +95,7 @@
         <div class="space-y-6 mb-8">
             <h2 class="text-2xl font-semibold std-shaded-text std-border-b pb-3 mb-4">Categories</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Directors -->
                 <div>
                     <h3 class="text-xl font-semibold mb-3">Top Directors</h3>
                     <div *ngIf="statistics.movieCountByDirector && (statistics.movieCountByDirector | keyvalue).length > 0; else noDirectors">
@@ -116,18 +117,31 @@
                     </div>
                     <ng-template #noDirectors><p class="text-gray-500 italic">No director data.</p></ng-template>
                 </div>
+
+                <!-- Genres -->
                 <div>
                     <h3 class="text-xl font-semibold mb-3">Top Genres</h3>
-                    <div *ngIf="statistics.movieCountByGenre && (statistics.movieCountByGenre | keyvalue).length > 0; else noGenres" class="flex flex-wrap gap-2">
-                        <span 
-                            *ngFor="let entry of (statistics.movieCountByGenre | keyvalue | orderBy:'value':'desc')"
-                            class="bg-indigo-100 text-indigo-800 text-sm font-medium px-2.5 py-0.5 rounded-full"
+                    <div *ngIf="statistics.movieCountByGenre && (statistics.movieCountByGenre | keyvalue).length > 0; else noGenres">
+                        <div class="flex flex-wrap gap-2">
+                            <span 
+                                *ngFor="let entry of (statistics.movieCountByGenre | keyvalue | orderBy:'value':'desc' | slice:0:(showAllGenres ? undefined : genreDisplayLimit))"
+                                class="bg-indigo-100 text-indigo-800 text-sm font-medium px-2.5 py-0.5 rounded-full"
+                            >
+                                {{ entry.key }}: {{ entry.value }}
+                            </span>
+                        </div>
+                        <button 
+                            *ngIf="statistics.movieCountByGenre && (statistics.movieCountByGenre | keyvalue).length > genreDisplayLimit"
+                            (click)="toggleShowAllGenres()"
+                            class="mt-3 text-blue-600 hover:underline text-sm focus:outline-none cursor-pointer"
                         >
-                            {{ entry.key }}: {{ entry.value }}
-                        </span>
+                            {{ showAllGenres ? 'Show Less' : 'See More' }}
+                        </button>
                     </div>
                     <ng-template #noGenres><p class="text-gray-500 italic">No genre data.</p></ng-template>
                 </div>
+
+                <!-- Actors -->
                 <div>
                     <h3 class="text-xl font-semibold mb-3">Top Actors</h3>
                     <div *ngIf="statistics.movieCountByActor && (statistics.movieCountByActor | keyvalue).length > 0; else noActors">

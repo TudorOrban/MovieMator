@@ -39,6 +39,7 @@ export interface TierListData {
 }
 
 export interface TierData {
+    id: string;
     name: string;
     color: string;
 }

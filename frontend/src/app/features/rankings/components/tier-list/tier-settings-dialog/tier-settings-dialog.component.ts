@@ -14,13 +14,13 @@ import { TierData } from '../../../models/Ranking';
 export class TierSettingsDialogComponent {
     @Input() tierColorOptions: string[] = [];
     @Input() selectedColor!: string;
-    @Input() tierName: string = "";    
+    @Input() tierName: string = "";  
+    @Input() tierId!: string;  
     @Output() requestConfirm = new EventEmitter<TierData>();
     @Output() requestClose = new EventEmitter<void>();
     @Output() requestDeleteTier = new EventEmitter<void>();
     @Output() requestClearImages = new EventEmitter<void>();
-    @Output() requestAddRowAbove = new EventEmitter<boolean>(); // false means below
-
+    @Output() requestAddRowAbove = new EventEmitter<boolean>(); 
     hasBeenSubmitted = signal(false);
 
     selectColor(index: number): void {
@@ -31,7 +31,7 @@ export class TierSettingsDialogComponent {
     }
 
     confirmSettings(): void {
-        this.requestConfirm.emit({ name: this.tierName, color: this.selectedColor });
+        this.requestConfirm.emit({ id: this.tierId, name: this.tierName, color: this.selectedColor });
     }
 
     closeSettings(): void {

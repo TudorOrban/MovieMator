@@ -1,6 +1,6 @@
 <div cdkDropListGroup>
     <div class="std-border">
-        <div *ngFor="let tier of rankingData?.tierListData?.tiers; let i = index"
+        <div *ngFor="let tier of rankingData?.tierListData?.tiers; let i = index; trackBy: trackByTierId"
             class="flex items-start justify-between w-full min-h-32 bg-gray-900 std-border-b"
         >
             <div
@@ -19,12 +19,10 @@
                 cdkDropList
                 [cdkDropListData]="rankingData.tierListData!.tierMovies[tier.name]!"
                 (cdkDropListDropped)="drop($event)"
-                [id]="tier.name"
-                class="flex flex-grow flex-wrap items-start gap-0.5 overflow-hidden min-h-32 p-1 relative z-0" style="transform: translateZ(0);" [cdkDropListOrientation]="'mixed'"
+                [id]="tier.id" class="flex flex-grow flex-wrap items-start gap-0.5 overflow-hidden min-h-32 p-1 relative z-0" style="transform: translateZ(0);" [cdkDropListOrientation]="'mixed'"
             >
                 <div
-                    *ngFor="let movie of rankingData.tierListData!.tierMovies[tier.name]!"
-                    cdkDrag
+                    *ngFor="let movie of rankingData.tierListData!.tierMovies[tier.name]!; trackBy: trackByMovieId" cdkDrag
                     [cdkDragData]="movie"
                     class="flex-shrink-0 w-20 h-32 cursor-grab movie-item mr-0.5"
                 >
@@ -68,6 +66,7 @@
                     <app-tier-settings-dialog
                         [tierColorOptions]="TIER_COLOR_OPTIONS"
                         [tierName]="tier.name"
+                        [tierId]="tier.id"
                         [selectedColor]="tier.color"
                         (requestConfirm)="confirmTierSettings($event, i)"
                         (requestClose)="closeTierSettings()"
@@ -89,8 +88,7 @@
             class="flex flex-wrap my-4 gap-2 bg-gray-900 text-gray-300 std-border p-4 rounded-md min-h-32 relative z-0" [cdkDropListOrientation]="'mixed'"
         >
             <div 
-                *ngFor="let movie of rankingData?.tierListData?.availableMovies"
-                cdkDrag
+                *ngFor="let movie of rankingData?.tierListData?.availableMovies; trackBy: trackByMovieId" cdkDrag
                 [cdkDragData]="movie"
                 class="flex-shrink-0 w-20 h-32 cursor-grab movie-item mr-0.5 relative"
                 [ngClass]="{'border-4 border-red-500': isDeleteModeOn && toBeRemovedMovieIds.includes(movie.id)}"

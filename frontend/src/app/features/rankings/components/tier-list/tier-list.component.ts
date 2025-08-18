@@ -30,6 +30,19 @@ export class TierListComponent {
         "#C62828", "#E64A19", "#FF8A65", "#FDD835", "#81C784", "#2E7D32", "#64B5F6", "#1565C0", "#8E24AA", "#D81B60", "#6D4C41", "#616161", "#333333", "#F5F5F5", "#90A4AE"
     ];
 
+    private updateAndEmitRankingData(newTierListData: TierListData): void {
+        const consistentTierListData: TierListData = {
+            ...newTierListData,
+            availableMovies: newTierListData.availableMovies || []
+        };
+
+        this.rankingData = {
+            ...this.rankingData,
+            tierListData: consistentTierListData
+        };
+        this.onRankingDataChange.emit(this.rankingData);
+    }
+
     drop(event: CdkDragDrop<MovieSmallDto[]>): void {
         if (!this.isEditable || !this.rankingData?.tierListData) return;
 

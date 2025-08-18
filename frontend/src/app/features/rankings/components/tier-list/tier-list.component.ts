@@ -7,6 +7,7 @@ import { faCaretDown, faCaretUp, faDownload, faGear } from '@fortawesome/free-so
 import { CdkDragDrop, CdkDrag, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { TierSettingsDialogComponent } from "./tier-settings-dialog/tier-settings-dialog.component";
 import { MovieSmallDto } from '../../../movies/models/Movie';
+import { v4 as uuidv4 } from 'uuid'; 
 
 @Component({
     selector: 'app-tier-list',
@@ -51,13 +52,20 @@ export class TierListComponent {
         const newTierMovies = { ...this.rankingData.tierListData.tierMovies };
         const newAvailableMovies = [...(this.rankingData.tierListData.availableMovies || [])];
 
+        const previousTierIdOrName = previousContainerId;
+        const currentTierIdOrName = currentContainerId;
+
+        const previousTier = this.rankingData.tierListData.tiers.find(t => t.id === previousTierIdOrName);
+        const currentTier = this.rankingData.tierListData.tiers.find(t => t.id === currentTierIdOrName);
+        
         const sourceList = previousContainerId === "available-movies"
             ? newAvailableMovies
-            : newTierMovies[previousContainerId];
+            : newTierMovies[previousTier?.name || ''];
 
         const targetList = currentContainerId === "available-movies"
             ? newAvailableMovies
-            : newTierMovies[currentContainerId];
+            : newTierMovies[currentTier?.name || ''];
+
 
         if (event.previousContainer === event.container) {
             moveItemInArray(sourceList, event.previousIndex, event.currentIndex);
@@ -95,12 +103,22 @@ export class TierListComponent {
             return;
         }
 
+        const oldTierName = tierListData.tiers[index].name;
         const newTiers = [...tierListData.tiers];
-        newTiers[index] = tierData;
+        newTiers[index] = { ...tierData, id: newTiers[index].id }; 
+        
+        const newTierMovies = { ...tierListData.tierMovies };
+
+        
+        if (oldTierName !== tierData.name) {
+            newTierMovies[tierData.name] = newTierMovies[oldTierName] || [];
+            delete newTierMovies[oldTierName];
+        }
 
         const updatedTierListData: TierListData = {
             ...tierListData,
             tiers: newTiers,
+            tierMovies: newTierMovies,
             availableMovies: tierListData.availableMovies || []
         };
 
@@ -174,7 +192,7 @@ export class TierListComponent {
 
         const newTierName = `New Tier ${currentTiers.length + 1}`;
         const newTierColor = this.TIER_COLOR_OPTIONS[Math.floor(Math.random() * this.TIER_COLOR_OPTIONS.length)];
-        const newTier: TierData = { name: newTierName, color: newTierColor };
+        const newTier: TierData = { id: uuidv4(), name: newTierName, color: newTierColor };
 
         const newTiers = [...currentTiers];
         const newTierMovies = { ...currentTierMovies };
@@ -184,7 +202,7 @@ export class TierListComponent {
                            newTiers.length;
 
         newTiers.splice(insertIndex, 0, newTier);
-        newTierMovies[newTierName] = [];
+        newTierMovies[newTier.name] = [];
 
         const updatedTierListData: TierListData = {
             tiers: newTiers,
@@ -203,21 +221,20 @@ export class TierListComponent {
         const newTiers = [...tierListData.tiers];
         const newTierMovies = { ...tierListData.tierMovies };
 
-        const currentTierName = newTiers[index].name;
-        const prevTierName = newTiers[index - 1].name;
+        const currentTier = newTiers[index];
+        const prevTier = newTiers[index - 1];
 
-        // Swap tier objects in 'tiers' array
         [newTiers[index], newTiers[index - 1]] = [newTiers[index - 1], newTiers[index]];
 
-        // Swap content in 'tierMovies' map (by moving content of original names)
-        const tempContent = newTierMovies[prevTierName];
-        newTierMovies[prevTierName] = newTierMovies[currentTierName];
-        newTierMovies[currentTierName] = tempContent;
+        const remappedTierMovies: { [tierName: string]: MovieSmallDto[] } = {};
+        newTiers.forEach(tier => {
+            remappedTierMovies[tier.name] = tierListData.tierMovies[tier.name] || [];
+        });
 
         const updatedTierListData: TierListData = {
             ...tierListData,
             tiers: newTiers,
-            tierMovies: newTierMovies,
+            tierMovies: remappedTierMovies, 
             availableMovies: tierListData.availableMovies || []
         };
 
@@ -229,23 +246,18 @@ export class TierListComponent {
         if (!tierListData || !tierListData.tiers || index >= tierListData.tiers.length - 1) return;
 
         const newTiers = [...tierListData.tiers];
-        const newTierMovies = { ...tierListData.tierMovies };
 
-        const currentTierName = newTiers[index].name;
-        const nextTierName = newTiers[index + 1].name;
-
-        // Swap tier objects in 'tiers' array
         [newTiers[index], newTiers[index + 1]] = [newTiers[index + 1], newTiers[index]];
 
-        // Swap content in 'tierMovies' map (by moving content of original names)
-        const tempContent = newTierMovies[nextTierName];
-        newTierMovies[nextTierName] = newTierMovies[currentTierName];
-        newTierMovies[currentTierName] = tempContent;
+        const remappedTierMovies: { [tierName: string]: MovieSmallDto[] } = {};
+        newTiers.forEach(tier => {
+            remappedTierMovies[tier.name] = tierListData.tierMovies[tier.name] || [];
+        });
 
         const updatedTierListData: TierListData = {
             ...tierListData,
             tiers: newTiers,
-            tierMovies: newTierMovies,
+            tierMovies: remappedTierMovies,
             availableMovies: tierListData.availableMovies || []
         };
 
@@ -304,6 +316,28 @@ export class TierListComponent {
         this.updateAndEmitRankingData(updatedTierListData);
         this.clearRemoveMovieIds();
     }
+
+    trackByTierId(index: number, tier: TierData): string {
+        return tier.id;
+    }
+
+    trackByMovieId(index: number, movie: MovieSmallDto): number {
+        return movie.id;
+    }
+
+    private updateAndEmitRankingData(newTierListData: TierListData): void {
+        const consistentTierListData: TierListData = {
+            ...newTierListData,
+            availableMovies: newTierListData.availableMovies || []
+        };
+
+        this.rankingData = {
+            ...this.rankingData,
+            tierListData: consistentTierListData
+        };
+        this.onRankingDataChange.emit(this.rankingData);
+    }
+
 
     faGear = faGear;
     faCaretUp = faCaretUp;

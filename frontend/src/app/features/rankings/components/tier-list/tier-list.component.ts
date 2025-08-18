@@ -29,9 +29,6 @@ export class TierListComponent {
         "#C62828", "#E64A19", "#FF8A65", "#FDD835", "#81C784", "#2E7D32", "#64B5F6", "#1565C0", "#8E24AA", "#D81B60", "#6D4C41", "#616161", "#333333", "#F5F5F5", "#90A4AE"
     ];
 
-    /**
-     * Helper to update rankingData immutably and emit changes.
-     */
     private updateAndEmitRankingData(newTierListData: TierListData): void {
         const consistentTierListData: TierListData = {
             ...newTierListData,
